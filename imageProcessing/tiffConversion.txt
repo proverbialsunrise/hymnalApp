@@ -1,0 +1,1 @@
+gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=tiffgray -r300 -sOutputFile=043-gray300.tiff 043\ My\ faith\ has\ foundmus.eps 
