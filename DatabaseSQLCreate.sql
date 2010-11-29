@@ -19,7 +19,7 @@ title TEXT,
 translator TEXT,
 tune TEXT,
 hymnal INTEGER,
-FOREIGN KEY(hymnal) REFERENCES artist(hymnalID)
+FOREIGN KEY(hymnal) REFERENCES hymnal(hymnalID)
 );
 
 CREATE TABLE lyricSection (
