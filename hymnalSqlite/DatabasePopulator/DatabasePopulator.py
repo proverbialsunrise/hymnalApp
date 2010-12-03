@@ -162,12 +162,12 @@ def parseName (name):
         ret.append ( name[i:name.find(".")] )
     return ret
 
-#createDB()
-#hymns = readSampleInput()
-#for hymn in hymns:
-#    print hymn.getInfoString()
-#    writeToDatabase(hymn)
+createDB()
+hymns = readSampleInput()
+for hymn in hymns:
+    print hymn.getInfoString()
+    writeToDatabase(hymn)
 
-addHymnSectionsToDB ( "/Users/jake/Documents/programming/iHymnal/src/hymnalApp/imageProcessing/z sampleParsed/043 My faith has foundmus",
+#addHymnSectionsToDB ( "/Users/jake/Documents/programming/iHymnal/src/hymnalApp/imageProcessing/z sampleParsed/043 My faith has foundmus",
                43 )
 
