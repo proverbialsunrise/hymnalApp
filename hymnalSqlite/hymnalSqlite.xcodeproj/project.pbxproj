@@ -19,6 +19,7 @@
 		378149D112A2F0ED00110CCE /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 378149D012A2F0ED00110CCE /* libsqlite3.dylib */; };
 		378149DA12A2F8F000110CCE /* Hymn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 378149D912A2F8F000110CCE /* Hymn.cpp */; };
 		378149ED12A4C1AC00110CCE /* DatabaseHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 378149EC12A4C1AC00110CCE /* DatabaseHelper.cpp */; };
+		37EAC98E12AA1B8B007A2EFD /* DatabaseTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 37EAC98D12AA1B8B007A2EFD /* DatabaseTests.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,12 @@
 		378149D912A2F8F000110CCE /* Hymn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Hymn.cpp; path = Model/Hymn.cpp; sourceTree = "<group>"; };
 		378149EB12A4C1AC00110CCE /* DatabaseHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DatabaseHelper.h; path = Model/DatabaseHelper.h; sourceTree = "<group>"; };
 		378149EC12A4C1AC00110CCE /* DatabaseHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DatabaseHelper.cpp; path = Model/DatabaseHelper.cpp; sourceTree = "<group>"; };
+		37EAC98712AA1B18007A2EFD /* DatabaseTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DatabaseTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		37EAC98812AA1B18007A2EFD /* DatabaseTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DatabaseTests-Info.plist"; sourceTree = "<group>"; };
+		37EAC98C12AA1B8B007A2EFD /* DatabaseTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DatabaseTests.h; path = Tests/DatabaseTests.h; sourceTree = "<group>"; };
+		37EAC98D12AA1B8B007A2EFD /* DatabaseTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = DatabaseTests.mm; path = Tests/DatabaseTests.mm; sourceTree = "<group>"; };
+		37EAC9AA12AA1BF1007A2EFD /* hymnalSqlite-Info copy.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "hymnalSqlite-Info copy.plist"; sourceTree = "<group>"; };
+		37EAC9B112AA1C4C007A2EFD /* hymnalSqliteTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "hymnalSqliteTests-Info.plist"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* hymnalSqlite-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "hymnalSqlite-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -53,6 +60,13 @@
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				2892E4100DC94CBA00A64D0F /* CoreGraphics.framework in Frameworks */,
 				378149D112A2F0ED00110CCE /* libsqlite3.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		37EAC98412AA1B18007A2EFD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,6 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				1D6058910D05DD3D006BFB54 /* hymnalSqlite.app */,
+				37EAC98712AA1B18007A2EFD /* DatabaseTests.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -82,11 +97,14 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				37EAC92412AA1327007A2EFD /* Tests */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				37EAC98812AA1B18007A2EFD /* DatabaseTests-Info.plist */,
+				37EAC9B112AA1C4C007A2EFD /* hymnalSqliteTests-Info.plist */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
@@ -106,6 +124,7 @@
 				28F335F01007B36200424DE2 /* RootViewController.xib */,
 				28AD735F0D9D9599002E5188 /* MainWindow.xib */,
 				8D1107310486CEB800E47090 /* hymnalSqlite-Info.plist */,
+				37EAC9AA12AA1BF1007A2EFD /* hymnalSqlite-Info copy.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -134,6 +153,15 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
+		37EAC92412AA1327007A2EFD /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				37EAC98C12AA1B8B007A2EFD /* DatabaseTests.h */,
+				37EAC98D12AA1B8B007A2EFD /* DatabaseTests.mm */,
+			);
+			name = Tests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -153,6 +181,24 @@
 			productName = hymnalSqlite;
 			productReference = 1D6058910D05DD3D006BFB54 /* hymnalSqlite.app */;
 			productType = "com.apple.product-type.application";
+		};
+		37EAC98612AA1B18007A2EFD /* DatabaseTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 37EAC98B12AA1B19007A2EFD /* Build configuration list for PBXNativeTarget "DatabaseTests" */;
+			buildPhases = (
+				37EAC98212AA1B18007A2EFD /* Resources */,
+				37EAC98312AA1B18007A2EFD /* Sources */,
+				37EAC98412AA1B18007A2EFD /* Frameworks */,
+				37EAC98512AA1B18007A2EFD /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DatabaseTests;
+			productName = DatabaseTests;
+			productReference = 37EAC98712AA1B18007A2EFD /* DatabaseTests.octest */;
+			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
 
@@ -174,6 +220,7 @@
 			projectRoot = "";
 			targets = (
 				1D6058900D05DD3D006BFB54 /* hymnalSqlite */,
+				37EAC98612AA1B18007A2EFD /* DatabaseTests */,
 			);
 		};
 /* End PBXProject section */
@@ -188,7 +235,30 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		37EAC98212AA1B18007A2EFD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		37EAC98512AA1B18007A2EFD /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1D60588E0D05DD3D006BFB54 /* Sources */ = {
@@ -204,6 +274,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		37EAC98312AA1B18007A2EFD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37EAC98E12AA1B8B007A2EFD /* DatabaseTests.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
@@ -212,6 +290,11 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
+					"\"$(DEVELOPER_DIR)/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator4.0.sdk/Developer/Library/Frameworks\"",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -226,11 +309,74 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_FRAMEWORKS_DIR)\"",
+					"\"$(DEVELOPER_DIR)/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator4.0.sdk/Developer/Library/Frameworks\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = hymnalSqlite_Prefix.pch;
 				INFOPLIST_FILE = "hymnalSqlite-Info.plist";
 				PRODUCT_NAME = hymnalSqlite;
 				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		37EAC98912AA1B19007A2EFD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INFOPLIST_FILE = "DatabaseTests-Info.plist";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					SenTestingKit,
+					"-framework",
+					UIKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = DatabaseTests;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		37EAC98A12AA1B19007A2EFD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				INFOPLIST_FILE = "DatabaseTests-Info.plist";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					SenTestingKit,
+					"-framework",
+					UIKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = DatabaseTests;
+				WRAPPER_EXTENSION = octest;
+				ZERO_LINK = NO;
 			};
 			name = Release;
 		};
@@ -269,6 +415,15 @@
 			buildConfigurations = (
 				1D6058940D05DD3E006BFB54 /* Debug */,
 				1D6058950D05DD3E006BFB54 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		37EAC98B12AA1B19007A2EFD /* Build configuration list for PBXNativeTarget "DatabaseTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				37EAC98912AA1B19007A2EFD /* Debug */,
+				37EAC98A12AA1B19007A2EFD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

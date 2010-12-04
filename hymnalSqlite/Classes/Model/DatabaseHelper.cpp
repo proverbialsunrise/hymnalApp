@@ -134,6 +134,7 @@ HymnVector getHymnsForHymnal(int hymnalID, HymnSort sortBy){
 	Hymnal hymnal = Hymnal(database, hymnalID);
 	
 	if (0 == get_allHymns_sort) {
+		//I don't know if you can put a wild card into an ORDER BY like this.  We may need two separate statements.
 		const char *sql = "SELECT hymnID, hymnNumber, title FROM hymn WHERE hymnal = ? ORDER BY ? ASC";
 		if (sqlite3_prepare_v2(database, sql, -1, &get_allHymns_sort, NULL) != SQLITE_OK) {
 			printf("Problem preparing get_allHymns_sort: %s", sqlite3_errmsg(database));
