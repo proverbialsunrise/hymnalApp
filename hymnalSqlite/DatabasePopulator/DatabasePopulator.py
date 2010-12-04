@@ -105,10 +105,11 @@ def writeToDatabase ( hymn ):
 
     conn.commit()
 
-def addHymnSectionsToDB ( imagesDir, hymnNumber ):
+def addHymnSectionsToDB ( imagesDir, hymnNumber, hymnalName ):
     '''Iterate through the given directory, and add the files to the lyricSection/musicSection
-    tables, associating with the given hymnNumber'''
-    #TODO: also make sure the hymn is from the right hymnal
+    tables, associating with the given hymn'''
+    dirName = hymnalName.replace(":", "") + imagesDir[imagesDir.rfind("/"):]
+    
     list = os.listdir ( imagesDir )
     list.sort();
     title=[]
@@ -116,17 +117,23 @@ def addHymnSectionsToDB ( imagesDir, hymnNumber ):
     music=[]
     
     for name in list:
+        if name[0] == ".":
+            continue
         components = parseName(name)
         if ( components[1] == "title" ):
             title = components
-        elif ( components[2].find("text") > -1 ):
+        elif ( len(components) == 4 ):
             lyrics.append(components)
         else:
             music.append(components)
     
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
-    c.execute ( "SELECT hymnID FROM hymn WHERE hymnNumber='" + str(hymnNumber) + "';" ) #AND hymnal == X
+    c.execute( "SELECT hymnalID FROM hymnal WHERE name='" + hymnalName +  "';")
+    row = c.fetchone()
+    hymnalID = row[0]
+    c.execute ( "SELECT hymnID FROM hymn WHERE hymnNumber='" + str(hymnNumber) + "' AND " + \
+                "hymnal='" + str(hymnalID) + "';" )
     row = c.fetchone()
     hymnID = row[0] #will fail here if hymn not found
             
@@ -134,50 +141,61 @@ def addHymnSectionsToDB ( imagesDir, hymnNumber ):
     for x in lyrics:
         print x
         sql = "insert into lyricSection (image, lineNumber, type, verseNumber, hymn) VALUES ('" +\
-              x[0] + "', '" + x[1] + "', '" + x[2] + "', '" + x[3] + "', '" + str(hymnID) + "');"
-        #print sql
+              dirName + "/" + x[0] + "', '" + x[1] + "', '" + str(x[2]) + "', '" + x[3] + "', '" + str(hymnID) + "');"
         c.execute (sql)
     for x in music:
         print x
         sql = "insert into musicSection (image, lineNumber, type, hymn) VALUES ('" +\
-              x[0] + "', '" + x[1] + "', '" + x[2] + "', '" + str(hymnID) + "');"
-        #print sql
+              dirName + "/" + x[0] + "', '" + x[1] + "', '" + str(x[2]) + "', '" + str(hymnID) + "');"
         c.execute (sql)
     
     conn.commit()
 
 def parseName (name):
-    '''Take a hymn image file name and return a list of its components.'''
+    '''Take a hymn image file name and return a list of its components.
+       lyric section: filename, line, type, verse
+       music section: filename, line, type'''
     if ( name.find("title") > -1 ):
         return [name, "title"]
     ret = []
     ret.append ( name )
     ret.append ( name[0:4] )
     i = 4
-    type=""
-    while i < len(name):
-        if ( name[i].isdigit() ):
-            type = name[4:i]
-            break
-        i = i+1
+    type=name[4:-4] #-4 = ".png"
     
-    ret.append ( type )
-    if ( type.find("text") > -1 ): #TODO: other types? textmen, textwomen?
-        ret.append ( name[i:name.find("_")] )
-        ret.append ( name[name.find("_")+1:name.find(".")])
-    else:
-        ret.append ( name[i:name.find(".")] )
+    if type.find("text") > -1:
+        #ret.append(type[0:-1])
+        ret.append ( 0 ) #for now just assuming unisex text
+        ret.append(type[-1])
+    elif type == "treble": #for now assuming no other staff type
+        ret.append ( 0 )
+    elif type == "bass":
+        ret.append ( 1 )
+
     return ret
 
+def addAllHymnSections ( hymnalName, baseDir ):
+    '''Takes a hymnal directory, goes through the hymn
+       subdirectories and adds the sections to the database.'''
+    list = os.listdir ( baseDir )
+    for name in list:
+        if os.path.isdir(baseDir + "/" + name) == False:
+            continue
+        #convert to int to ensure that it's a number
+        #and so that the conversion back later will strip leading zeroes
+        hymnNumber = int(name[0:3])
+        
+        addHymnSectionsToDB ( baseDir + "/" + name, hymnNumber, hymnalName )
+
+###BEGIN SCRIPT###
+HWB = "Hymnal: A Worship Book"
 createDB()
-addHymnal ( "Hymnal: A Worship Book", "copyright unknown to jake")
+addHymnal ( HWB, "copyright unknown to jake")
 hymns = readSampleInput()
 for hymn in hymns:
     print hymn.getInfoString()
     writeToDatabase(hymn)
 
-#addHymnSectionsToDB ( 
-#    "/Users/jake/Documents/programming/iHymnal/src/hymnalApp/imageProcessing/z sampleParsed/043 My faith has foundmus",
-#    43 )
+addAllHymnSections ( HWB, "../../imageProcessing/sampleParsed/" )
 
 print ( "Finished" )
