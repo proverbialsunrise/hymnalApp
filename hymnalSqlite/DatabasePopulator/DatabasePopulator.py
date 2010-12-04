@@ -15,6 +15,13 @@ def createDB():
         
     conn.commit()
 
+def addHymnal ( name, copyrightText ):
+    conn = sqlite3.connect(DB_FILE)
+    c = conn.cursor()
+    c.execute ( "INSERT INTO hymnal (name, copyrightText) VALUES ('" + \
+                name + "', '" + copyrightText + "');")
+    conn.commit()
+
 class Hymn:
     def __init__(self,  hymnal="" , number="", author="", composer="", copyrightInfo="", firstLine="", metric="", section="",
                  subSection="", subSubSection="", title="", translator="", tune=""):
@@ -128,13 +135,13 @@ def addHymnSectionsToDB ( imagesDir, hymnNumber ):
         print x
         sql = "insert into lyricSection (image, lineNumber, type, verseNumber, hymn) VALUES ('" +\
               x[0] + "', '" + x[1] + "', '" + x[2] + "', '" + x[3] + "', '" + str(hymnID) + "');"
-        print sql
+        #print sql
         c.execute (sql)
     for x in music:
         print x
         sql = "insert into musicSection (image, lineNumber, type, hymn) VALUES ('" +\
               x[0] + "', '" + x[1] + "', '" + x[2] + "', '" + str(hymnID) + "');"
-        print sql
+        #print sql
         c.execute (sql)
     
     conn.commit()
@@ -163,11 +170,14 @@ def parseName (name):
     return ret
 
 createDB()
+addHymnal ( "Hymnal: A Worship Book", "copyright unknown to jake")
 hymns = readSampleInput()
 for hymn in hymns:
     print hymn.getInfoString()
     writeToDatabase(hymn)
 
-#addHymnSectionsToDB ( "/Users/jake/Documents/programming/iHymnal/src/hymnalApp/imageProcessing/z sampleParsed/043 My faith has foundmus",
-               43 )
+#addHymnSectionsToDB ( 
+#    "/Users/jake/Documents/programming/iHymnal/src/hymnalApp/imageProcessing/z sampleParsed/043 My faith has foundmus",
+#    43 )
 
+print ( "Finished" )
