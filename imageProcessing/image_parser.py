@@ -2,7 +2,7 @@
 #   recognizes clefs in the hymn
 #   cuts out the staves it finds, and stores them in a directory
 #   cuts out the lines of text it finds between staves
-#   cuts out the title (this doesn't work if there is no title on the page
+#   cuts out the title (this doesn't work if there is no title on the page)
 
 import Image
 import sys
@@ -10,6 +10,9 @@ import os
 import glob
 
 def matchImage(smallData, smallWidth, bigData, bigWidth, offsetX, offsetY, minRatio):
+    '''See if the clef represented by smallData matches what we find at the
+    (offsetX, offsetY) coordinates of the hymn, represented by bigData
+    minRatio: the minimum percentage of pixels that have to be the same to match.'''
     bigIndex = (bigWidth * offsetY) + offsetX
     if bigIndex > len(bigData):
         return -1
@@ -51,11 +54,13 @@ def matchImage(smallData, smallWidth, bigData, bigWidth, offsetX, offsetY, minRa
     return float(count) / float(len(smallData))
 
 def cutSection(image, top, bottom, left, right, outFileName):
+    '''Crop a section and output it to outFileName.'''
     im = image.copy()
     region = im.crop([left,top, right, bottom])
     region.save(outFileName)
 
 def pixelsOnLine(imageWidth, imageData, offsetY, offsetX):
+    '''Return the number of pixels on the given line.'''
     index = imageWidth * offsetY
     count = 0
     for i in range(index + offsetX, index + imageWidth - 1): #skip the beginning of the line to avoid staff-connectors
@@ -65,6 +70,7 @@ def pixelsOnLine(imageWidth, imageData, offsetY, offsetX):
     return count
 
 def pixelsInColumn(imageWidth, imageData, column):
+    '''Return the number of pixels in the given column.'''
     index = column
     count = 0
     while(index < len(imageData)):
@@ -78,6 +84,7 @@ X_OFFSET = 376
 Y_OFFSET = 200
 
 def topOfStaff(imageWidth, imageData, offsetY):
+    '''Find the top of a music staff starting at offsetY.'''
     lineNum = offsetY
     nearlyDone = 0
     while lineNum > 0:
@@ -93,6 +100,7 @@ def topOfStaff(imageWidth, imageData, offsetY):
     return lineNum
 
 def bottomOfStaff(imageWidth, imageData, offsetY):
+    '''Find the bottom of a music staff starting at offsetY.'''
     lineNum = offsetY + 1
     nearlyDone = 0
     while 1:
@@ -108,6 +116,8 @@ def bottomOfStaff(imageWidth, imageData, offsetY):
     return lineNum
 
 def leftOfStaves(imageWidth, imageData):
+    '''Get the leftmost location of text/music on the page.
+    This way all the images can have the same width.'''
     colNum = 1
     while 1:
         if(pixelsInColumn(imageWidth, imageData, colNum) > 0):
@@ -115,6 +125,8 @@ def leftOfStaves(imageWidth, imageData):
         colNum = colNum + 1
 
 def rightOfStaves(imageWidth, imageData):
+    '''Get the rightmost location of text/music on the page.
+    This way all the images can have the same width.'''
     colNum = imageWidth - 2
     while 1:
         if(pixelsInColumn(imageWidth, imageData, colNum) > 0):
@@ -122,7 +134,9 @@ def rightOfStaves(imageWidth, imageData):
         colNum = colNum - 1
 
 
-def getStaves(directory, hymnFileName, hymnImage, clefFileName, clefName):
+def getStaves(directory, hymnName, hymnImage, clefFileName, clefName, offset=0):
+    '''Finds and cuts out the staves with the given clef in them.
+    Returns a list of [top,bottom] corresponding to the y-values of the staff'''
     indices = []
     clefImage = Image.open(clefFileName, 'r')
     y = Y_OFFSET
@@ -148,9 +162,9 @@ def getStaves(directory, hymnFileName, hymnImage, clefFileName, clefName):
         bottom = bottomOfStaff(hymnWidth, hymnData, y + 5)
         left = leftOfStaves(hymnWidth, hymnData)
         right = rightOfStaves(hymnWidth, hymnData)
-        if(not os.path.exists("%s/%s" % (directory, hymnFileName[0:-4]))):
-           os.makedirs("%s/%s" % (directory, hymnFileName[0:-4]))
-        cutSection(hymnImage, top, bottom, left, right, "%s/%s/%04d%s%d.png" % (directory, hymnFileName[0:-4], top, clefName, clefsFound))
+        if(not os.path.exists("%s/%s" % (directory, hymnName))):
+           os.makedirs("%s/%s" % (directory, hymnName))
+        cutSection(hymnImage, top, bottom, left, right, "%s/%s/%04d%s.png" % (directory, hymnName, top + offset, clefName))
         indices.append([top,bottom])
         if y < bottom:
             y = bottom
@@ -158,6 +172,7 @@ def getStaves(directory, hymnFileName, hymnImage, clefFileName, clefName):
     return indices
 
 def mergeVals(treble, bass):
+    '''Merges the treble and bass sections.'''
     retVal = []
     while(len(treble) + len(bass) > 0):
         if len(treble) == 0:
@@ -172,8 +187,12 @@ def mergeVals(treble, bass):
                 
     return retVal
 
-def getTextBetween(top, bottom, imageWidth, imageData, image, lineNumber):
-    print("getting text between %d and %d; line %d" % (top, bottom, lineNumber))
+def getTextBetween(top, bottom, imageWidth, imageData, image, hymnName, offset=0):
+    '''Get the lyrics in between the given staves.
+    top: the bottom of the staff above
+    bottom: the top of the staff below
+    offset is for multi-page hymns - it is added to the y-value in the outputted file name'''
+    print("getting text between %d and %d" % (top, bottom))
     locations = []
     i = top
     textLineStart = -1
@@ -194,12 +213,13 @@ def getTextBetween(top, bottom, imageWidth, imageData, image, lineNumber):
     right = rightOfStaves(hymnWidth, hymnData)
     i = 1
     for vals in locations:
-        cutSection(image, vals[0], vals[1], left, right, "%s/%s/%04dtext%d_%d.png" % (directory, hymnFileName[0:-4], vals[0], i, lineNumber))
+        cutSection(image, vals[0], vals[1], left, right, "%s/%s/%04dtext%d.png" % (directory, hymnName, vals[0] + offset, i))
         i = i + 1
 
     return len(locations) > 0
 
-def getTitle(hymnWidth, hymnData, hymnImage):
+def getTitle(hymnWidth, hymnData, hymnImage, hymnName):
+    '''Cut out the title of the hymn.'''
     i = 0
     while(pixelsOnLine(hymnWidth, hymnData, i, 0) == 0):
         i = i + 1
@@ -208,7 +228,7 @@ def getTitle(hymnWidth, hymnData, hymnImage):
         i = i + 1
     bottom = i
     cutSection(hymnImage, top, bottom, leftOfStaves(hymnWidth, hymnData), rightOfStaves(hymnWidth, hymnData), \
-               "%s/%s/%04dtitle.png" % (directory, hymnFileName[0:-4], top))
+               "%s/%s/%04dtitle.png" % (directory, hymnName, top))
 
     
 
@@ -228,23 +248,34 @@ for infile in glob.glob(directory + "/*.png"):
     hymnData = list(hymnImage.getdata())
     hymnWidth = hymnImage.getbbox()[2]
     
-    yVals = getStaves(directory, hymnFileName, hymnImage, trebleClefFileName, "treble")
+    # detect multi-page hymns
+    hymnName = hymnFileName[0:-4]
+    numPrecedingPages = 0
+    if hymnName[-2] == "-":
+        try:
+            numPrecedingPages = int(hymnName[-1]) - 1
+            hymnName = hymnName[0:-2]
+        except ValueError:
+            print ( "Failed to parse page number for " + hymnFileName )
+    
+    # we assume here that each page of a hymn has the same height
+    offset = hymnImage.getbbox()[3] * numPrecedingPages #this will usually be zero
+    
+    yVals = getStaves(directory, hymnName, hymnImage, trebleClefFileName, "treble", offset)
     #print(yVals)
     if(os.path.exists(bassClefFileName)):
-        bassYVals = getStaves(directory, hymnFileName, hymnImage, bassClefFileName, "bass")
+        bassYVals = getStaves(directory, hymnName, hymnImage, bassClefFileName, "bass", offset)
         #print(bassYVals)
 
     clefVals = mergeVals(yVals, bassYVals)
     #print(clefVals)
-    lineNumber = 1
     for i in range(0, len(clefVals)):
         bottom = len(hymnData) / hymnWidth
         if i < len(clefVals) - 1:
             bottom = clefVals[i+1][0] + 1
             
-        foundStuff = getTextBetween(clefVals[i][1], bottom, hymnWidth, hymnData, hymnImage, lineNumber)
-        if(foundStuff):
-            lineNumber = lineNumber + 1
+        foundStuff = getTextBetween(clefVals[i][1], bottom, hymnWidth, hymnData, hymnImage, hymnName, offset)
 
-    getTitle(hymnWidth, hymnData, hymnImage)
+    if numPrecedingPages == 0:
+        getTitle(hymnWidth, hymnData, hymnImage, hymnName)
 
