@@ -9,6 +9,8 @@
 
 #include "DatabaseHelper.h"
 
+static sqlite3 *database = 0;
+
 //When adding a sqlite statement, make sure to add it to finalizeDatabaseStatements() so that it is properly destroyed.
 static sqlite3_stmt *get_allHymns_sort = 0;
 static sqlite3_stmt *get_allHymnsForSection_sort = 0;
@@ -17,7 +19,20 @@ static sqlite3_stmt *get_hymnMusicSections = 0;
 
 static sqlite3_stmt *get_hymnLyricsSections = 0;
 
+#pragma mark Database Lifecycle
+void openConnectionWithPath(std::string& databasePath){
+	if (database == 0) {
+		sqlite3_open(databasePath.c_str(), &database);
+	} else {
+		printf("Database is already open.\n");
+	}
 
+}
+
+void closeConnection() {
+	sqlite3_close(database);
+	database = 0;
+}
 
 void finalizeDatabaseStatements(){
 	if (0 != get_allHymns_sort) {
@@ -40,8 +55,11 @@ void finalizeDatabaseStatements(){
 	
 }
 
+#pragma mark -
 
-hymnPieceVector getMusicPiecesForHymn(int hymnID, PartSpecifier part, sqlite3* database) {
+#pragma mark Hymn Display
+
+HymnPieceVector getMusicPiecesForHymn(int hymnID, PartSpecifier part) {
 	if (0 == get_hymnMusicSections) {
 		const char *sql = "SELECT lineNumber, image, type FROM musicSection WHERE hymn = ?";
 		if (sqlite3_prepare_v2(database, sql, -1, &get_hymnMusicSections, NULL) != SQLITE_OK) {
@@ -51,7 +69,7 @@ hymnPieceVector getMusicPiecesForHymn(int hymnID, PartSpecifier part, sqlite3* d
 		}
 	}
 	
-	hymnPieceVector hymnPieces;
+	HymnPieceVector hymnPieces;
 	sqlite3_bind_int(get_hymnMusicSections, 1, hymnID);
 	while (sqlite3_step(get_hymnMusicSections) == SQLITE_ROW) {
 		
@@ -66,7 +84,7 @@ hymnPieceVector getMusicPiecesForHymn(int hymnID, PartSpecifier part, sqlite3* d
 		} else {
 			int lineNumber = sqlite3_column_int(get_hymnMusicSections, 0);
 			std::string imagePath = (const char *)sqlite3_column_text(get_hymnMusicSections, 1);
-			hymnPiece piece = hymnPiece(lineNumber, imagePath);
+			HymnPiece piece = HymnPiece(lineNumber, imagePath);
 			hymnPieces.push_back(piece);
 		}
 	}
@@ -74,7 +92,7 @@ hymnPieceVector getMusicPiecesForHymn(int hymnID, PartSpecifier part, sqlite3* d
 	return hymnPieces;
 }
 
-hymnPieceVector getLyricPiecesForHymn(int hymnID, VerseSpecifier verse, sqlite3* database) {
+HymnPieceVector getLyricPiecesForHymn(int hymnID, VerseSpecifier verse) {
 	if (0 == get_hymnLyricsSections) {
 		const char *sql = "SELECT lineNumber, image, type, verseNumber FROM lyricSection WHERE hymn = ?";
 		if (sqlite3_prepare_v2(database, sql, -1, &get_hymnLyricsSections, NULL) != SQLITE_OK) {
@@ -84,7 +102,7 @@ hymnPieceVector getLyricPiecesForHymn(int hymnID, VerseSpecifier verse, sqlite3*
 		}
 	}
 	
-	hymnPieceVector hymnPieces;
+	HymnPieceVector hymnPieces;
 	sqlite3_bind_int(get_hymnMusicSections, 1, hymnID);
 	while (sqlite3_step(get_hymnMusicSections) == SQLITE_ROW) {
 		
@@ -100,10 +118,39 @@ hymnPieceVector getLyricPiecesForHymn(int hymnID, VerseSpecifier verse, sqlite3*
 		} else {
 			int lineNumber = sqlite3_column_int(get_hymnMusicSections, 0);
 			std::string imagePath = (const char *)sqlite3_column_text(get_hymnMusicSections, 1);
-			hymnPiece piece = hymnPiece(lineNumber, imagePath);
+			HymnPiece piece = HymnPiece(lineNumber, imagePath);
 			hymnPieces.push_back(piece);
 		}
 	}
 	sqlite3_reset(get_hymnMusicSections);
 	return hymnPieces;
 }
+
+#pragma mark -
+
+#pragma mark Getting Hymns
+
+HymnVector getHymnsForHymnal(int hymnalID, HymnSort sortBy){
+	Hymnal hymnal = Hymnal(database, hymnalID);
+	
+	if (0 == get_allHymns_sort) {
+		const char *sql = "SELECT hymnID, hymnNumber, title FROM hymn WHERE hymnal = ? ORDER BY ? ASC";
+		if (sqlite3_prepare_v2(database, sql, -1, &get_allHymns_sort, NULL) != SQLITE_OK) {
+			printf("Problem preparing get_allHymns_sort: %s", sqlite3_errmsg(database));
+		}
+	}
+	
+	sqlite3_bind_int(get_allHymns_sort, 1, hymnalID);
+	sqlite3_bind_int(get_allHymns_sort, 2, sortBy);
+	
+	HymnVector hymns;
+	while (sqlite3_step(get_allHymns_sort) == SQLITE_ROW) {
+		//We could do one less query here if performance is an issue. The code is cleaner this way. TODO?
+		int hymnID = sqlite3_column_int(get_allHymns_sort, 0);
+		Hymn hymn = Hymn(hymnID, hymnal, database);
+		hymns.push_back(hymn);
+	}
+	return hymns;
+}
+
+#pragma mark -
