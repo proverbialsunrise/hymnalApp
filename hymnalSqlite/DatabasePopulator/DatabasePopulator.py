@@ -179,7 +179,8 @@ def addAllHymnSections ( hymnalName, baseDir ):
        subdirectories and adds the sections to the database.'''
     list = os.listdir ( baseDir )
     for name in list:
-        if os.path.isdir(baseDir + "/" + name) == False:
+        if os.path.isdir(baseDir + "/" + name) == False or \
+            name[0] == ".":
             continue
         #convert to int to ensure that it's a number
         #and so that the conversion back later will strip leading zeroes
