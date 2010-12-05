@@ -2,6 +2,7 @@ import sqlite3
 import DatabaseCommands
 import os
 
+DEBUG = True
 DB_FILE = '/tmp/exampleDB'
 
 def createDB():
@@ -63,7 +64,7 @@ def readSampleInput():
     for line in f:
         parts = line.split('|')
         h = Hymn ( parts[0], parts[1], parts[2], parts[3], parts[4], parts[5],
-                   parts[6],parts[7], parts[8], parts[9], parts[10], parts[11] )
+                   parts[6],parts[7], parts[8], parts[9], parts[10], parts[11], parts[12] )
         hymns.append(h)
     return hymns
 
@@ -127,6 +128,14 @@ def addHymnSectionsToDB ( imagesDir, hymnNumber, hymnalName ):
         else:
             music.append(components)
     
+    #Simple detection of unison treble clefs
+    #If a treble clef is at the end or is followed by
+    #another treble clef, we assume it is unison
+    for i in range(len(music)):
+        if music[i][2] == 1 and \
+                (i == len(music)-1 or music[i+1][2] == 1):
+            music[i][2] = 0
+    
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
     c.execute( "SELECT hymnalID FROM hymnal WHERE name='" + hymnalName +  "';")
@@ -137,21 +146,21 @@ def addHymnSectionsToDB ( imagesDir, hymnNumber, hymnalName ):
     row = c.fetchone()
     hymnID = row[0] #will fail here if hymn not found
             
-    print title
+    if DEBUG: print title
     i=0
     while i < len(lyrics):
         x = lyrics[i]
         if ( x[3] == '1' and \
            (i + 1 == len(lyrics) or lyrics[i+1][3] == '1') ):
             x[3] = '-1'
-        print x
+        if DEBUG: print x
         sql = "insert into lyricSection (image, lineNumber, type, verseNumber, hymn) VALUES ('" +\
               dirName + "/" + x[0] + "', '" + x[1] + "', '" + str(x[2]) + "', '" + x[3] + "', '" + str(hymnID) + "');"
         c.execute (sql)
         i = i + 1
 
     for x in music:
-        print x
+        if DEBUG: print x
         sql = "insert into musicSection (image, lineNumber, type, hymn) VALUES ('" +\
               dirName + "/" + x[0] + "', '" + x[1] + "', '" + str(x[2]) + "', '" + str(hymnID) + "');"
         c.execute (sql)
@@ -175,9 +184,9 @@ def parseName (name):
         ret.append ( 0 ) #for now just assuming unisex text
         ret.append(type[-1])
     elif type == "treble": #for now assuming no other staff type
-        ret.append ( 0 )
-    elif type == "bass":
         ret.append ( 1 )
+    elif type == "bass":
+        ret.append ( 2 )
 
     return ret
 
@@ -190,7 +199,7 @@ def addAllHymnSections ( hymnalName, baseDir ):
             name[0] == ".":
             continue
         #convert to int to ensure that it's a number
-        #and so that the conversion back later will strip leading zeroes
+        #and to strip leading zeroes
         hymnNumber = int(name[0:3])
         
         addHymnSectionsToDB ( baseDir + "/" + name, hymnNumber, hymnalName )
@@ -201,7 +210,7 @@ createDB()
 addHymnal ( HWB, "copyright unknown to jake")
 hymns = readSampleInput()
 for hymn in hymns:
-    print hymn.getInfoString()
+    if DEBUG: print hymn.getInfoString()
     writeToDatabase(hymn)
 
 addAllHymnSections ( HWB, "../../imageProcessing/sampleParsed/" )
