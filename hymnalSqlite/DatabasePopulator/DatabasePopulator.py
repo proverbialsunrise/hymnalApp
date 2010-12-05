@@ -138,17 +138,24 @@ def addHymnSectionsToDB ( imagesDir, hymnNumber, hymnalName ):
     hymnID = row[0] #will fail here if hymn not found
             
     print title
-    for x in lyrics:
+    i=0
+    while i < len(lyrics):
+        x = lyrics[i]
+        if ( x[3] == '1' and \
+           (i + 1 == len(lyrics) or lyrics[i+1][3] == '1') ):
+            x[3] = '-1'
         print x
         sql = "insert into lyricSection (image, lineNumber, type, verseNumber, hymn) VALUES ('" +\
               dirName + "/" + x[0] + "', '" + x[1] + "', '" + str(x[2]) + "', '" + x[3] + "', '" + str(hymnID) + "');"
         c.execute (sql)
+        i = i + 1
+
     for x in music:
         print x
         sql = "insert into musicSection (image, lineNumber, type, hymn) VALUES ('" +\
               dirName + "/" + x[0] + "', '" + x[1] + "', '" + str(x[2]) + "', '" + str(hymnID) + "');"
         c.execute (sql)
-    
+
     conn.commit()
 
 def parseName (name):
