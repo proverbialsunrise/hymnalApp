@@ -9,7 +9,6 @@
 
 #include "DatabaseHelper.h"
 
-static const unsigned int ALLVERSES = 0;
 
 static sqlite3 *database = 0;
 
@@ -19,6 +18,7 @@ static sqlite3_stmt *get_allHymnsForSection_sort = 0;
 
 static sqlite3_stmt *get_hymnMusicSections = 0;
 static sqlite3_stmt *get_hymnLyricsSections = 0;
+static sqlite3_stmt *get_hymnSections = 0;
 
 #pragma mark Database Lifecycle
 void openConnectionWithPath(std::string& databasePath){
@@ -53,6 +53,10 @@ void finalizeDatabaseStatements(){
 		sqlite3_finalize(get_hymnLyricsSections);
 		get_hymnLyricsSections = 0;
 	}
+	if (0 != get_hymnSections) {
+		sqlite3_finalize(get_hymnSections);
+		get_hymnSections = 0;
+	}
 	
 }
 
@@ -66,7 +70,7 @@ Hymnal getHymnal(int hymnalID){
 
 HymnSectionVector getMusicPiecesForHymn(int hymnID, PartSpecifier part) {
 	if (0 == get_hymnMusicSections) {
-		const char *sql = "SELECT lineNumber, image, type FROM musicSection WHERE hymn = ? AND (type LIKE ? OR type = 0)";
+		const char *sql = "SELECT lineNumber, image, type FROM musicSection WHERE hymn = ? AND (type LIKE ? OR type = 0) ORDER BY lineNumber";
 		if (sqlite3_prepare_v2(database, sql, -1, &get_hymnMusicSections, NULL) != SQLITE_OK) {
 			printf("Problem preparing statements get_hymnMusicSectionsForPart: %s\n", sqlite3_errmsg(database));
 			//We don't want to recover from this error...
@@ -100,7 +104,7 @@ HymnSectionVector getMusicPiecesForHymn(int hymnID, PartSpecifier part) {
 
 HymnSectionVector getLyricPiecesForHymn(int hymnID, int verse, PartSpecifier part) {
 	if (0 == get_hymnLyricsSections) {
-		const char *sql = "SELECT lineNumber, image, type, verseNumber FROM lyricSection WHERE hymn = ? and (verseNumber LIKE ? OR verseNumber = -1) AND (type LIKE ? OR type = 0) ";
+		const char *sql = "SELECT lineNumber, image, type, verseNumber FROM lyricSection WHERE hymn = ? and (verseNumber LIKE ? OR verseNumber = -1) AND (type LIKE ? OR type = 0) ORDER BY lineNumber";
 		if (sqlite3_prepare_v2(database, sql, -1, &get_hymnLyricsSections, NULL) != SQLITE_OK) {
 			printf("Problem preparing statements get_hymnLyricsSections: %s\n", sqlite3_errmsg(database));
 			//We don't want to recover from this error...
@@ -128,26 +132,56 @@ HymnSectionVector getLyricPiecesForHymn(int hymnID, int verse, PartSpecifier par
 	sqlite3_bind_text(get_hymnLyricsSections, 3, partChar, strlen(partChar), SQLITE_TRANSIENT);
 
 	while (sqlite3_step(get_hymnLyricsSections) == SQLITE_ROW) {
-		
-		//Don't do anything if the verse is incorrect. 
-		//If this turns out to be slow, we can add more SQL statements to make it faster TODO?
-		//I don't think it will be a problem. 
-		if (verse != ALLVERSES) {
-			int v = sqlite3_column_int(get_hymnLyricsSections, 3);
-			if (v != verse) {
-				continue;
-			}
-			//what about the type?  Do we need to do something with the type? TODO
-		} else {
 			HymnSection piece;
 			piece.lineNumber = sqlite3_column_int(get_hymnLyricsSections, 0);
 			piece.imagePath = (const char *)sqlite3_column_text(get_hymnLyricsSections, 1);
 			piece.part = sqlite3_column_int(get_hymnLyricsSections, 2);
 			hymnPieces.push_back(piece);
-		}
 	}
 	sqlite3_reset(get_hymnLyricsSections);
 	return hymnPieces;
+}
+
+HymnSectionVector getPiecesForHymn(int hymnID, int verse, PartSpecifier part){
+	if (0 == get_hymnSections) {
+		const char *sql = "SELECT lineNumber, image, type FROM musicSection WHERE hymn = ? AND (type LIKE ? OR type = 0) UNION SELECT lineNumber, image, type FROM lyricSection WHERE hymn = ? and (verseNumber LIKE ? OR verseNumber = -1) AND (type LIKE ? OR type = 0) ORDER BY lineNumber";
+		if (sqlite3_prepare_v2(database, sql, -1, &get_hymnSections, NULL) != SQLITE_OK) {
+			printf("Problem preparing statement get_hymnSections: %s", sqlite3_errmsg(database));
+		}
+	}
+	
+	sqlite3_bind_int(get_hymnSections, 1, hymnID);
+	sqlite3_bind_int(get_hymnSections, 3, hymnID);
+	
+	char verseChar[2];
+	if (verse == ALLVERSES) {
+		sprintf(verseChar, "%%");
+	} else {
+		sprintf(verseChar, "%d", verse);
+	}
+	sqlite3_bind_text(get_hymnSections, 4, verseChar, strlen(verseChar), SQLITE_TRANSIENT);
+	
+	char partChar[2];
+	if (part == ALLPARTS) {
+		sprintf(partChar, "%%");
+	} else {
+		sprintf(partChar, "%d", part);
+	}
+	sqlite3_bind_text(get_hymnSections, 2, partChar, strlen(partChar), SQLITE_TRANSIENT);
+	sqlite3_bind_text(get_hymnSections, 5, partChar, strlen(partChar), SQLITE_TRANSIENT);
+	
+	HymnSectionVector hymnPieces;
+	
+	while (sqlite3_step(get_hymnSections) == SQLITE_ROW) {
+		HymnSection piece;
+		piece.lineNumber = sqlite3_column_int(get_hymnSections, 0);
+		piece.imagePath = (const char *)sqlite3_column_text(get_hymnSections, 1);
+		piece.part = sqlite3_column_int(get_hymnSections, 2);
+		hymnPieces.push_back(piece);
+	}
+	
+	return hymnPieces;
+	
 }
 
 #pragma mark -

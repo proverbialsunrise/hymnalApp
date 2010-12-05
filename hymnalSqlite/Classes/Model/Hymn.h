@@ -22,6 +22,7 @@ public:
 	~Hymn();
 	Hymn(const int hymnID, const Hymnal& parentHymnal, sqlite3 *db);
 
+	int get_hymnID() const;
 	int get_hymnNumber() const;
 	std::string get_author() const;
 	std::string get_composer() const;

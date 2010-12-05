@@ -19,6 +19,7 @@
 #include "Hymn.h"
 #include "Hymnal.h"
 
+static const unsigned int ALLVERSES = 0;
 
 //enum for which parts to return
 typedef enum PartSpecifier {
@@ -61,6 +62,8 @@ typedef  std::vector<HymnSection> HymnSectionVector;
 HymnSectionVector getMusicPiecesForHymn(int hymnID, PartSpecifier part);
 
 HymnSectionVector getLyricPiecesForHymn(int hymnID, int verse, PartSpecifier part);
+
+HymnSectionVector getPiecesForHymn(int hymnID, int verse, PartSpecifier part);
 
 #pragma mark -
 

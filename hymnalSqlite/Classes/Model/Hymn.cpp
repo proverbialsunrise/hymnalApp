@@ -18,7 +18,6 @@ static sqlite3_stmt *get_musicImages = 0;
 
 Hymn::Hymn() {
 	//Don't use this constructor.  We don't want an empty hymn. 
-	throw 0;
 }
 
 Hymn::Hymn(const int hymnID, const Hymnal& parentHymnal, sqlite3 *db){
@@ -92,7 +91,9 @@ void Hymn::finalizeDatabaseStatements(){
 	}
 }
 
-
+int Hymn::get_hymnID() const{
+	return hymnID;
+}
 int Hymn::get_hymnNumber() const{
 	return hymnNumber;
 }
