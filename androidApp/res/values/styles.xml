@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- This was supposed to make the shadow below the title bar
+		go away, but I couldn't make it work. -->
+	<style name="HymnTheme" parent="android:Theme">
+    	<item name="android:windowNoTitle">true</item>
+    	<item name="android:windowContentOverlay">@null</item>
+	</style>
+</resources>
