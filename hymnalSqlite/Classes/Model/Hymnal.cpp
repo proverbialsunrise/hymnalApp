@@ -15,7 +15,6 @@ static unsigned int numInstances = 0;
 
 Hymnal::Hymnal() {	
 	//Don't use this constructor.
-	throw 0;
 }
 
 
@@ -46,9 +45,11 @@ Hymnal::~Hymnal(){
 }
 
 void Hymnal::prepareDatabaseStatements(){
-	const char *sql = "SELECT title, copyrightText FROM hymnal WHERE hymnalID = ?";
+	const char *sql = "SELECT name, copyrightText FROM hymnal WHERE hymnalID = ?";
 	if (sqlite3_prepare_v2(this->database, sql, -1, &get_hymnal_stmt, NULL) != SQLITE_OK) {
 		printf("Problem preparing statement get_hymnal_stmt: %s\n", sqlite3_errmsg(this->database));
+		//If we can't get the hymnal, we're toast...
+		throw 0;
 	}
 }
 
@@ -57,4 +58,14 @@ void Hymnal::finalizeDatabaseStatements(){
 		sqlite3_finalize(get_hymnal_stmt);
 		get_hymnal_stmt = 0;
 	}
+}
+
+int Hymnal::get_hymnalID() const{
+	return hymnalID;
+}
+std::string Hymnal::get_title() const{
+	return title;
+}
+std::string Hymnal::get_copyrightText() const{
+	return copyrightText;
 }

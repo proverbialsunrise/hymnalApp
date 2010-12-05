@@ -9,6 +9,8 @@
 
 #include "DatabaseHelper.h"
 
+static const unsigned int ALLVERSES = 0;
+
 static sqlite3 *database = 0;
 
 //When adding a sqlite statement, make sure to add it to finalizeDatabaseStatements() so that it is properly destroyed.
@@ -16,7 +18,6 @@ static sqlite3_stmt *get_allHymns_sort = 0;
 static sqlite3_stmt *get_allHymnsForSection_sort = 0;
 
 static sqlite3_stmt *get_hymnMusicSections = 0;
-
 static sqlite3_stmt *get_hymnLyricsSections = 0;
 
 #pragma mark Database Lifecycle
@@ -57,11 +58,15 @@ void finalizeDatabaseStatements(){
 
 #pragma mark -
 
+Hymnal getHymnal(int hymnalID){
+	return Hymnal(database, hymnalID);
+}
+
 #pragma mark Hymn Display
 
-HymnPieceVector getMusicPiecesForHymn(int hymnID, PartSpecifier part) {
+HymnSectionVector getMusicPiecesForHymn(int hymnID, PartSpecifier part) {
 	if (0 == get_hymnMusicSections) {
-		const char *sql = "SELECT lineNumber, image, type FROM musicSection WHERE hymn = ?";
+		const char *sql = "SELECT lineNumber, image, type FROM musicSection WHERE hymn = ? AND (type LIKE ? OR type = 0)";
 		if (sqlite3_prepare_v2(database, sql, -1, &get_hymnMusicSections, NULL) != SQLITE_OK) {
 			printf("Problem preparing statements get_hymnMusicSectionsForPart: %s\n", sqlite3_errmsg(database));
 			//We don't want to recover from this error...
@@ -69,32 +74,33 @@ HymnPieceVector getMusicPiecesForHymn(int hymnID, PartSpecifier part) {
 		}
 	}
 	
-	HymnPieceVector hymnPieces;
+	HymnSectionVector hymnPieces;
 	sqlite3_bind_int(get_hymnMusicSections, 1, hymnID);
+	
+	//This will break if there is a hymn with more than 9 verses...
+	char partChar[2];
+	if (part == ALLPARTS) {
+		partChar == "%";
+	} else {
+		sprintf(partChar, "%d", part);
+	}
+
+	sqlite3_bind_text(get_hymnMusicSections, 2, partChar, strlen(partChar), SQLITE_TRANSIENT);
+
 	while (sqlite3_step(get_hymnMusicSections) == SQLITE_ROW) {
-		
-		//Don't do anything if the part is incorrect. 
-		//If this turns out to be slow, we can add more SQL statements to make it faster TODO?
-		//I don't think it will be a problem.
-		if (part != ALLPARTS) {
-			int p = sqlite3_column_int(get_hymnMusicSections, 2);
-			if (p != part) {
-				continue;
-			}
-		} else {
-			int lineNumber = sqlite3_column_int(get_hymnMusicSections, 0);
-			std::string imagePath = (const char *)sqlite3_column_text(get_hymnMusicSections, 1);
-			HymnPiece piece = HymnPiece(lineNumber, imagePath);
-			hymnPieces.push_back(piece);
-		}
+		HymnSection piece;
+		piece.lineNumber = sqlite3_column_int(get_hymnMusicSections, 0);
+		piece.imagePath = (const char *)sqlite3_column_text(get_hymnMusicSections, 1);
+		piece.part = sqlite3_column_int(get_hymnMusicSections, 2);
+		hymnPieces.push_back(piece);
 	}
 	sqlite3_reset(get_hymnMusicSections);
 	return hymnPieces;
 }
 
-HymnPieceVector getLyricPiecesForHymn(int hymnID, VerseSpecifier verse) {
+HymnSectionVector getLyricPiecesForHymn(int hymnID, int verse, PartSpecifier part) {
 	if (0 == get_hymnLyricsSections) {
-		const char *sql = "SELECT lineNumber, image, type, verseNumber FROM lyricSection WHERE hymn = ?";
+		const char *sql = "SELECT lineNumber, image, type, verseNumber FROM lyricSection WHERE hymn = ? and (verseNumber LIKE ? OR verseNumber = -1) AND (type LIKE ? OR type = 0) ";
 		if (sqlite3_prepare_v2(database, sql, -1, &get_hymnLyricsSections, NULL) != SQLITE_OK) {
 			printf("Problem preparing statements get_hymnLyricsSections: %s\n", sqlite3_errmsg(database));
 			//We don't want to recover from this error...
@@ -102,27 +108,45 @@ HymnPieceVector getLyricPiecesForHymn(int hymnID, VerseSpecifier verse) {
 		}
 	}
 	
-	HymnPieceVector hymnPieces;
-	sqlite3_bind_int(get_hymnMusicSections, 1, hymnID);
-	while (sqlite3_step(get_hymnMusicSections) == SQLITE_ROW) {
+	HymnSectionVector hymnPieces;
+	sqlite3_bind_int(get_hymnLyricsSections, 1, hymnID);
+	
+	char verseChar[2];
+	if (verse == ALLVERSES) {
+		sprintf(verseChar, "%%");
+	} else {
+		sprintf(verseChar, "%d", verse);
+	}
+	sqlite3_bind_text(get_hymnLyricsSections, 2, verseChar, strlen(verseChar), SQLITE_TRANSIENT);
+
+	char partChar[2];
+	if (part == ALLPARTS) {
+		sprintf(partChar, "%%");
+	} else {
+		sprintf(partChar, "%d", part);
+	}
+	sqlite3_bind_text(get_hymnLyricsSections, 3, partChar, strlen(partChar), SQLITE_TRANSIENT);
+
+	while (sqlite3_step(get_hymnLyricsSections) == SQLITE_ROW) {
 		
-		//Don't do anything if the part is incorrect. 
+		//Don't do anything if the verse is incorrect. 
 		//If this turns out to be slow, we can add more SQL statements to make it faster TODO?
 		//I don't think it will be a problem. 
 		if (verse != ALLVERSES) {
-			int v = sqlite3_column_int(get_hymnMusicSections, 3);
+			int v = sqlite3_column_int(get_hymnLyricsSections, 3);
 			if (v != verse) {
 				continue;
 			}
 			//what about the type?  Do we need to do something with the type? TODO
 		} else {
-			int lineNumber = sqlite3_column_int(get_hymnMusicSections, 0);
-			std::string imagePath = (const char *)sqlite3_column_text(get_hymnMusicSections, 1);
-			HymnPiece piece = HymnPiece(lineNumber, imagePath);
+			HymnSection piece;
+			piece.lineNumber = sqlite3_column_int(get_hymnLyricsSections, 0);
+			piece.imagePath = (const char *)sqlite3_column_text(get_hymnLyricsSections, 1);
+			piece.part = sqlite3_column_int(get_hymnLyricsSections, 2);
 			hymnPieces.push_back(piece);
 		}
 	}
-	sqlite3_reset(get_hymnMusicSections);
+	sqlite3_reset(get_hymnLyricsSections);
 	return hymnPieces;
 }
 
@@ -151,6 +175,7 @@ HymnVector getHymnsForHymnal(int hymnalID, HymnSort sortBy){
 		Hymn hymn = Hymn(hymnID, hymnal, database);
 		hymns.push_back(hymn);
 	}
+	sqlite3_reset(get_allHymns_sort);
 	return hymns;
 }
 

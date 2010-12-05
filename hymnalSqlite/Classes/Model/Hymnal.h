@@ -25,7 +25,7 @@ class Hymnal {
 	
 	~Hymnal();
 	
-	
+	int get_hymnalID() const;
 	std::string get_title() const;
 	std::string get_copyrightText() const;
 	

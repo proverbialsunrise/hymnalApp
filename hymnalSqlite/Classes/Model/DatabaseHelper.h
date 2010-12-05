@@ -20,27 +20,11 @@
 #include "Hymnal.h"
 
 
-//enum for which verses to return
-typedef enum VerseSpecifier {
-	ALLVERSES = 0,
-	VERSEONE = 1,
-	VERSETWO = 2,
-	VERSETHREE = 3,
-	VERSEFOUR = 4,
-	VERSEFIVE = 5,
-	VERSESIX = 6,
-	VERSESEVEN = 7,
-	VERSEEIGHT = 8,
-	VERSENINE = 9,
-	VERSETEN = 10
-	//This should be enough?
-} VerseSpecifier;
-
 //enum for which parts to return
 typedef enum PartSpecifier {
 	ALLPARTS = 0,
-	SOPRANOALTO = 1,
-	TENORBASS = 2	
+	TREBLE = 1,
+	BASS = 2	
 } PartSpecifier;
 
 //enum for how to sort lists of hymns
@@ -49,7 +33,11 @@ typedef enum HymnSort {
 	SORT_BY_NAME = 2
 } HymnSort;
 
-
+typedef struct HymnSection {	
+	int lineNumber;
+	int part;
+	std::string imagePath;
+} HymnPiece;
 
 #pragma mark Databse Lifecycle
 void openConnectionWithPath(std::string& databasePath);
@@ -63,16 +51,16 @@ void closeConnection();
 
 #pragma mark -
 
+Hymnal getHymnal(int hymnalID);
+
 #pragma mark Hymn Display
-//typedefs to simplify declaring these
-typedef  std::pair<int, std::string> HymnPiece;
-typedef  std::vector<HymnPiece> HymnPieceVector;
+typedef  std::vector<HymnSection> HymnSectionVector;
 
 //These methods return pairs, first the int tells you the ordering, then the string the filepath
 
-HymnPieceVector getMusicPiecesForHymn(int hymnID, PartSpecifier part);
+HymnSectionVector getMusicPiecesForHymn(int hymnID, PartSpecifier part);
 
-HymnPieceVector getLyricPiecesForHymn(int hymnID, VerseSpecifier verse);
+HymnSectionVector getLyricPiecesForHymn(int hymnID, int verse, PartSpecifier part);
 
 #pragma mark -
 
@@ -80,7 +68,6 @@ HymnPieceVector getLyricPiecesForHymn(int hymnID, VerseSpecifier verse);
 #pragma mark Getting Hymns
 
 typedef std::vector<Hymn> HymnVector;
-
 
 //Gets all the hymns for the specified hymnal. Sorted by sortBy.
 HymnVector getHymnsForHymnal(int hymnalID, HymnSort sortBy);
