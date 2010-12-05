@@ -3,6 +3,7 @@ package com.example.hymnal;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.*;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView.OnItemClickListener;
@@ -31,12 +32,16 @@ public class Hymnal extends ListActivity{
 	    	   startActivity(i);
           }
         });
-
     }
+	
+	public native String[] listHymns();
+	static {
+		System.loadLibrary ( "Database-Jni" );
+	}
 
-    //TODO: implement
     private String[] getHymnals(){
-    	String[] a = {"Hymnal: A Worship Book", "another hymnal"};
+    	String[] a = listHymns();
+    	Log.e("Hymnal", a[0]);
     	return a;
     }
 }

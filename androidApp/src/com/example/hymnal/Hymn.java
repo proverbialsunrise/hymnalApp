@@ -33,8 +33,8 @@ public class Hymn extends Activity{
 
         ScrollView mainScrollView = (ScrollView) findViewById(R.id.hymn_scrollview);
         LinearLayout ll = (LinearLayout) mainScrollView.findViewById(R.id.next_level);
-        ll.setPadding(0, 0, 0, 0);
-        //ll.setBackgroundColor(0xffffffff);//TODO: keep??
+        //ll.setPadding(0, 0, 0, 0);
+        ll.setBackgroundColor(0xffffffff);//TODO: keep??
         
         if ( Environment.MEDIA_MOUNTED.equals(Environment.MEDIA_MOUNTED) ||
              Environment.MEDIA_MOUNTED.equals(Environment.MEDIA_MOUNTED_READ_ONLY)	){
