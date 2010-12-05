@@ -8,9 +8,13 @@
 
 #import "DatabaseTests.h"
 #import "DatabaseHelper.h"
+#include <string>
 
 @implementation DatabaseTests
 
+- (void) setUp {
+
+}
 
 - (void) testPass {
 	STAssertTrue(TRUE, @"");

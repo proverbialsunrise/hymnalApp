@@ -8,6 +8,8 @@
 
 #import "hymnalSqliteAppDelegate.h"
 #import "RootViewController.h"
+#import <string>
+#import "DatabaseHelper.h"
 
 
 @implementation hymnalSqliteAppDelegate
@@ -22,7 +24,10 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
     
     // Override point for customization after application launch.
-    
+	NSString *dbPath = [[NSBundle mainBundle] pathForResource:@"exampleDB" ofType:@"db"];
+	std::string dbPathString = std::string([dbPath UTF8String]);
+	openConnectionWithPath(dbPathString);
+	
     // Add the navigation controller's view to the window and display.
     [window addSubview:navigationController.view];
     [window makeKeyAndVisible];

@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DatabaseHelper.h"
 
 @interface RootViewController : UITableViewController {
+	HymnVector hymns;
+	Hymnal hymnal;
 }
 
 @end

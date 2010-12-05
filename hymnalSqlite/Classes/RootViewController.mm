@@ -7,7 +7,7 @@
 //
 
 #import "RootViewController.h"
-
+#import "HymnViewController.h"
 
 @implementation RootViewController
 
@@ -15,14 +15,16 @@
 #pragma mark -
 #pragma mark View lifecycle
 
-/*
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+	hymnal = getHymnal(1);
+	hymns = getHymnsForHymnal(hymnal.get_hymnalID(), SORT_BY_NUMBER);
+	[self setTitle:[NSString stringWithFormat:@"%s", hymnal.get_title().c_str()]];
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
-*/
+
 
 /*
 - (void)viewWillAppear:(BOOL)animated {
@@ -65,7 +67,7 @@
 
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
+    return hymns.size();
 }
 
 
@@ -76,10 +78,12 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
     }
+	int row = indexPath.row;
     
-	// Configure the cell.
+	cell.textLabel.text = [NSString stringWithFormat:@"%d", hymns[row].get_hymnNumber()];
+	cell.detailTextLabel.text = [NSString stringWithFormat:@"%s", hymns[row].get_title().c_str()];
 
     return cell;
 }
@@ -129,14 +133,12 @@
 #pragma mark Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-	/*
-	 <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-	 [self.navigationController pushViewController:detailViewController animated:YES];
-	 [detailViewController release];
-	 */
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+	
+	//HymnViewController *hymnViewController = [[HymnViewController alloc] initWithHymn:hymns[indexPath.row]];
+	//[self.navigationController pushViewController:hymnViewController animated:YES];
+	//[hymnViewController release];
+
 }
 
 
