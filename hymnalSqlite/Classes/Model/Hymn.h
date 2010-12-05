@@ -20,8 +20,9 @@ class Hymn  {
 public:
 	Hymn();
 	~Hymn();
-	Hymn(const int hymnID, const Hymnal& parentHymnal, sqlite3 *db);
-
+	Hymn(const Hymn& h);
+	Hymn(const int hymnID, const Hymnal& parentHymnal);
+	
 	int get_hymnID() const;
 	int get_hymnNumber() const;
 	std::string get_author() const;
@@ -36,6 +37,12 @@ public:
 	std::string get_translator() const;
 	std::string get_tune() const;
 	//Setters aren't necessary. 
+	
+	static void prepareDatabaseStatements(sqlite3 *database);
+	static void finalizeDatabaseStatements();
+	
+	//Debug Function.
+	void printDescription() const;
 	
 private:
 	Hymnal hymnal;
@@ -53,12 +60,7 @@ private:
 	std::string title;
 	std::string translator;
 	std::string tune;
-	
-	sqlite3 *database;
 
-	
-	void prepareDatabaseStatements();
-	void finalizeDatabaseStatements();
 	void setHymnDetailsFromSqlRow(sqlite3_stmt *row);
 };
 

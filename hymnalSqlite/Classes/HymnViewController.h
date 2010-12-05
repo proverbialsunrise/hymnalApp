@@ -9,13 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "DatabaseHelper.h"
 
-@interface HymnViewController : UIViewController <UIScrollViewDelegate> {
-	Hymn hymn;	
-	UIScrollView *scrollView;
-	UIView *contentView;
-	CGFloat contentWidth;
-	CGFloat contentHeight;
+
+@interface HymnViewController : UIViewController {
+	Hymn hymn;
+	IBOutlet UIScrollView *scrollView;
 }
+
+@property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
 
 - (id) initWithHymn:(Hymn)h;
 

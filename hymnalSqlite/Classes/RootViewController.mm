@@ -26,11 +26,12 @@
 }
 
 
-/*
+
 - (void)viewWillAppear:(BOOL)animated {
+	[self setTitle:[NSString stringWithFormat:@"%s", hymnal.get_title().c_str()]];
     [super viewWillAppear:animated];
 }
-*/
+
 /*
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -81,7 +82,7 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
     }
 	int row = indexPath.row;
-    
+    hymns[row].printDescription();
 	cell.textLabel.text = [NSString stringWithFormat:@"%d", hymns[row].get_hymnNumber()];
 	cell.detailTextLabel.text = [NSString stringWithFormat:@"%s", hymns[row].get_title().c_str()];
 
@@ -134,10 +135,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-	
-	//HymnViewController *hymnViewController = [[HymnViewController alloc] initWithHymn:hymns[indexPath.row]];
-	//[self.navigationController pushViewController:hymnViewController animated:YES];
-	//[hymnViewController release];
+	[self setTitle:@"HWB"]; //TODO use Hymnal ShortName
+	HymnViewController *hymnViewController = [[HymnViewController alloc] initWithHymn:(Hymn)(hymns[indexPath.row])];
+	[self.navigationController pushViewController:hymnViewController animated:YES];
+	[hymnViewController release];
 
 }
 

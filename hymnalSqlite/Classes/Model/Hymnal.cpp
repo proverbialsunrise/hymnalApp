@@ -11,18 +11,19 @@
 
 
 static sqlite3_stmt *get_hymnal_stmt = 0;
-static unsigned int numInstances = 0;
 
 Hymnal::Hymnal() {	
-	//Don't use this constructor.
+	//Don't use this constructor explicitly.
+}
+
+Hymnal::Hymnal(const Hymnal& h) {
+	hymnalID = h.hymnalID;
+	title = h.title;
+	copyrightText = h.copyrightText;
 }
 
 
 Hymnal::Hymnal(sqlite3 *db, int hID){
-	this->database = db;
-	if (numInstances == 0) {
-		this->prepareDatabaseStatements();
-	}
 	sqlite3_bind_int(get_hymnal_stmt, 1, hID);
 	this->hymnalID = hID;
 	if (sqlite3_step(get_hymnal_stmt) == SQLITE_ROW) {
@@ -34,20 +35,16 @@ Hymnal::Hymnal(sqlite3 *db, int hID){
 		throw 0;
 	}
 	sqlite3_reset(get_hymnal_stmt);
-	numInstances ++;
 }
 
 Hymnal::~Hymnal(){
-	numInstances --;
-	if (numInstances == 0) {
-		this->finalizeDatabaseStatements();
-	}
+
 }
 
-void Hymnal::prepareDatabaseStatements(){
+void Hymnal::prepareDatabaseStatements(sqlite3 *database){
 	const char *sql = "SELECT name, copyrightText FROM hymnal WHERE hymnalID = ?";
-	if (sqlite3_prepare_v2(this->database, sql, -1, &get_hymnal_stmt, NULL) != SQLITE_OK) {
-		printf("Problem preparing statement get_hymnal_stmt: %s\n", sqlite3_errmsg(this->database));
+	if (sqlite3_prepare_v2(database, sql, -1, &get_hymnal_stmt, NULL) != SQLITE_OK) {
+		printf("Problem preparing statement get_hymnal_stmt: %s\n", sqlite3_errmsg(database));
 		//If we can't get the hymnal, we're toast...
 		throw 0;
 	}

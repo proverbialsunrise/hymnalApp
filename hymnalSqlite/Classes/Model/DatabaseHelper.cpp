@@ -24,6 +24,8 @@ static sqlite3_stmt *get_hymnSections = 0;
 void openConnectionWithPath(std::string& databasePath){
 	if (database == 0) {
 		sqlite3_open(databasePath.c_str(), &database);
+		Hymnal::prepareDatabaseStatements(database);
+		Hymn::prepareDatabaseStatements(database);
 	} else {
 		printf("Database is already open.\n");
 	}
@@ -36,6 +38,8 @@ void closeConnection() {
 }
 
 void finalizeDatabaseStatements(){
+	Hymnal::finalizeDatabaseStatements();
+	Hymn::finalizeDatabaseStatements();
 	if (0 != get_allHymns_sort) {
 		sqlite3_finalize(get_allHymns_sort);
 		get_allHymns_sort = 0;
@@ -83,10 +87,11 @@ HymnSectionVector getMusicPiecesForHymn(int hymnID, PartSpecifier part) {
 	
 	//This will break if there is a hymn with more than 9 verses...
 	char partChar[2];
+	memset(partChar, 0, 2);
 	if (part == ALLPARTS) {
-		partChar == "%";
+		snprintf(partChar, 2, "%%");
 	} else {
-		sprintf(partChar, "%d", part);
+		snprintf(partChar, 2, "%d", part);
 	}
 
 	sqlite3_bind_text(get_hymnMusicSections, 2, partChar, strlen(partChar), SQLITE_TRANSIENT);
@@ -116,18 +121,20 @@ HymnSectionVector getLyricPiecesForHymn(int hymnID, int verse, PartSpecifier par
 	sqlite3_bind_int(get_hymnLyricsSections, 1, hymnID);
 	
 	char verseChar[2];
+	memset(verseChar, 0, 2);
 	if (verse == ALLVERSES) {
-		sprintf(verseChar, "%%");
+		snprintf(verseChar, 2, "%%");
 	} else {
-		sprintf(verseChar, "%d", verse);
+		snprintf(verseChar, 2, "%d", verse);
 	}
 	sqlite3_bind_text(get_hymnLyricsSections, 2, verseChar, strlen(verseChar), SQLITE_TRANSIENT);
 
 	char partChar[2];
+	memset(partChar, 0, 2);
 	if (part == ALLPARTS) {
-		sprintf(partChar, "%%");
+		snprintf(partChar, 2, "%%");
 	} else {
-		sprintf(partChar, "%d", part);
+		snprintf(partChar, 2, "%d", part);
 	}
 	sqlite3_bind_text(get_hymnLyricsSections, 3, partChar, strlen(partChar), SQLITE_TRANSIENT);
 
@@ -154,18 +161,20 @@ HymnSectionVector getPiecesForHymn(int hymnID, int verse, PartSpecifier part){
 	sqlite3_bind_int(get_hymnSections, 3, hymnID);
 	
 	char verseChar[2];
+	memset(verseChar, 0, 2);
 	if (verse == ALLVERSES) {
-		sprintf(verseChar, "%%");
+		snprintf(verseChar, 2, "%%");
 	} else {
-		sprintf(verseChar, "%d", verse);
+		snprintf(verseChar, 2, "%d", verse);
 	}
 	sqlite3_bind_text(get_hymnSections, 4, verseChar, strlen(verseChar), SQLITE_TRANSIENT);
 	
 	char partChar[2];
+	memset(partChar, 0, 2);
 	if (part == ALLPARTS) {
-		sprintf(partChar, "%%");
+		snprintf(partChar, 2, "%%");
 	} else {
-		sprintf(partChar, "%d", part);
+		snprintf(partChar, 2, "%d", part);
 	}
 	sqlite3_bind_text(get_hymnSections, 2, partChar, strlen(partChar), SQLITE_TRANSIENT);
 	sqlite3_bind_text(get_hymnSections, 5, partChar, strlen(partChar), SQLITE_TRANSIENT);
@@ -206,7 +215,7 @@ HymnVector getHymnsForHymnal(int hymnalID, HymnSort sortBy){
 	while (sqlite3_step(get_allHymns_sort) == SQLITE_ROW) {
 		//We could do one less query here if performance is an issue. The code is cleaner this way. TODO?
 		int hymnID = sqlite3_column_int(get_allHymns_sort, 0);
-		Hymn hymn = Hymn(hymnID, hymnal, database);
+		Hymn hymn = Hymn(hymnID, hymnal);
 		hymns.push_back(hymn);
 	}
 	sqlite3_reset(get_allHymns_sort);

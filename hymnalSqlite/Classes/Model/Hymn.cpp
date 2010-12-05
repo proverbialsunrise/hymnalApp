@@ -9,22 +9,34 @@
 
 #include "Hymn.h"
 
-static unsigned int numInstances = 0;
-//counting instances like this is not safe for multiple threads.  Be wary.
 
 static sqlite3_stmt *get_hymnInfo = 0;
 static sqlite3_stmt *get_lyricImages = 0;
 static sqlite3_stmt *get_musicImages = 0;
 
 Hymn::Hymn() {
-	//Don't use this constructor.  We don't want an empty hymn. 
+	//Don't use this constructor explicitly.  We don't want an empty hymn. 
 }
 
-Hymn::Hymn(const int hymnID, const Hymnal& parentHymnal, sqlite3 *db){
-	this->database = db;
-	if (0 == numInstances) {
-		this->prepareDatabaseStatements();
-	}
+Hymn::Hymn(const Hymn& h){
+	hymnal = h.hymnal;
+	hymnID = h.hymnID;
+	hymnNumber = h.hymnNumber;
+	
+	author = h.author;
+	composer = h.composer;
+	copyrightInfo = h.copyrightInfo;
+	firstLine = h.firstLine;
+	metric = h.metric;
+	section = h.section;
+	subSection = h.subSection;
+	subSubSection = h.subSubSection;
+	title = h.title;
+	translator = h.translator;
+	tune = h.tune;
+}
+
+Hymn::Hymn(const int hymnID, const Hymnal& parentHymnal){
 	this->hymnal = parentHymnal;
 	this->hymnID = hymnID;
 	sqlite3_bind_int(get_hymnInfo, 1, hymnID);
@@ -32,14 +44,12 @@ Hymn::Hymn(const int hymnID, const Hymnal& parentHymnal, sqlite3 *db){
 		this->setHymnDetailsFromSqlRow(get_hymnInfo);		
 	}
 	sqlite3_reset(get_hymnInfo);
-	numInstances ++;
+	//this->printDescription();
 }
 
+
+
 Hymn::~Hymn() {
-	numInstances --;
-	if (0 == numInstances) {
-		this->finalizeDatabaseStatements();
-	}
 }
 
 void Hymn::setHymnDetailsFromSqlRow(sqlite3_stmt *row){
@@ -58,11 +68,11 @@ void Hymn::setHymnDetailsFromSqlRow(sqlite3_stmt *row){
 	this->tune = (const char *)sqlite3_column_text(row, 11);
 }
 
-void Hymn::prepareDatabaseStatements(){
-	if (0 != this->database) {
+void Hymn::prepareDatabaseStatements(sqlite3 *database){
+	if (0 != database) {
 		if (0 == get_hymnInfo) {
 			const char *sql = "SELECT hymnNumber, author, composer, copyrightInfo, firstLine, metric, section, subSection, subSubSection, title, translator, tune FROM hymn WHERE hymnID = ?";
-			if (sqlite3_prepare_v2(this->database, sql, -1, &get_hymnInfo, NULL) != SQLITE_OK) {
+			if (sqlite3_prepare_v2(database, sql, -1, &get_hymnInfo, NULL) != SQLITE_OK) {
 				printf("Problem preparing statement get_hymnInfo: %s \n", sqlite3_errmsg(database));
 			}
 		}
@@ -89,6 +99,22 @@ void Hymn::finalizeDatabaseStatements(){
 		sqlite3_finalize(get_musicImages);
 		get_musicImages = 0;
 	}
+}
+
+void Hymn::printDescription() const{
+	printf("HymnID: %d\n", this->hymnID);
+	printf("HymnNumber: %d\n", this->hymnNumber);
+	printf("Author: %s\n", this->author.c_str());
+	printf("Composer: %s\n", this->composer.c_str());
+	printf("CopyrightInfo: %s\n", this->copyrightInfo.c_str());
+	printf("FirstLine: %s\n", this->firstLine.c_str());
+	printf("Metric: %s\n", this->metric.c_str());
+	printf("Section: %s\n", this->section.c_str());
+	printf("SubSection: %s\n", this->subSection.c_str());
+	printf("SubSubSection: %s\n", this->subSubSection.c_str());
+	printf("Title: %s\n", this->title.c_str());
+	printf("Translator: %s\n", this->translator.c_str());
+	printf("Tune: %s\n", this->tune.c_str());
 }
 
 int Hymn::get_hymnID() const{
