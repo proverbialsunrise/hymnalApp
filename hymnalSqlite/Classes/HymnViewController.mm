@@ -33,22 +33,75 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	[self setTitle:[NSString stringWithFormat:@"%s", hymn.get_title().c_str()]];
+	hymnSections = getPiecesForHymn(hymn.get_hymnID(), ALLVERSES, ALLPARTS);
+	[self refreshImages];
+	
+}
+
+- (void) removeAllImages {
+	for (UIView *view in [self.view subviews]) {
+		[view removeFromSuperview];
+	}
+}
+
+- (void) refreshImages {	
+	HymnSectionVector::iterator section;
+	NSString *bundleName = (NSString*)[[[NSBundle mainBundle] infoDictionary]  objectForKey:@"CFBundleName"];
+	NSString *appDirectory = [NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.app", bundleName]];
+	
+	CGFloat contentHeight = 0.0;
+	CGFloat contentWidth = 0.0;
+	
+	contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+	
+	for (section = hymnSections.begin(); section < hymnSections.end(); section++) {
+		NSString *path = [NSString stringWithFormat:@"%s",section->imagePath.c_str()];
+		NSString *fullPath = [NSString stringWithFormat:@"%@/%@", appDirectory, path];
+		NSLog(@"%@/%@", appDirectory, path);
+		
+		UIImage *sectionImage = [UIImage imageWithContentsOfFile:fullPath];
+		UIImageView *sectionImageView = [[UIImageView alloc] initWithImage:sectionImage];
+		sectionImageView.frame = CGRectMake(0, contentHeight, sectionImage.size.width, sectionImage.size.height);
+		[contentView addSubview:sectionImageView];
+		
+		contentHeight += sectionImage.size.height;
+		contentWidth = sectionImage.size.width;
+		[sectionImageView release];
+	}
+	[contentView setFrame:CGRectMake(0, 0, contentWidth, contentHeight)];
+
+	[scrollView addSubview:contentView];
+	[scrollView setContentSize:contentView.frame.size];
+	[scrollView setMaximumZoomScale:1.0];
+	float minimumScale = scrollView.frame.size.width/contentView.frame.size.width;
+
+	[scrollView setMinimumZoomScale:minimumScale];
+	[scrollView setZoomScale:minimumScale];
+}
+
+-(UIView *) viewForZoomingInScrollView:(UIScrollView *)scrollView {
+	return contentView;
 }
 
 
-/*
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return YES;
 }
-*/
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+	float minimumScale = scrollView.frame.size.width/contentView.frame.size.width;
+	[scrollView setMinimumZoomScale:minimumScale];
+	[scrollView setZoomScale:minimumScale];
+}
+
 
 - (void)didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
     // Release any cached data, images, etc that aren't in use.
+	//release the images.
 }
 
 - (void)viewDidUnload {

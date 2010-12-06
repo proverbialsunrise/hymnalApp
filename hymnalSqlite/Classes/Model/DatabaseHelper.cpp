@@ -188,7 +188,7 @@ HymnSectionVector getPiecesForHymn(int hymnID, int verse, PartSpecifier part){
 		piece.part = sqlite3_column_int(get_hymnSections, 2);
 		hymnPieces.push_back(piece);
 	}
-	
+	sqlite3_reset(get_hymnSections);
 	return hymnPieces;
 	
 }

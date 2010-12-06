@@ -10,13 +10,18 @@
 #import "DatabaseHelper.h"
 
 
-@interface HymnViewController : UIViewController {
+@interface HymnViewController : UIViewController <UIScrollViewDelegate> {
 	Hymn hymn;
+	HymnSectionVector hymnSections;
 	IBOutlet UIScrollView *scrollView;
+	
+	UIView *contentView;
 }
 
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
 
 - (id) initWithHymn:(Hymn)h;
+
+- (void) refreshImages;
 
 @end
