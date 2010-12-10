@@ -16,6 +16,7 @@
 	IBOutlet UIScrollView *scrollView;
 	
 	UIView *contentView;
+	CGFloat contentWidth;
 }
 
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;

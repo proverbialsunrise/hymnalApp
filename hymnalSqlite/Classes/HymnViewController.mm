@@ -50,7 +50,7 @@
 	NSString *appDirectory = [NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.app", bundleName]];
 	
 	CGFloat contentHeight = 0.0;
-	CGFloat contentWidth = 0.0;
+	contentWidth = 0.0;
 	
 	contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
 	
@@ -73,7 +73,7 @@
 	[scrollView addSubview:contentView];
 	[scrollView setContentSize:contentView.frame.size];
 	[scrollView setMaximumZoomScale:1.0];
-	float minimumScale = scrollView.frame.size.width/contentView.frame.size.width;
+	float minimumScale = scrollView.frame.size.width/contentWidth;
 
 	[scrollView setMinimumZoomScale:minimumScale];
 	[scrollView setZoomScale:minimumScale];
@@ -81,6 +81,14 @@
 
 -(UIView *) viewForZoomingInScrollView:(UIScrollView *)scrollView {
 	return contentView;
+}
+
+- (void)hideNavigationBar{
+	[[self navigationController] setNavigationBarHidden:YES animated:YES];
+}
+
+- (void) viewDidAppear:(BOOL)animated{
+	[NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(hideNavigationBar) userInfo:nil repeats:NO];
 }
 
 
@@ -91,7 +99,7 @@
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	float minimumScale = scrollView.frame.size.width/contentView.frame.size.width;
+	float minimumScale = scrollView.frame.size.width/contentWidth;
 	[scrollView setMinimumZoomScale:minimumScale];
 	[scrollView setZoomScale:minimumScale];
 }
