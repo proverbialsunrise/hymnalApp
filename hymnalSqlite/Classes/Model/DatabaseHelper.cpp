@@ -9,6 +9,7 @@
 
 #include "DatabaseHelper.h"
 
+void finalizeDatabaseStatements();
 
 static sqlite3 *database = 0;
 
@@ -33,6 +34,7 @@ void openConnectionWithPath(std::string& databasePath){
 }
 
 void closeConnection() {
+	finalizeDatabaseStatements();
 	sqlite3_close(database);
 	database = 0;
 }

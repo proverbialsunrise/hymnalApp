@@ -40,13 +40,12 @@ typedef struct HymnSection {
 	std::string imagePath;
 } HymnPiece;
 
-#pragma mark Databse Lifecycle
+#pragma mark Database Lifecycle
 void openConnectionWithPath(std::string& databasePath);
 
 //Call this method before closing the database connection so we keep a clean DB.
 //This method finalizes all open SQL statements in this class.  
 //Along with the destructors being called on all Hymn and Hymnal objects, this should finalize all statements.
-void finalizeDatabaseStatements();
 
 void closeConnection();
 
@@ -56,8 +55,6 @@ Hymnal getHymnal(int hymnalID);
 
 #pragma mark Hymn Display
 typedef  std::vector<HymnSection> HymnSectionVector;
-
-//These methods return pairs, first the int tells you the ordering, then the string the filepath
 
 HymnSectionVector getMusicPiecesForHymn(int hymnID, PartSpecifier part);
 
