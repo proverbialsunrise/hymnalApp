@@ -16,11 +16,11 @@ def createDB():
         
     conn.commit()
 
-def addHymnal ( name, copyrightText ):
+def addHymnal ( name, copyrightText, shortName ):
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
-    c.execute ( "INSERT INTO hymnal (name, copyrightText) VALUES ('" + \
-                name + "', '" + copyrightText + "');")
+    c.execute ( "INSERT INTO hymnal (name, copyrightText, shortName) VALUES ('" + \
+                name + "', '" + copyrightText + "', '" + shortName + "');" )
     conn.commit()
 
 class Hymn:
@@ -207,7 +207,7 @@ def addAllHymnSections ( hymnalName, baseDir ):
 ###BEGIN SCRIPT###
 HWB = "Hymnal: A Worship Book"
 createDB()
-addHymnal ( HWB, "copyright unknown to jake")
+addHymnal ( HWB, "copyright unknown to jake", "HWB")
 hymns = readSampleInput()
 for hymn in hymns:
     if DEBUG: print hymn.getInfoString()

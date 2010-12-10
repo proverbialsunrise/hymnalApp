@@ -3,7 +3,8 @@ sql_commands = [
 """CREATE TABLE hymnal ( 
 hymnalID INTEGER PRIMARY KEY AUTOINCREMENT,
 name TEXT, 
-copyrightText TEXT
+copyrightText TEXT,
+shortName TEXT
 );""",
 
  """
