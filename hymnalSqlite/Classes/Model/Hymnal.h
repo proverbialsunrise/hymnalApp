@@ -22,7 +22,8 @@ class Hymnal {
 	
 	Hymnal();
 	Hymnal(const Hymnal& h);
-	Hymnal(sqlite3 *db, int hID);
+	Hymnal(int hID);
+	Hymnal(int hID, sqlite3_stmt* get_hymnal);
 	
 	
 	~Hymnal();
@@ -30,9 +31,11 @@ class Hymnal {
 	int get_hymnalID() const;
 	std::string get_title() const;
 	std::string get_copyrightText() const;
+	std::string get_shortName() const;
 	
 	static void finalizeDatabaseStatements();
 	static void prepareDatabaseStatements(sqlite3 *database);
+	static void tsPrepareDatabaseStatements(sqlite3 *database, sqlite3_stmt** ret_get_hymnal_stmt);
 
 	
 	private:
@@ -40,6 +43,9 @@ class Hymnal {
 	int hymnalID;
 	std::string title;
 	std::string copyrightText;
+	std::string shortName;
+	
+	void setHymnalDetailsFromSqliteRow(sqlite3_stmt *row);
 };
 
 #endif

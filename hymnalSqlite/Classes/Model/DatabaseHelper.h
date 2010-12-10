@@ -43,15 +43,19 @@ typedef struct HymnSection {
 #pragma mark Database Lifecycle
 void openConnectionWithPath(std::string& databasePath);
 
-//Call this method before closing the database connection so we keep a clean DB.
+void tsOpenConnectionWithPath(std::string& databasePath, sqlite3** dbPointer);
+//Call this method when finished with the DB so we keep a clean DB.
 //This method finalizes all open SQL statements in this class.  
 //Along with the destructors being called on all Hymn and Hymnal objects, this should finalize all statements.
 
 void closeConnection();
 
+void tsCloseConnection(sqlite3* db, sqlite3_stmt* get_hymnal_stm, sqlite3_stmt* get_hymn_stm);
 #pragma mark -
 
 Hymnal getHymnal(int hymnalID);
+
+Hymnal tsGetHymnal(int hymnalID, sqlite3_stmt* get_hymnal);
 
 #pragma mark Hymn Display
 typedef  std::vector<HymnSection> HymnSectionVector;
@@ -75,8 +79,6 @@ HymnVector getHymnsForHymnal(int hymnalID, HymnSort sortBy);
 HymnVector getHymnsForSection(int hymnalID, std::string& section, HymnSort sortBy);
 
 HymnVector getHymnsForSubSection(int hymnalID, std::string& subSection, HymnSort sortBy);
-
-
 
 #pragma mark -
 

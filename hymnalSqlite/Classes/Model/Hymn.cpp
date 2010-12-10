@@ -11,8 +11,7 @@
 
 
 static sqlite3_stmt *get_hymnInfo = 0;
-static sqlite3_stmt *get_lyricImages = 0;
-static sqlite3_stmt *get_musicImages = 0;
+
 
 Hymn::Hymn() {
 	//Don't use this constructor explicitly.  We don't want an empty hymn. 
@@ -47,6 +46,17 @@ Hymn::Hymn(const int hymnID, const Hymnal& parentHymnal){
 	//this->printDescription();
 }
 
+Hymn::Hymn(const int hymnID, const Hymnal& parentHymnal, sqlite3_stmt* get_hymn){
+	this->hymnal = parentHymnal;
+	this->hymnID = hymnID;
+	sqlite3_bind_int(get_hymn, 1, hymnID);
+	if (sqlite3_step(get_hymn) == SQLITE_ROW) {
+		this->setHymnDetailsFromSqlRow(get_hymn);		
+	}
+	sqlite3_reset(get_hymn);
+	this->printDescription();
+}
+
 
 
 Hymn::~Hymn() {
@@ -76,28 +86,24 @@ void Hymn::prepareDatabaseStatements(sqlite3 *database){
 				printf("Problem preparing statement get_hymnInfo: %s \n", sqlite3_errmsg(database));
 			}
 		}
-		if (0 == get_lyricImages) {
-			//TODO
-		}
-		
-		if (0 == get_musicImages) {
-			//TODO
+	}
+}
+
+void Hymn::tsPrepareDatabaseStatements(sqlite3 *database, sqlite3_stmt** ret_get_hymn_info) {
+	if (0 != database) {
+		const char *sql = "SELECT hymnNumber, author, composer, copyrightInfo, firstLine, metric, section, subSection, subSubSection, title, translator, tune FROM hymn WHERE hymnID = ?";
+		if (sqlite3_prepare_v2(database, sql, -1, ret_get_hymn_info, NULL) != SQLITE_OK) {
+			printf("Problem preparing statement get_hymnInfo: %s \n", sqlite3_errmsg(database));
 		}
 	}
 }
+
+
 
 void Hymn::finalizeDatabaseStatements(){
 	if (0 != get_hymnInfo) {
 		sqlite3_finalize(get_hymnInfo);
 		get_hymnInfo = 0;
-	}
-	if (0 != get_lyricImages) {
-		sqlite3_finalize(get_lyricImages);
-		get_lyricImages = 0;
-	}
-	if (0 != get_musicImages) {
-		sqlite3_finalize(get_musicImages);
-		get_musicImages = 0;
 	}
 }
 

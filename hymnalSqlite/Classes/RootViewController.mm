@@ -84,7 +84,11 @@
 	int row = indexPath.row;
     hymns[row].printDescription();
 	cell.textLabel.text = [NSString stringWithFormat:@"%d", hymns[row].get_hymnNumber()];
+	cell.textLabel.font = [UIFont fontWithName:@"Georgia" size:22.0];
 	cell.detailTextLabel.text = [NSString stringWithFormat:@"%s", hymns[row].get_title().c_str()];
+	cell.detailTextLabel.font = [UIFont fontWithName:@"Georgia" size:16.0];
+	cell.detailTextLabel.textAlignment = UITextAlignmentLeft;
+	cell.detailTextLabel.textColor = [UIColor blackColor];
 
     return cell;
 }
@@ -135,11 +139,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-	[self setTitle:@"HWB"]; //TODO use Hymnal ShortName
+	[self setTitle:[NSString stringWithFormat:@"%s", hymnal.get_shortName().c_str()]]; //TODO use Hymnal ShortName
 	HymnViewController *hymnViewController = [[HymnViewController alloc] initWithHymn:(Hymn)(hymns[indexPath.row])];
 	[self.navigationController pushViewController:hymnViewController animated:YES];
 	[hymnViewController release];
-
 }
 
 

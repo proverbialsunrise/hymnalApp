@@ -22,6 +22,7 @@ public:
 	~Hymn();
 	Hymn(const Hymn& h);
 	Hymn(const int hymnID, const Hymnal& parentHymnal);
+	Hymn(const int hymnID, const Hymnal& parentHymnal, sqlite3_stmt* get_hymn);
 	
 	int get_hymnID() const;
 	int get_hymnNumber() const;
@@ -39,6 +40,8 @@ public:
 	//Setters aren't necessary. 
 	
 	static void prepareDatabaseStatements(sqlite3 *database);
+	static void tsPrepareDatabaseStatements(sqlite3 *database, sqlite3_stmt** ret_get_hymn_info);
+	
 	static void finalizeDatabaseStatements();
 	
 	//Debug Function.

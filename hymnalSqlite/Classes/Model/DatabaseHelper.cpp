@@ -30,13 +30,28 @@ void openConnectionWithPath(std::string& databasePath){
 	} else {
 		printf("Database is already open.\n");
 	}
+}
 
+void tsOpenConnectionWithPath(std::string& databasePath, sqlite3** ret_dbPointer, sqlite3_stmt** ret_get_hymnal_stmt, sqlite3_stmt** ret_get_hymn_stmt){
+	if (database == 0) {
+		sqlite3_open(databasePath.c_str(), ret_dbPointer);
+		Hymnal::tsPrepareDatabaseStatements(*ret_dbPointer, ret_get_hymnal_stmt);
+		Hymn::tsPrepareDatabaseStatements(*ret_dbPointer, ret_get_hymn_stmt);
+	} else {
+		printf("Database is already open.\n");
+	}	
 }
 
 void closeConnection() {
 	finalizeDatabaseStatements();
 	sqlite3_close(database);
 	database = 0;
+}
+
+void tsCloseConnection(sqlite3* db, sqlite3_stmt* get_hymnal_stm, sqlite3_stmt* get_hymn_stm){
+	sqlite3_finalize(get_hymnal_stm);
+	sqlite3_finalize(get_hymn_stm);
+	sqlite3_close(db);
 }
 
 void finalizeDatabaseStatements(){
@@ -69,7 +84,11 @@ void finalizeDatabaseStatements(){
 #pragma mark -
 
 Hymnal getHymnal(int hymnalID){
-	return Hymnal(database, hymnalID);
+	return Hymnal(hymnalID);
+}
+
+Hymnal tsGetHymnal(int hymnalID, sqlite3_stmt* get_hymnal){
+	return Hymnal(hymnalID, get_hymnal);
 }
 
 #pragma mark Hymn Display
@@ -200,7 +219,7 @@ HymnSectionVector getPiecesForHymn(int hymnID, int verse, PartSpecifier part){
 #pragma mark Getting Hymns
 
 HymnVector getHymnsForHymnal(int hymnalID, HymnSort sortBy){
-	Hymnal hymnal = Hymnal(database, hymnalID);
+	Hymnal hymnal = Hymnal(hymnalID);
 	
 	if (0 == get_allHymns_sort) {
 		//I don't know if you can put a wild card into an ORDER BY like this.  We may need two separate statements.
