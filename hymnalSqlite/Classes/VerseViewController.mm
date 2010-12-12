@@ -1,19 +1,19 @@
 //
-//  HymnViewController.m
+//  VerseViewController.m
 //  hymnalSqlite
 //
 //  Created by Daniel Johnson on 10-12-05.
 //  Copyright 2010 __MyCompanyName__. All rights reserved.
 //
 
-#import "HymnViewController.h"
+#import "VerseViewController.h"
 
 
-@implementation HymnViewController
+@implementation VerseViewController
 @synthesize scrollView;
 
 - (id) initWithHymn:(Hymn)h {
-	if (self = [super initWithNibName:@"HymnViewController" bundle:[NSBundle mainBundle]]) {
+	if (self = [super initWithNibName:@"VerseViewController" bundle:[NSBundle mainBundle]]) {
 		hymn = h;
 	}
 	return self;

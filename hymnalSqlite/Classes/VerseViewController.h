@@ -1,5 +1,5 @@
 //
-//  HymnViewController.h
+//  VerseViewController.h
 //  hymnalSqlite
 //
 //  Created by Daniel Johnson on 10-12-05.
@@ -10,7 +10,7 @@
 #import "DatabaseHelper.h"
 
 
-@interface HymnViewController : UIViewController <UIScrollViewDelegate> {
+@interface VerseViewController : UIViewController <UIScrollViewDelegate> {
 	Hymn hymn;
 	HymnSectionVector hymnSections;
 	IBOutlet UIScrollView *scrollView;

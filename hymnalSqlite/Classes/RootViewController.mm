@@ -7,7 +7,7 @@
 //
 
 #import "RootViewController.h"
-#import "HymnViewController.h"
+#import "VerseViewController.h"
 
 @implementation RootViewController
 
@@ -140,7 +140,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 	[self setTitle:[NSString stringWithFormat:@"%s", hymnal.get_shortName().c_str()]]; //TODO use Hymnal ShortName
-	HymnViewController *hymnViewController = [[HymnViewController alloc] initWithHymn:(Hymn)(hymns[indexPath.row])];
+	VerseViewController *hymnViewController = [[VerseViewController alloc] initWithHymn:(Hymn)(hymns[indexPath.row])];
 	[self.navigationController pushViewController:hymnViewController animated:YES];
 	[hymnViewController release];
 }
