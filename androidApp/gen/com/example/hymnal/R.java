@@ -14,8 +14,8 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
-        public static final int hymn_scrollview=0x7f060000;
-        public static final int next_level=0x7f060001;
+        public static final int hymn_scrollview=0x7f070000;
+        public static final int next_level=0x7f070001;
     }
     public static final class layout {
         public static final int hymn=0x7f030000;
@@ -23,12 +23,18 @@ public final class R {
         public static final int main=0x7f030002;
     }
     public static final class string {
-        public static final int app_name=0x7f040000;
+        public static final int app_name=0x7f050000;
+        public static final int search_hint=0x7f050001;
+        public static final int search_label=0x7f050002;
+        public static final int settings_description=0x7f050003;
     }
     public static final class style {
         /**  This was supposed to make the shadow below the title bar
 		go away, but I couldn't make it work. 
          */
-        public static final int HymnTheme=0x7f050000;
+        public static final int HymnTheme=0x7f060000;
+    }
+    public static final class xml {
+        public static final int searchable=0x7f040000;
     }
 }

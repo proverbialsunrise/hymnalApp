@@ -1,7 +1,9 @@
 package com.example.hymnal;
 
 import android.app.ListActivity;
+import android.app.SearchManager;
 import android.content.Intent;
+//import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
@@ -17,8 +19,16 @@ public class Hymnal extends ListActivity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+        Intent intent = getIntent();
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            // handles a search query
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Log.e ( "hymnal", "got query: " + query );
+            //showResults(query);
+            return;
+        }
+
         final String[] hymnals = getHymnals();
-        
         setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item, hymnals));
 
         ListView lv = getListView();
@@ -41,6 +51,8 @@ public class Hymnal extends ListActivity{
 
     private String[] getHymnals(){
     	String[] a = listHymns();
+    	//TODO: don't hardcode path
+    	//SQLiteDatabase db = openDatabase ( "/sdcard/hymnalapp/database",  );
     	Log.e("Hymnal", a[0]);
     	return a;
     }
