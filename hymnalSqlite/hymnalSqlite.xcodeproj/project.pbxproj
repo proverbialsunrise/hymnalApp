@@ -24,6 +24,8 @@
 		378149DA12A2F8F000110CCE /* Hymn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 378149D912A2F8F000110CCE /* Hymn.cpp */; };
 		378149ED12A4C1AC00110CCE /* DatabaseHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 378149EC12A4C1AC00110CCE /* DatabaseHelper.cpp */; };
 		37EAC98E12AA1B8B007A2EFD /* DatabaseTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 37EAC98D12AA1B8B007A2EFD /* DatabaseTests.mm */; };
+		37F5959412B5541C00A33F3C /* HymnViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 37F5959212B5541C00A33F3C /* HymnViewController.mm */; };
+		37F5959512B5541C00A33F3C /* HymnViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 37F5959312B5541C00A33F3C /* HymnViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,17 +46,20 @@
 		37449FA612AC31780060771F /* VerseViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VerseViewController.mm; sourceTree = "<group>"; };
 		37449FA712AC31780060771F /* VerseViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VerseViewController.xib; sourceTree = "<group>"; };
 		3744A00912AC8A170060771F /* Hymnal A Worship Book */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Hymnal A Worship Book"; path = "TestData/Hymnal A Worship Book"; sourceTree = "<group>"; };
-		378149C512A2EDB200110CCE /* Hymnal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Hymnal.h; path = Model/Hymnal.h; sourceTree = "<group>"; };
-		378149C612A2EDB200110CCE /* Hymnal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Hymnal.cpp; path = Model/Hymnal.cpp; sourceTree = "<group>"; };
+		378149C512A2EDB200110CCE /* Hymnal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hymnal.h; sourceTree = "<group>"; };
+		378149C612A2EDB200110CCE /* Hymnal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Hymnal.cpp; sourceTree = "<group>"; };
 		378149D012A2F0ED00110CCE /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
-		378149D812A2F8F000110CCE /* Hymn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Hymn.h; path = Model/Hymn.h; sourceTree = "<group>"; };
-		378149D912A2F8F000110CCE /* Hymn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Hymn.cpp; path = Model/Hymn.cpp; sourceTree = "<group>"; };
-		378149EB12A4C1AC00110CCE /* DatabaseHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DatabaseHelper.h; path = Model/DatabaseHelper.h; sourceTree = "<group>"; };
-		378149EC12A4C1AC00110CCE /* DatabaseHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DatabaseHelper.cpp; path = Model/DatabaseHelper.cpp; sourceTree = "<group>"; };
+		378149D812A2F8F000110CCE /* Hymn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hymn.h; sourceTree = "<group>"; };
+		378149D912A2F8F000110CCE /* Hymn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Hymn.cpp; sourceTree = "<group>"; };
+		378149EB12A4C1AC00110CCE /* DatabaseHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseHelper.h; sourceTree = "<group>"; };
+		378149EC12A4C1AC00110CCE /* DatabaseHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DatabaseHelper.cpp; sourceTree = "<group>"; };
 		37EAC98712AA1B18007A2EFD /* DatabaseTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DatabaseTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		37EAC98812AA1B18007A2EFD /* DatabaseTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DatabaseTests-Info.plist"; sourceTree = "<group>"; };
 		37EAC98C12AA1B8B007A2EFD /* DatabaseTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DatabaseTests.h; path = Tests/DatabaseTests.h; sourceTree = "<group>"; };
 		37EAC98D12AA1B8B007A2EFD /* DatabaseTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = DatabaseTests.mm; path = Tests/DatabaseTests.mm; sourceTree = "<group>"; };
+		37F5959112B5541C00A33F3C /* HymnViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HymnViewController.h; sourceTree = "<group>"; };
+		37F5959212B5541C00A33F3C /* HymnViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HymnViewController.mm; sourceTree = "<group>"; };
+		37F5959312B5541C00A33F3C /* HymnViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HymnViewController.xib; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* hymnalSqlite-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "hymnalSqlite-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -90,6 +95,8 @@
 				1D3623250D0F684500981E51 /* hymnalSqliteAppDelegate.mm */,
 				37449FA512AC31780060771F /* VerseViewController.h */,
 				37449FA612AC31780060771F /* VerseViewController.mm */,
+				37F5959112B5541C00A33F3C /* HymnViewController.h */,
+				37F5959212B5541C00A33F3C /* HymnViewController.mm */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -133,6 +140,7 @@
 				3744A00912AC8A170060771F /* Hymnal A Worship Book */,
 				28F335F01007B36200424DE2 /* RootViewController.xib */,
 				37449FA712AC31780060771F /* VerseViewController.xib */,
+				37F5959312B5541C00A33F3C /* HymnViewController.xib */,
 				28AD735F0D9D9599002E5188 /* MainWindow.xib */,
 				8D1107310486CEB800E47090 /* hymnalSqlite-Info.plist */,
 			);
@@ -169,6 +177,7 @@
 				378149EC12A4C1AC00110CCE /* DatabaseHelper.cpp */,
 			);
 			name = Model;
+			path = ../../Common/Model;
 			sourceTree = "<group>";
 		};
 		37EAC92412AA1327007A2EFD /* Tests */ = {
@@ -253,6 +262,7 @@
 				37449CE212AB77DE0060771F /* exampleDB.db in Resources */,
 				37449FA912AC31780060771F /* VerseViewController.xib in Resources */,
 				3744A05212AC8A170060771F /* Hymnal A Worship Book in Resources */,
+				37F5959512B5541C00A33F3C /* HymnViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,6 +303,7 @@
 				378149DA12A2F8F000110CCE /* Hymn.cpp in Sources */,
 				378149ED12A4C1AC00110CCE /* DatabaseHelper.cpp in Sources */,
 				37449FA812AC31780060771F /* VerseViewController.mm in Sources */,
+				37F5959412B5541C00A33F3C /* HymnViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -17,12 +17,15 @@
 	
 	UIView *contentView;
 	CGFloat contentWidth;
+	unsigned int verseNumber;
 }
 
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
 
-- (id) initWithHymn:(Hymn)h;
+- (id) initWithHymn:(Hymn)h verse:(unsigned int)verseNum;
 
 - (void) refreshImages;
+
+- (void) reset;
 
 @end

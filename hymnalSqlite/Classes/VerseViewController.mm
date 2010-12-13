@@ -12,11 +12,19 @@
 @implementation VerseViewController
 @synthesize scrollView;
 
-- (id) initWithHymn:(Hymn)h {
+- (id) initWithHymn:(Hymn)h verse:(unsigned int)verseNum{
 	if (self = [super initWithNibName:@"VerseViewController" bundle:[NSBundle mainBundle]]) {
 		hymn = h;
+		verseNumber = verseNum;
+		
 	}
 	return self;
+}
+
+- (void) setToMinimumZoom {
+	float minimumScale = scrollView.frame.size.width/contentWidth;
+	[scrollView setMinimumZoomScale:minimumScale];
+	[scrollView setZoomScale:minimumScale];
 }
 /*
  // The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
@@ -33,7 +41,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	[self setTitle:[NSString stringWithFormat:@"%s", hymn.get_title().c_str()]];
-	hymnSections = getPiecesForHymn(hymn.get_hymnID(), ALLVERSES, ALLPARTS);
+	hymnSections = getPiecesForHymn(hymn.get_hymnID(), verseNumber, ALLPARTS);
 	[self refreshImages];
 	
 }
@@ -73,8 +81,8 @@
 	[scrollView addSubview:contentView];
 	[scrollView setContentSize:contentView.frame.size];
 	[scrollView setMaximumZoomScale:1.0];
+	
 	float minimumScale = scrollView.frame.size.width/contentWidth;
-
 	[scrollView setMinimumZoomScale:minimumScale];
 	[scrollView setZoomScale:minimumScale];
 }
@@ -99,9 +107,13 @@
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	float minimumScale = scrollView.frame.size.width/contentWidth;
-	[scrollView setMinimumZoomScale:minimumScale];
-	[scrollView setZoomScale:minimumScale];
+	[self setToMinimumZoom];
+}
+
+- (void) reset {
+	[self setToMinimumZoom];
+	[scrollView scrollRectToVisible:CGRectMake(0, 0, 100, 100) animated:YES];
+	[self.view setNeedsDisplay];
 }
 
 
