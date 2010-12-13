@@ -39,8 +39,12 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
-	//Load a set of VerseViewControllers.  If necessary, we can load these on demand...but no point until it seems necessary.
 	currentVerse = 1;
+	rotating = NO;
+	self.title = [NSString stringWithFormat:@"%s", hymn.get_title().c_str()];
+	
+	//Load a set of VerseViewControllers.  If necessary, we can load these on demand...but no point until it seems necessary.
+	
 	CGFloat xOffset = 0.0;
 	int numVerses = getNumVersesForHymn(hymn.get_hymnID());
 	for (int i = 1; i <= numVerses; i++) {
@@ -62,8 +66,11 @@
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations
-	rotating = YES;
     return YES;
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+	rotating = YES;
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
