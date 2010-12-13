@@ -102,7 +102,7 @@
 			//set the new current verse.
 			currentVerse = (xOffset / currentWidth) + 1;
 			if (oldVerse != currentVerse) {
-				VerseViewController *verseViewController = [verseViewControllers objectAtIndex:(currentVerse - 1)];
+				VerseViewController *verseViewController = [verseViewControllers objectAtIndex:(oldVerse - 1)];
 				[verseViewController reset];
 			}
 			NSLog(@"Scrolled To Verse: %d", currentVerse);

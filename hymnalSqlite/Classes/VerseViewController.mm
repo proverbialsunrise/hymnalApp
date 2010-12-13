@@ -114,6 +114,7 @@
 	[self setToMinimumZoom];
 	[scrollView scrollRectToVisible:CGRectMake(0, 0, 100, 100) animated:YES];
 	[self.view setNeedsDisplay];
+	NSLog(@"Reset Verse %d", verseNumber);
 }
 
 
