@@ -223,6 +223,14 @@ unsigned int numVersesForHymn(int hymnID) {
 			printf("Problem preparing statement get_numVerses: %s", sqlite3_errmsg(database));
 		}
 	}
+	
+	int numVerses = 0;
+	sqlite3_bind_int ( get_numVersesForHymn, 1, hymnID );
+	while ( sqlite3_step ( get_numVersesForHymn ) == SQLITE_ROW ) {
+		numVerses = sqlite3_column_int(get_numVersesForHymn, 0);
+	}
+	sqlite3_reset(get_numVersesForHymn);
+	return numVerses;
 }
 #pragma mark -
 

@@ -15,7 +15,9 @@
 #include <string>
 #include <utility>
 
+extern "C"{
 #include "sqlite3.h"
+}
 #include "Hymn.h"
 #include "Hymnal.h"
 

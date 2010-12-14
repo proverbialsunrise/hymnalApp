@@ -18,8 +18,8 @@
 		<activity android:name=".HymnList"
 				  android:label="HymnList" />
 		
-		<activity android:name=".Hymn"
-				  android:label="Hymn" />
+		<activity android:name=".HymnView"
+				  android:label="HymnView" />
 
 		<activity android:name=".SearchActivity"
 				  android:label="SearchActivity" >
