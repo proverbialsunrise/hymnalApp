@@ -129,7 +129,7 @@ Java_com_example_hymnal_HymnView_getSections ( JNIEnv* env, jobject thiz, jint h
 JNIEXPORT jint JNICALL
 Java_com_example_hymnal_HymnView_getNumVerses ( JNIEnv* env, jobject thiz, jint hymnId )
 {
-	unsigned int a = numVersesForHymn ( hymnId );
+	unsigned int a = getNumVersesForHymn ( hymnId );
 	std::stringstream ss;
 	ss << a;
 	
