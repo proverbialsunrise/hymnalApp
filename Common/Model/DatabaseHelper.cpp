@@ -216,18 +216,20 @@ HymnSectionVector getPiecesForHymn(int hymnID, int verse, PartSpecifier part){
 	
 }
 
-unsigned int numVersesForHymn(int hymnID) {
+unsigned int getNumVersesForHymn(int hymnID) {
 	if (0 == get_numVersesForHymn) {
 		const char * sql = "SELECT MAX(verseNumber) FROM lyricSection WHERE hymn = ?";
 		if (sqlite3_prepare_v2(database, sql, -1, &get_numVersesForHymn, NULL)) {
 			printf("Problem preparing statement get_numVerses: %s", sqlite3_errmsg(database));
 		}
 	}
-	
-	int numVerses = 0;
-	sqlite3_bind_int ( get_numVersesForHymn, 1, hymnID );
-	while ( sqlite3_step ( get_numVersesForHymn ) == SQLITE_ROW ) {
+	unsigned int numVerses = 0;
+	sqlite3_bind_int(get_numVersesForHymn, 1, hymnID);
+	if (sqlite3_step(get_numVersesForHymn) == SQLITE_ROW) {
 		numVerses = sqlite3_column_int(get_numVersesForHymn, 0);
+	}
+	if (numVerses == -1) { //All hymn parts are for ALLVERSES.
+		numVerses = 1;
 	}
 	sqlite3_reset(get_numVersesForHymn);
 	return numVerses;

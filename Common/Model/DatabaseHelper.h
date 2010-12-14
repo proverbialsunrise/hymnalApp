@@ -68,7 +68,7 @@ HymnSectionVector getLyricPiecesForHymn(int hymnID, int verse, PartSpecifier par
 
 HymnSectionVector getPiecesForHymn(int hymnID, int verse, PartSpecifier part);
 
-unsigned int numVersesForHymn(int hymnID);
+unsigned int getNumVersesForHymn(int hymnID);
 #pragma mark -
 
 
