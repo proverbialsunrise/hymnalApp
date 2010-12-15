@@ -75,7 +75,10 @@ public class HymnView extends Activity {
         }
 
         currentVerse = 1;
-        numVerses = getNumVerses(hymnId);
+        if ( !Hymnal.EMULATOR )
+        	numVerses = getNumVerses(hymnId);
+        else
+        	numVerses = 4;
         if ( numVerses == -1 )
         	numVerses = 1;
         showPage();
@@ -86,7 +89,7 @@ public class HymnView extends Activity {
                 return gestureDetector.onTouchEvent(event);
             }
         };
-        ll.setOnTouchListener(gestureListener);
+        mainScrollView.setOnTouchListener(gestureListener);
     }
     
     private static final int SWIPE_MIN_DISTANCE = 120;
@@ -106,18 +109,11 @@ public class HymnView extends Activity {
                 }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                 	changeVerse ( false );
                 }
+                return true;
             } catch (Exception e) {
                 // nothing
             }
             return false;
-        }
-        @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY){
-        	return true;
-        }
-        @Override
-        public boolean onDown(MotionEvent e){
-        	return true;
         }
     }
     
@@ -185,10 +181,14 @@ public class HymnView extends Activity {
     public native String[] getSections ( int hymnId, int verse, int partSpecifier );
     public native int getNumVerses ( int hymnId );
 	static {
-		System.loadLibrary ( "Database-Jni" );
+		if ( !Hymnal.EMULATOR )
+			System.loadLibrary ( "Database-Jni" );
 	}
 
     private Vector<String> getHymnPieces ( int hymnId, int partSpecifier ){
+    	if ( Hymnal.EMULATOR ){
+    		return getHymnPieces_noJni(hymnId, partSpecifier);
+    	}
     	String[] pieces = getSections ( hymnId, currentVerse, partSpecifier );
     	SortedSet<String> sortedSet = new TreeSet<String> ( );
     	for ( int i = 0; i < pieces.length; ++i ){
@@ -202,11 +202,44 @@ public class HymnView extends Activity {
     	}
     	return v;
     }
+    
+    //just a hack to display one particular hymn without using the database
+    private Vector<String> getHymnPieces_noJni ( int hymnId, int partSpecifier ){
+    	Vector<String> ret = new Vector<String>();
+    	File dir = new File("/sdcard/hymnalapp/Hymnal A Worship Book/043 My faith has foundmus/");
+    	String basePath = "Hymnal A Worship Book/043 My faith has foundmus/";
+    	String list[] = dir.list();
+    	SortedSet<String> sortedSet = new TreeSet<String>();
+    	
+    	for ( int i = 0; i < list.length; ++i ){
+    		if ( list[i].startsWith(".") || list[i].contains ( "title" ) )
+    			continue;
+    		sortedSet.add(list[i]);
+    	}
+    	
+    	int verse = currentVerse;
+    	String clef = "png";
+    	if ( partSpecifier == 1 )
+    		clef = "bass";
+    	else if ( partSpecifier == 2 )
+    		clef = "treble";
+ 
+    	Iterator<String> it = sortedSet.iterator();
+    	while ( it.hasNext() ){
+    		String s = it.next();
+    		//Log.e ( "hymnal", "piece: " + basePath + "/" + s );
+    		if (   ( s.contains(clef) && !s.contains("text") ) || 
+    			   s.contains("text" + verse ) ){
+    			ret.add(basePath + "/" + s);
+    		}
+    	}
+    	return ret;
+    }
 
     /// @deprecated
     /// Keeping it around for now because it has logic to 
     /// display all the verses on the same page
-    private Vector<String> getHymnPieces_noJni( String hymn ){
+    private Vector<String> getAllHymnPieces_noJni( String hymn ){
     	File dir = new File(hymn);
     	String list[] = dir.list();
     	SortedSet<String> sortedSet = new TreeSet<String>();

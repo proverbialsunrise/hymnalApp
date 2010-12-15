@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class Hymnal extends ListActivity{
+	static boolean EMULATOR = false;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,11 +37,17 @@ public class Hymnal extends ListActivity{
 	
 	public native String[] listHymnals();
 	static {
-		System.loadLibrary ( "Database-Jni" );
+		if ( !EMULATOR )
+			System.loadLibrary ( "Database-Jni" );
 	}
 
     private String[] getHymnals(){
-    	String[] a = listHymnals();
+    	String[] a = null;
+    	if( !EMULATOR ){
+    		a = listHymnals();
+    	}else{
+    		a = new String[]{"Hymnal: A Worship Book"};
+		}
     	Log.e("Hymnal", a[0]);
     	return a;
     }

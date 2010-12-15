@@ -44,7 +44,8 @@ public class HymnList extends ListActivity{
 	
 	public native Hymn[] listHymns( int hymnalId );
 	static {
-		System.loadLibrary ( "Database-Jni" );
+		if ( !Hymnal.EMULATOR )
+			System.loadLibrary ( "Database-Jni" );
 	}
 	
 	private String[] getHymnStrings ( Hymn[] hymns ){
@@ -57,7 +58,14 @@ public class HymnList extends ListActivity{
 	}
 
     private Hymn[] getHymns ( int hymnalId ){
-    	Hymn[] hymns = listHymns ( hymnalId );
+    	Hymn[] hymns = null;
+    	if ( !Hymnal.EMULATOR )
+    		hymns = listHymns ( hymnalId );
+    	else{
+    		Hymn h = new Hymn(1, 43, "My faith has found a resting place");
+    		hymns = new Hymn[1];
+    		hymns[0] = h;
+    	}
     	return hymns;
     }
 }
