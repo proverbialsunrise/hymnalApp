@@ -10,8 +10,16 @@
 #import "DatabaseHelper.h"
 
 @interface RootViewController : UITableViewController {
-	HymnVector hymns;
 	Hymnal hymnal;
+	
+	//Stores list content.  
+	HymnVector hymns;
+	HymnVector *filteredHymns;
+	
+	//Stores search state if the view is unloaded
+	NSString *savedSearchTerm;
+	NSInteger savedScopeButtonIndex;
+	BOOL searchWasActive;
 }
 
 @end

@@ -19,16 +19,27 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	hymnal = getHymnal(1);
+	
 	hymns = getHymnsForHymnal(hymnal.get_hymnalID(), SORT_BY_NUMBER);
-	[self setTitle:[NSString stringWithFormat:@"%s", hymnal.get_title().c_str()]];
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+	
+	//create a vector to store the filtered hymns
+ 	filteredHymns = new HymnVector;
+	
+	if (savedSearchTerm) {
+		[self.searchDisplayController setActive:searchWasActive];
+		[self.searchDisplayController.searchBar setSelectedScopeButtonIndex:savedScopeButtonIndex];
+		[self.searchDisplayController.searchBar setText:savedSearchTerm];
+		
+		savedSearchTerm = nil;
+	}
+	
+	[self.tableView reloadData];
 }
 
 
 
 - (void)viewWillAppear:(BOOL)animated {
-	[self setTitle:[NSString stringWithFormat:@"%s", hymnal.get_title().c_str()]];
+	[self setTitle:[NSString stringWithCString:hymnal.get_title().c_str() encoding:NSUTF8StringEncoding]];
     [super viewWillAppear:animated];
 }
 
@@ -42,11 +53,15 @@
 	[super viewWillDisappear:animated];
 }
 */
-/*
+
 - (void)viewDidDisappear:(BOOL)animated {
 	[super viewDidDisappear:animated];
+	// save the state of the search UI so that it can be restored if the view is re-created
+    searchWasActive = [self.searchDisplayController isActive];
+    savedSearchTerm = [self.searchDisplayController.searchBar text];
+    savedScopeButtonIndex = [self.searchDisplayController.searchBar selectedScopeButtonIndex];
 }
-*/
+
 
 
  // Override to allow orientations other than the default portrait orientation.
@@ -68,7 +83,18 @@
 
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return hymns.size();
+	/*
+	 If the requesting table view is the search display controller's table view, return the count of
+     the filtered list, otherwise return the count of the main list.
+	 */
+	if (tableView == self.searchDisplayController.searchResultsTableView)
+	{
+		return filteredHymns->size();
+    }
+	else
+	{
+		return hymns.size();
+    }
 }
 
 
@@ -82,10 +108,18 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
     }
 	int row = indexPath.row;
-    hymns[row].printDescription();
-	cell.textLabel.text = [NSString stringWithFormat:@"%d", hymns[row].get_hymnNumber()];
+
+	Hymn hymn;
+	
+	if (tableView == self.searchDisplayController.searchResultsTableView) {
+		hymn = (*filteredHymns)[row];
+	} else {
+		hymn = hymns[row];
+	}
+
+	cell.textLabel.text = [NSString stringWithFormat:@"%d", hymn.get_hymnNumber()];
 	cell.textLabel.font = [UIFont fontWithName:@"Georgia" size:22.0];
-	cell.detailTextLabel.text = [NSString stringWithFormat:@"%s", hymns[row].get_title().c_str()];
+	cell.detailTextLabel.text = [NSString stringWithCString:hymn.get_title().c_str() encoding:NSUTF8StringEncoding];
 	cell.detailTextLabel.font = [UIFont fontWithName:@"Georgia" size:16.0];
 	cell.detailTextLabel.textAlignment = UITextAlignmentLeft;
 	cell.detailTextLabel.textColor = [UIColor blackColor];
@@ -94,57 +128,96 @@
 }
 
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source.
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
-    }   
-}
-*/
-
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-
 #pragma mark -
 #pragma mark Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-	[self setTitle:[NSString stringWithFormat:@"%s", hymnal.get_shortName().c_str()]]; //TODO use Hymnal ShortName
-	HymnViewController *hymnViewController = [[HymnViewController alloc] initWithHymn:(Hymn)(hymns[indexPath.row])];
+	[self setTitle:[NSString stringWithCString:hymnal.get_shortName().c_str() encoding:NSUTF8StringEncoding]];
+	Hymn hymn;
+	if (tableView == self.searchDisplayController.searchResultsTableView) {
+		hymn = (*filteredHymns)[indexPath.row];
+	} else {
+		hymn = (*filteredHymns)[indexPath.row];
+	}
+	
+	HymnViewController *hymnViewController = [[HymnViewController alloc] initWithHymn:hymn];
 	[self.navigationController pushViewController:hymnViewController animated:YES];
 	[hymnViewController release];
 }
 
+
+#pragma mark -
+#pragma mark Content Filtering
+
+- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
+{
+	/*
+	 Update the filtered array based on the search text and scope.
+	 */
+	//Eventually I think this should be a call to the database rather than an iteration through the hymns in the list. 
+	//Nevertheless, we'll start here and see if there is performance trouble. 
+	//If necessary, kick off a background SQL search, return NO and reload the data when the search is complete. 
+	
+	filteredHymns->clear(); // First clear the filtered vector.
+	
+	/*
+	Search the main list for hymns that match based on number, name, first line
+	 */
+	HymnVector::iterator it;
+	for (it = hymns.begin(); it != hymns.end(); it++)
+	{
+		BOOL addToFiltered = NO;
+		if (!addToFiltered && ([scope isEqualToString:@"Number"] || [scope isEqualToString:@"All"]) && it->get_hymnNumber() == [searchText intValue])
+		{
+			addToFiltered = YES;
+		}
+		if (!addToFiltered && ([scope isEqualToString:@"Title"] || [scope isEqualToString:@"All"]))
+		{	
+			NSString *title = [NSString stringWithCString:it->get_title().c_str() encoding:NSUTF8StringEncoding];
+			NSComparisonResult result = [title compare:searchText options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch) range:NSMakeRange(0, [searchText length])];
+			if (result == NSOrderedSame)
+			{
+				addToFiltered = YES;
+			}
+		}
+		if (!addToFiltered && ([scope isEqualToString:@"First Line"] || [scope isEqualToString:@"All"])){
+			NSString *firstLine = [NSString stringWithCString:it->get_firstLine().c_str() encoding:NSUTF8StringEncoding];
+			NSComparisonResult result = [firstLine compare:searchText options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch) range:NSMakeRange(0, [searchText length])];
+			if (result == NSOrderedSame)
+			{
+				addToFiltered = YES;
+			}
+		}
+		if (addToFiltered) {
+			filteredHymns->push_back(*it);
+		}
+	}
+	
+}
+
+
+#pragma mark -
+#pragma mark UISearchDisplayController Delegate Methods
+
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
+{
+    [self filterContentForSearchText:searchString scope:
+	 [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
+    
+    // Return YES to cause the search result table view to be reloaded.
+    return YES;
+}
+
+
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption
+{
+    [self filterContentForSearchText:[self.searchDisplayController.searchBar text] scope:
+	 [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:searchOption]];
+    
+    // Return YES to cause the search result table view to be reloaded.
+    return YES;
+}
 
 #pragma mark -
 #pragma mark Memory management
@@ -161,8 +234,8 @@
     // For example: self.myOutlet = nil;
 }
 
-
 - (void)dealloc {
+	delete filteredHymns;
     [super dealloc];
 }
 

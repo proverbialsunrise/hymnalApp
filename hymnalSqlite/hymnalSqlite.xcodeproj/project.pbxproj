@@ -26,6 +26,12 @@
 		37EAC98E12AA1B8B007A2EFD /* DatabaseTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 37EAC98D12AA1B8B007A2EFD /* DatabaseTests.mm */; };
 		37F5959412B5541C00A33F3C /* HymnViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 37F5959212B5541C00A33F3C /* HymnViewController.mm */; };
 		37F5959512B5541C00A33F3C /* HymnViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 37F5959312B5541C00A33F3C /* HymnViewController.xib */; };
+		37F5983C12B73DEE00A33F3C /* Icon1-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = 37F5983912B73DEE00A33F3C /* Icon1-iPad.png */; };
+		37F5983D12B73DEE00A33F3C /* Icon1.png in Resources */ = {isa = PBXBuildFile; fileRef = 37F5983A12B73DEE00A33F3C /* Icon1.png */; };
+		37F5983E12B73DEE00A33F3C /* Icon1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 37F5983B12B73DEE00A33F3C /* Icon1@2x.png */; };
+		37F5985C12B9BAB700A33F3C /* Icon2-iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = 37F5985912B9BAB700A33F3C /* Icon2-iPad.png */; };
+		37F5985D12B9BAB700A33F3C /* Icon2.png in Resources */ = {isa = PBXBuildFile; fileRef = 37F5985A12B9BAB700A33F3C /* Icon2.png */; };
+		37F5985E12B9BAB700A33F3C /* Icon2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 37F5985B12B9BAB700A33F3C /* Icon2@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +66,12 @@
 		37F5959112B5541C00A33F3C /* HymnViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HymnViewController.h; sourceTree = "<group>"; };
 		37F5959212B5541C00A33F3C /* HymnViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HymnViewController.mm; sourceTree = "<group>"; };
 		37F5959312B5541C00A33F3C /* HymnViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HymnViewController.xib; sourceTree = "<group>"; };
+		37F5983912B73DEE00A33F3C /* Icon1-iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon1-iPad.png"; path = "../Artwork/Icon1-iPad.png"; sourceTree = SOURCE_ROOT; };
+		37F5983A12B73DEE00A33F3C /* Icon1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon1.png; path = ../Artwork/Icon1.png; sourceTree = SOURCE_ROOT; };
+		37F5983B12B73DEE00A33F3C /* Icon1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon1@2x.png"; path = "../Artwork/Icon1@2x.png"; sourceTree = SOURCE_ROOT; };
+		37F5985912B9BAB700A33F3C /* Icon2-iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon2-iPad.png"; path = "../Artwork/Icon2-iPad.png"; sourceTree = SOURCE_ROOT; };
+		37F5985A12B9BAB700A33F3C /* Icon2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon2.png; path = ../Artwork/Icon2.png; sourceTree = SOURCE_ROOT; };
+		37F5985B12B9BAB700A33F3C /* Icon2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon2@2x.png"; path = "../Artwork/Icon2@2x.png"; sourceTree = SOURCE_ROOT; };
 		8D1107310486CEB800E47090 /* hymnalSqlite-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "hymnalSqlite-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -137,6 +149,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				37F5983812B73DDA00A33F3C /* Artwork */,
 				3744A00912AC8A170060771F /* Hymnal A Worship Book */,
 				28F335F01007B36200424DE2 /* RootViewController.xib */,
 				37449FA712AC31780060771F /* VerseViewController.xib */,
@@ -187,6 +200,19 @@
 				37EAC98D12AA1B8B007A2EFD /* DatabaseTests.mm */,
 			);
 			name = Tests;
+			sourceTree = "<group>";
+		};
+		37F5983812B73DDA00A33F3C /* Artwork */ = {
+			isa = PBXGroup;
+			children = (
+				37F5985912B9BAB700A33F3C /* Icon2-iPad.png */,
+				37F5985A12B9BAB700A33F3C /* Icon2.png */,
+				37F5985B12B9BAB700A33F3C /* Icon2@2x.png */,
+				37F5983912B73DEE00A33F3C /* Icon1-iPad.png */,
+				37F5983A12B73DEE00A33F3C /* Icon1.png */,
+				37F5983B12B73DEE00A33F3C /* Icon1@2x.png */,
+			);
+			name = Artwork;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -263,6 +289,12 @@
 				37449FA912AC31780060771F /* VerseViewController.xib in Resources */,
 				3744A05212AC8A170060771F /* Hymnal A Worship Book in Resources */,
 				37F5959512B5541C00A33F3C /* HymnViewController.xib in Resources */,
+				37F5983C12B73DEE00A33F3C /* Icon1-iPad.png in Resources */,
+				37F5983D12B73DEE00A33F3C /* Icon1.png in Resources */,
+				37F5983E12B73DEE00A33F3C /* Icon1@2x.png in Resources */,
+				37F5985C12B9BAB700A33F3C /* Icon2-iPad.png in Resources */,
+				37F5985D12B9BAB700A33F3C /* Icon2.png in Resources */,
+				37F5985E12B9BAB700A33F3C /* Icon2@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
