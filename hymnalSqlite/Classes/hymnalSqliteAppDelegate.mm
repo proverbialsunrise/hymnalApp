@@ -7,7 +7,7 @@
 //
 
 #import "hymnalSqliteAppDelegate.h"
-#import "RootViewController.h"
+#import "ByNumberController.h"
 #import <string>
 #import "DatabaseHelper.h"
 
@@ -15,7 +15,7 @@
 @implementation hymnalSqliteAppDelegate
 
 @synthesize window;
-@synthesize navigationController;
+@synthesize tabBarController;
 
 
 #pragma mark -
@@ -27,9 +27,24 @@
 	NSString *dbPath = [[NSBundle mainBundle] pathForResource:@"exampleDB" ofType:@"db"];
 	std::string dbPathString = std::string([dbPath UTF8String]);
 	openConnectionWithPath(dbPathString);
+	//Instantiate the ByNumber list.
+	ByNumberController *byNumberController = [[[ByNumberController alloc] initWithNibName:@"ByNumberController" bundle:[NSBundle mainBundle]] autorelease];
+	UINavigationController *numNavigationController = [[[UINavigationController alloc] initWithRootViewController:byNumberController] autorelease];
+	numNavigationController.tabBarItem = [[[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemTopRated tag:1] autorelease];
+	numNavigationController.navigationBar.barStyle = UIBarStyleBlack;
+	//Instantiate the ByTopic list.
+	//we don't have this view controller yet but I wanted to add something else to the TabBar.  
+	UINavigationController *topicNavigationController = [[[UINavigationController alloc] initWithRootViewController:byNumberController] autorelease];
+	topicNavigationController.tabBarItem = [[[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemRecents tag:2] autorelease];
+	topicNavigationController.navigationBar.barStyle = UIBarStyleBlack;
+
 	
+	NSArray *viewControllers = [NSArray arrayWithObjects:numNavigationController, topicNavigationController, nil];
+	
+	tabBarController.viewControllers = viewControllers;
+		
     // Add the navigation controller's view to the window and display.
-    [window addSubview:navigationController.view];
+    [window addSubview:tabBarController.view];
     [window makeKeyAndVisible];
 
     return YES;
@@ -85,7 +100,7 @@
 
 
 - (void)dealloc {
-	[navigationController release];
+	[tabBarController release];
 	[window release];
 	[super dealloc];
 }

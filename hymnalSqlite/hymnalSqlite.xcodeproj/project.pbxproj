@@ -13,8 +13,8 @@
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		2892E4100DC94CBA00A64D0F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */; };
 		28AD73600D9D9599002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD735F0D9D9599002E5188 /* MainWindow.xib */; };
-		28C286E10D94DF7D0034E888 /* RootViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 28C286E00D94DF7D0034E888 /* RootViewController.mm */; };
-		28F335F11007B36200424DE2 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28F335F01007B36200424DE2 /* RootViewController.xib */; };
+		28C286E10D94DF7D0034E888 /* ByNumberController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 28C286E00D94DF7D0034E888 /* ByNumberController.mm */; };
+		28F335F11007B36200424DE2 /* ByNumberController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28F335F01007B36200424DE2 /* ByNumberController.xib */; };
 		37449CE212AB77DE0060771F /* exampleDB.db in Resources */ = {isa = PBXBuildFile; fileRef = 37449CE012AB77DE0060771F /* exampleDB.db */; };
 		37449FA812AC31780060771F /* VerseViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 37449FA612AC31780060771F /* VerseViewController.mm */; };
 		37449FA912AC31780060771F /* VerseViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 37449FA712AC31780060771F /* VerseViewController.xib */; };
@@ -43,9 +43,9 @@
 		2892E40F0DC94CBA00A64D0F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		28A0AAE50D9B0CCF005BE974 /* hymnalSqlite_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hymnalSqlite_Prefix.pch; sourceTree = "<group>"; };
 		28AD735F0D9D9599002E5188 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
-		28C286DF0D94DF7D0034E888 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
-		28C286E00D94DF7D0034E888 /* RootViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RootViewController.mm; sourceTree = "<group>"; };
-		28F335F01007B36200424DE2 /* RootViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RootViewController.xib; sourceTree = "<group>"; };
+		28C286DF0D94DF7D0034E888 /* ByNumberController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ByNumberController.h; sourceTree = "<group>"; };
+		28C286E00D94DF7D0034E888 /* ByNumberController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ByNumberController.mm; sourceTree = "<group>"; };
+		28F335F01007B36200424DE2 /* ByNumberController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ByNumberController.xib; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		37449CE012AB77DE0060771F /* exampleDB.db */ = {isa = PBXFileReference; lastKnownFileType = file; name = exampleDB.db; path = TestData/exampleDB.db; sourceTree = "<group>"; };
 		37449FA512AC31780060771F /* VerseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VerseViewController.h; sourceTree = "<group>"; };
@@ -101,8 +101,8 @@
 			isa = PBXGroup;
 			children = (
 				3781499A12A2E72900110CCE /* Model */,
-				28C286DF0D94DF7D0034E888 /* RootViewController.h */,
-				28C286E00D94DF7D0034E888 /* RootViewController.mm */,
+				28C286DF0D94DF7D0034E888 /* ByNumberController.h */,
+				28C286E00D94DF7D0034E888 /* ByNumberController.mm */,
 				1D3623240D0F684500981E51 /* hymnalSqliteAppDelegate.h */,
 				1D3623250D0F684500981E51 /* hymnalSqliteAppDelegate.mm */,
 				37449FA512AC31780060771F /* VerseViewController.h */,
@@ -151,7 +151,7 @@
 			children = (
 				37F5983812B73DDA00A33F3C /* Artwork */,
 				3744A00912AC8A170060771F /* Hymnal A Worship Book */,
-				28F335F01007B36200424DE2 /* RootViewController.xib */,
+				28F335F01007B36200424DE2 /* ByNumberController.xib */,
 				37449FA712AC31780060771F /* VerseViewController.xib */,
 				37F5959312B5541C00A33F3C /* HymnViewController.xib */,
 				28AD735F0D9D9599002E5188 /* MainWindow.xib */,
@@ -284,7 +284,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				28AD73600D9D9599002E5188 /* MainWindow.xib in Resources */,
-				28F335F11007B36200424DE2 /* RootViewController.xib in Resources */,
+				28F335F11007B36200424DE2 /* ByNumberController.xib in Resources */,
 				37449CE212AB77DE0060771F /* exampleDB.db in Resources */,
 				37449FA912AC31780060771F /* VerseViewController.xib in Resources */,
 				3744A05212AC8A170060771F /* Hymnal A Worship Book in Resources */,
@@ -330,7 +330,7 @@
 			files = (
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* hymnalSqliteAppDelegate.mm in Sources */,
-				28C286E10D94DF7D0034E888 /* RootViewController.mm in Sources */,
+				28C286E10D94DF7D0034E888 /* ByNumberController.mm in Sources */,
 				378149C712A2EDB200110CCE /* Hymnal.cpp in Sources */,
 				378149DA12A2F8F000110CCE /* Hymn.cpp in Sources */,
 				378149ED12A4C1AC00110CCE /* DatabaseHelper.cpp in Sources */,

@@ -1,15 +1,15 @@
 //
-//  RootViewController.m
+//  ByNumberController.mm
 //  hymnalSqlite
 //
 //  Created by Daniel Johnson on 10-11-28.
 //  Copyright __MyCompanyName__ 2010. All rights reserved.
 //
 
-#import "RootViewController.h"
+#import "ByNumberController.h"
 #import "HymnViewController.h"
 
-@implementation RootViewController
+@implementation ByNumberController
 
 
 #pragma mark -
@@ -21,7 +21,8 @@
 	hymnal = getHymnal(1);
 	
 	hymns = getHymnsForHymnal(hymnal.get_hymnalID(), SORT_BY_NUMBER);
-	
+	[self setTitle:[NSString stringWithCString:hymnal.get_title().c_str() encoding:NSUTF8StringEncoding]];
+
 	//create a vector to store the filtered hymns
  	filteredHymns = new HymnVector;
 	
@@ -138,7 +139,7 @@
 	if (tableView == self.searchDisplayController.searchResultsTableView) {
 		hymn = (*filteredHymns)[indexPath.row];
 	} else {
-		hymn = (*filteredHymns)[indexPath.row];
+		hymn = (hymns)[indexPath.row];
 	}
 	
 	HymnViewController *hymnViewController = [[HymnViewController alloc] initWithHymn:hymn];

@@ -1,5 +1,5 @@
 //
-//  RootViewController.h
+//  ByNumberController.h
 //  hymnalSqlite
 //
 //  Created by Daniel Johnson on 10-11-28.
@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "DatabaseHelper.h"
 
-@interface RootViewController : UITableViewController {
+@interface ByNumberController : UITableViewController {
 	Hymnal hymnal;
 	
 	//Stores list content.  
