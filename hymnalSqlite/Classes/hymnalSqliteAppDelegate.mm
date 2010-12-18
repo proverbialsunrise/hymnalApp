@@ -34,7 +34,8 @@
 	numNavigationController.navigationBar.barStyle = UIBarStyleBlack;
 	//Instantiate the ByTopic list.
 	//we don't have this view controller yet but I wanted to add something else to the TabBar.  
-	UINavigationController *topicNavigationController = [[[UINavigationController alloc] initWithRootViewController:byNumberController] autorelease];
+	ByNumberController *byNumberController2 = [[[ByNumberController alloc] initWithNibName:@"ByNumberController" bundle:[NSBundle mainBundle]] autorelease];
+	UINavigationController *topicNavigationController = [[[UINavigationController alloc] initWithRootViewController:byNumberController2] autorelease];
 	topicNavigationController.tabBarItem = [[[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemRecents tag:2] autorelease];
 	topicNavigationController.navigationBar.barStyle = UIBarStyleBlack;
 

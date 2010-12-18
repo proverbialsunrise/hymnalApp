@@ -91,14 +91,11 @@
 	return contentView;
 }
 
-- (void)hideNavigationBar{
-	[[self navigationController] setNavigationBarHidden:YES animated:YES];
-}
 
+/*
 - (void) viewDidAppear:(BOOL)animated{
-	[NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(hideNavigationBar) userInfo:nil repeats:NO];
 }
-
+*/
 
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {

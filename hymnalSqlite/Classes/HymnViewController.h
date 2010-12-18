@@ -15,6 +15,8 @@
 	Hymn hymn;
 	NSInteger currentVerse;
 	BOOL rotating;
+	
+	NSTimer *navigationBarTimer;
 }
 
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;

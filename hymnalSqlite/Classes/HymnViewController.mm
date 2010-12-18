@@ -10,15 +10,30 @@
 #import "DatabaseHelper.h"
 #import "VerseViewController.h"
 
+@interface HymnViewController () //Private Interface
+
+- (void) redrawVersesForOrientation:(UIInterfaceOrientation)fromInterfaceOrientation;
+
+- (void) hideNavigationBar;
+
+- (void) showNavigationBar;
+
+- (void) scrollToVerse:(NSInteger)verseNum animated:(BOOL)animate;
+
+@end
+
 
 @implementation HymnViewController
 
 @synthesize scrollView;
 
+#pragma mark ViewController LifeCycle
+
  // The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) {
 		verseViewControllers = [NSMutableArray new];
+		self.hidesBottomBarWhenPushed = YES;
     }
     return self;
 }
@@ -30,43 +45,73 @@
 	return self;
 }
 
-- (void) scrollToVerse:(NSInteger)verseNum animated:(BOOL)animate {
-	CGFloat curWidth = self.scrollView.frame.size.width;
-	NSLog(@"Scroll to verse number: %d", verseNum);
-	[self.scrollView scrollRectToVisible:CGRectMake(curWidth * (verseNum - 1), 0, curWidth, 100) animated:animate];
-}
-
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
 	currentVerse = 1;
 	rotating = NO;
+	navigationBarTimer = nil;
 	self.title = [NSString stringWithFormat:@"%s", hymn.get_title().c_str()];
 	
 	//Load a set of VerseViewControllers.  If necessary, we can load these on demand...but no point until it seems necessary.
-	
-	CGFloat xOffset = 0.0;
 	int numVerses = getNumVersesForHymn(hymn.get_hymnID());
 	for (int i = 1; i <= numVerses; i++) {
 		VerseViewController *verseViewController = [[[VerseViewController alloc] initWithHymn:hymn verse:i] autorelease];
-		[verseViewControllers addObject:verseViewController];
-		CGRect viewFrame = verseViewController.view.frame;	
-		[verseViewController.view setFrame:CGRectMake(xOffset, 0, viewFrame.size.width, viewFrame.size.height)];
-		xOffset += viewFrame.size.width;
 		[self.scrollView addSubview:verseViewController.view];
+		[verseViewControllers addObject:verseViewController];
 	}
-	
-	[self.scrollView setContentSize:CGSizeMake(xOffset, self.view.frame.size.height)];
-	[self.scrollView setDelegate:self];
+	[self.scrollView setDelegate:self];	
+	//Make corners hot to bring back Navigation Controls.
+	UIButton* topLeftCornerButton = [[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)] autorelease];
+	[topLeftCornerButton addTarget:self action:@selector(showNavigationBar) forControlEvents:UIControlEventTouchDown];
+	UIButton* topRightCornerButton = [[topLeftCornerButton copy] autorelease];
+	[self.view addSubview:topLeftCornerButton];
 	
 }
 
+- (void) viewWillAppear:(BOOL)animated {
+	[self redrawVersesForOrientation:self.interfaceOrientation];
+}
 
+- (void) viewDidAppear:(BOOL)animated {
+	navigationBarTimer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(hideNavigationBar) userInfo:nil repeats:NO];
+}
+
+- (void) viewWillDisappear:(BOOL)animated {
+	if (navigationBarTimer != nil) {
+		[navigationBarTimer invalidate];
+		navigationBarTimer = nil;
+	}
+}
+
+- (void)didReceiveMemoryWarning {
+    // Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+    
+    // Release any cached data, images, etc that aren't in use.
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+}
+
+- (void)dealloc {
+	[scrollView release];
+	[verseViewControllers release];
+    [super dealloc];
+}
+
+#pragma mark -
+
+
+#pragma mark Rotation
 
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations
-    return YES;
+    return !(interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown);
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
@@ -74,20 +119,11 @@
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-	//Redraw the Verses the appropriate size. 
-	CGFloat xOffset = 0.0;
-	for (VerseViewController  *v in verseViewControllers) {
-		CGRect viewFrame = v.view.frame;	
-		[v.view setFrame:CGRectMake(xOffset, 0, viewFrame.size.width, viewFrame.size.height)];
-		xOffset += viewFrame.size.width;
-		[v didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-	}
-	[self.scrollView setContentSize:CGSizeMake(xOffset, self.view.frame.size.height)];
-	[self scrollToVerse:currentVerse animated:NO];
+	[self redrawVersesForOrientation:fromInterfaceOrientation];
 	rotating = NO;
 }
 
-
+#pragma mark -
 #pragma mark UIScrollViewDelegate
 
 - (void) scrollViewDidScroll:(UIScrollView *)sView {
@@ -107,34 +143,53 @@
 			}
 			NSLog(@"Scrolled To Verse: %d", currentVerse);
 		}
+		NSLog(@"Offset: %d", xOffset);
 	}
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)sView {
-	NSLog(@"Animation ended");
+	//NSLog(@"Animation ended");
 }
 
 #pragma mark -
 
-- (void)didReceiveMemoryWarning {
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
+#pragma mark Private Interface 
+- (void) scrollToVerse:(NSInteger)verseNum animated:(BOOL)animate {
+	CGFloat curWidth = self.scrollView.frame.size.width;
+	NSLog(@"Scroll to verse number: %d", verseNum);
+	[self.scrollView scrollRectToVisible:CGRectMake(curWidth * (verseNum - 1), 0, curWidth, 100) animated:animate];
 }
 
-- (void)viewDidUnload {
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+- (void) hideNavigationBar{
+	self.wantsFullScreenLayout = YES;
+	[[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+	[[self navigationController] setNavigationBarHidden:YES animated:YES];
+	if (navigationBarTimer != nil) {
+		[navigationBarTimer invalidate];
+		navigationBarTimer = nil;
+	}
 }
 
-
-- (void)dealloc {
-	[scrollView release];
-	[verseViewControllers release];
-    [super dealloc];
+- (void) showNavigationBar{
+	self.wantsFullScreenLayout = NO;
+	[[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
+	[[self navigationController] setNavigationBarHidden:NO animated:YES];
+	navigationBarTimer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(hideNavigationBar) userInfo:nil repeats:NO];
 }
 
+- (void) redrawVersesForOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+	//Redraw the Verses the appropriate size. 
+	CGFloat xOffset = 0.0;
+	for (VerseViewController  *v in verseViewControllers) {
+		CGRect viewFrame = v.view.frame;	
+		[v.view setFrame:CGRectMake(xOffset, 0, viewFrame.size.width, viewFrame.size.height)];
+		xOffset += viewFrame.size.width;
+		[v didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+	}
+	[self.scrollView setContentSize:CGSizeMake(xOffset, self.view.frame.size.height)];
+	[self scrollToVerse:currentVerse animated:NO];
+}
+
+#pragma mark -
 
 @end
