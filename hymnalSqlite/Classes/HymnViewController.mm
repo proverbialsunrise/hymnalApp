@@ -57,16 +57,11 @@
 	int numVerses = getNumVersesForHymn(hymn.get_hymnID());
 	for (int i = 1; i <= numVerses; i++) {
 		VerseViewController *verseViewController = [[[VerseViewController alloc] initWithHymn:hymn verse:i] autorelease];
+		[verseViewController setDelegate:self];
 		[self.scrollView addSubview:verseViewController.view];
 		[verseViewControllers addObject:verseViewController];
 	}
-	[self.scrollView setDelegate:self];	
-	//Make corners hot to bring back Navigation Controls.
-	UIButton* topLeftCornerButton = [[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)] autorelease];
-	[topLeftCornerButton addTarget:self action:@selector(showNavigationBar) forControlEvents:UIControlEventTouchDown];
-	UIButton* topRightCornerButton = [[topLeftCornerButton copy] autorelease];
-	[self.view addSubview:topLeftCornerButton];
-	
+	[self.scrollView setDelegate:self];		
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -153,6 +148,13 @@
 
 #pragma mark -
 
+#pragma mark VerseViewControllerDelegate
+- (void) verseViewControllerTouchUpEvent:(VerseViewController *)verseViewController {
+	[self showNavigationBar];
+}
+
+#pragma mark -
+
 #pragma mark Private Interface 
 - (void) scrollToVerse:(NSInteger)verseNum animated:(BOOL)animate {
 	CGFloat curWidth = self.scrollView.frame.size.width;
@@ -171,6 +173,7 @@
 }
 
 - (void) showNavigationBar{
+	[navigationBarTimer invalidate];
 	self.wantsFullScreenLayout = NO;
 	[[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
 	[[self navigationController] setNavigationBarHidden:NO animated:YES];

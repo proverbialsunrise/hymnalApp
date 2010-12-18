@@ -9,6 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "DatabaseHelper.h"
 
+@class VerseViewController;
+
+@protocol VerseViewControllerDelegate <NSObject>
+
+- (void) verseViewControllerTouchUpEvent:(VerseViewController *)verseViewController;
+
+@end
+
 
 @interface VerseViewController : UIViewController <UIScrollViewDelegate> {
 	Hymn hymn;
@@ -18,13 +26,15 @@
 	UIView *contentView;
 	CGFloat contentWidth;
 	unsigned int verseNumber;
+	
+	id <VerseViewControllerDelegate> delegate;
 }
 
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
+@property (nonatomic, assign) id <VerseViewControllerDelegate> delegate;
 
 - (id) initWithHymn:(Hymn)h verse:(unsigned int)verseNum;
 
-- (void) refreshImages;
 
 - (void) reset;
 

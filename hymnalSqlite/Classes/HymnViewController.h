@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "Hymn.h"
+#import "VerseViewController.h"
 
-@interface HymnViewController : UIViewController <UIScrollViewDelegate> {
+@interface HymnViewController : UIViewController <UIScrollViewDelegate, VerseViewControllerDelegate> {
 	UIScrollView *scrollView;
 	NSMutableArray* verseViewControllers;
 	Hymn hymn;
