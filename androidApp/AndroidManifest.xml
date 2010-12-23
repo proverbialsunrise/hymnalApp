@@ -6,7 +6,7 @@
       
     <uses-sdk android:minSdkVersion="7" />
       
-    <application android:icon="@drawable/icon" android:label="@string/app_name">
+    <application android:icon="@drawable/hymnal_icon" android:label="@string/app_name">
         <activity android:name=".Hymnal"
                   android:label="@string/app_name">
             <intent-filter>

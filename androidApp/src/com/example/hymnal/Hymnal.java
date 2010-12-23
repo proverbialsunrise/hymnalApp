@@ -2,7 +2,7 @@ package com.example.hymnal;
 
 import android.app.ListActivity;
 import android.content.Intent;
-//import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
@@ -37,6 +37,10 @@ public class Hymnal extends ListActivity{
 	
 	public native String[] listHymnals();
 	static {
+    	if ( "sdk".equals( Build.PRODUCT ) )
+			EMULATOR = true;
+    	else
+    		Log.e ( "hymnal", "Product: " + Build.PRODUCT );
 		if ( !EMULATOR )
 			System.loadLibrary ( "Database-Jni" );
 	}
