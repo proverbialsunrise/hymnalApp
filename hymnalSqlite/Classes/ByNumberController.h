@@ -7,19 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "DatabaseHelper.h"
+#import "HymnListTableViewController.h"
 
-@interface ByNumberController : UITableViewController {
-	Hymnal hymnal;
-	
-	//Stores list content.  
-	HymnVector hymns;
-	HymnVector *filteredHymns;
-	
-	//Stores search state if the view is unloaded
-	NSString *savedSearchTerm;
-	NSInteger savedScopeButtonIndex;
-	BOOL searchWasActive;
+@interface ByNumberController : HymnListTableViewController {
+
 }
 
 @end

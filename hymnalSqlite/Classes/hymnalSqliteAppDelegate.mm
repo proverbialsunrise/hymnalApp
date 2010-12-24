@@ -10,6 +10,7 @@
 #import "ByNumberController.h"
 #import <string>
 #import "DatabaseHelper.h"
+#import "ByTitleController.h"
 
 
 @implementation hymnalSqliteAppDelegate
@@ -28,14 +29,14 @@
 	std::string dbPathString = std::string([dbPath UTF8String]);
 	openConnectionWithPath(dbPathString);
 	//Instantiate the ByNumber list.
-	ByNumberController *byNumberController = [[[ByNumberController alloc] initWithNibName:@"ByNumberController" bundle:[NSBundle mainBundle]] autorelease];
+	ByNumberController *byNumberController = [[[ByNumberController alloc] initWithNibName:@"HymnListTableViewController" bundle:[NSBundle mainBundle]] autorelease];
 	UINavigationController *numNavigationController = [[[UINavigationController alloc] initWithRootViewController:byNumberController] autorelease];
 	numNavigationController.tabBarItem = [[[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemTopRated tag:1] autorelease];
 	numNavigationController.navigationBar.barStyle = UIBarStyleBlack;
 	//Instantiate the ByTopic list.
 	//we don't have this view controller yet but I wanted to add something else to the TabBar.  
-	ByNumberController *byNumberController2 = [[[ByNumberController alloc] initWithNibName:@"ByNumberController" bundle:[NSBundle mainBundle]] autorelease];
-	UINavigationController *topicNavigationController = [[[UINavigationController alloc] initWithRootViewController:byNumberController2] autorelease];
+	ByTitleController *byTitleController = [[[ByTitleController alloc] initWithNibName:@"HymnListTableViewController" bundle:[NSBundle mainBundle]] autorelease];
+	UINavigationController *topicNavigationController = [[[UINavigationController alloc] initWithRootViewController:byTitleController] autorelease];
 	topicNavigationController.tabBarItem = [[[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemRecents tag:2] autorelease];
 	topicNavigationController.navigationBar.barStyle = UIBarStyleBlack;
 

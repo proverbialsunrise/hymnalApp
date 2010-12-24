@@ -1,25 +1,24 @@
-//
-//  ByNumberController.mm
+    //
+//  ByTitleController.m
 //  hymnalSqlite
 //
-//  Created by Daniel Johnson on 10-11-28.
-//  Copyright __MyCompanyName__ 2010. All rights reserved.
+//  Created by Daniel Johnson on 10-12-24.
+//  Copyright 2010 __MyCompanyName__. All rights reserved.
 //
 
-#import "ByNumberController.h"
+#import "ByTitleController.h"
 
-@implementation ByNumberController
 
-#pragma mark View lifecycle
+@implementation ByTitleController
 
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 	hymnal = getHymnal(1);
 	
-	hymns = getHymnsForHymnal(hymnal.get_hymnalID(), SORT_BY_NUMBER);
+	hymns = getHymnsForHymnal(hymnal.get_hymnalID(), SORT_BY_NAME);
 	[self setTitle:[NSString stringWithCString:hymnal.get_title().c_str() encoding:NSUTF8StringEncoding]];
-
+	
 	//create a vector to store the filtered hymns
  	filteredHymns = new HymnVector;
 	
@@ -46,12 +45,12 @@
 	 */
 	//Eventually I think this should be a call to the database rather than an iteration through the hymns in the list. 
 	//Nevertheless, we'll start here and see if there is performance trouble. 
-	//If necessary, kick off a background SQL search, return NO and reload the data when the search is complete. TODO??
+	//If necessary, kick off a background SQL search, return NO and reload the data when the search is complete. TODO?
 	
 	filteredHymns->clear(); // First clear the filtered vector.
 	
 	/*
-	Search the main list for hymns that match based on number, name, first line
+	 Search the main list for hymns that match based on number, name, first line
 	 */
 	HymnVector::iterator it;
 	for (it = hymns.begin(); it != hymns.end(); it++)
@@ -80,4 +79,3 @@
 #pragma mark -
 
 @end
-
