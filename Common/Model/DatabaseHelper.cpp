@@ -26,6 +26,7 @@ static sqlite3_stmt *get_numVersesForHymn = 0;
 #pragma mark Database Lifecycle
 void openConnectionWithPath(std::string& databasePath){
 	if (database == 0) {
+		printf("Database: %s\n", databasePath.c_str());
 		sqlite3_open(databasePath.c_str(), &database);
 		Hymnal::prepareDatabaseStatements(database);
 		Hymn::prepareDatabaseStatements(database);
@@ -243,18 +244,22 @@ HymnVector getHymnsForHymnal(int hymnalID, HymnSort sortBy){
 	
 	if (0 == get_allHymns_sort) {
 		//I don't know if you can put a wild card into an ORDER BY like this.  We may need two separate statements.
-		const char *sql = "SELECT hymnID, hymnNumber, title FROM hymn WHERE hymnal = ? ORDER BY ? ASC";
+		const char *sql = "SELECT hymnID, hymnNumber, title FROM hymn WHERE hymnal = ? ORDER BY CASE ? WHEN 1 THEN hymnID WHEN 2 THEN hymnNumber WHEN 3 THEN title END ASC";
 		if (sqlite3_prepare_v2(database, sql, -1, &get_allHymns_sort, NULL) != SQLITE_OK) {
-			printf("Problem preparing get_allHymns_sort: %s", sqlite3_errmsg(database));
+			printf("Problem preparing get_allHymns_sort: %s\n", sqlite3_errmsg(database));
 		}
 	}
 	
-	sqlite3_bind_int(get_allHymns_sort, 1, hymnalID);
-	sqlite3_bind_int(get_allHymns_sort, 2, sortBy);
+	if (sqlite3_bind_int(get_allHymns_sort, 1, hymnalID) != SQLITE_OK){
+		printf("Problem binding to 1 of get_allHymns_sort.\n");
+	}
+	
+	 if (sqlite3_bind_int(get_allHymns_sort, 2, sortBy) != SQLITE_OK){
+		printf("Problem binding to 2 of get_allHymns_sort.\n");
+	} 
 	
 	HymnVector hymns;
 	while (sqlite3_step(get_allHymns_sort) == SQLITE_ROW) {
-		//We could do one less query here if performance is an issue. The code is cleaner this way. TODO?
 		int hymnID = sqlite3_column_int(get_allHymns_sort, 0);
 		Hymn hymn = Hymn(hymnID, hymnal);
 		hymns.push_back(hymn);

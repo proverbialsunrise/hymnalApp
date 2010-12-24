@@ -76,12 +76,13 @@ void Hymn::setHymnDetailsFromSqlRow(sqlite3_stmt *row){
 	this->title = (const char *)sqlite3_column_text(row, 9);
 	this->translator = (const char *)sqlite3_column_text(row, 10);
 	this->tune = (const char *)sqlite3_column_text(row, 11);
+	this->favourite = (bool)sqlite3_column_int(row, 12);
 }
 
 void Hymn::prepareDatabaseStatements(sqlite3 *database){
 	if (0 != database) {
 		if (0 == get_hymnInfo) {
-			const char *sql = "SELECT hymnNumber, author, composer, copyrightInfo, firstLine, metric, section, subSection, subSubSection, title, translator, tune FROM hymn WHERE hymnID = ?";
+			const char *sql = "SELECT hymnNumber, author, composer, copyrightInfo, firstLine, metric, section, subSection, subSubSection, title, translator, tune, favourite FROM hymn WHERE hymnID = ?";
 			if (sqlite3_prepare_v2(database, sql, -1, &get_hymnInfo, NULL) != SQLITE_OK) {
 				printf("Problem preparing statement get_hymnInfo: %s \n", sqlite3_errmsg(database));
 			}
@@ -91,7 +92,7 @@ void Hymn::prepareDatabaseStatements(sqlite3 *database){
 
 void Hymn::tsPrepareDatabaseStatements(sqlite3 *database, sqlite3_stmt** ret_get_hymn_info) {
 	if (0 != database) {
-		const char *sql = "SELECT hymnNumber, author, composer, copyrightInfo, firstLine, metric, section, subSection, subSubSection, title, translator, tune FROM hymn WHERE hymnID = ?";
+		const char *sql = "SELECT hymnNumber, author, composer, copyrightInfo, firstLine, metric, section, subSection, subSubSection, title, translator, tune, favourite FROM hymn WHERE hymnID = ?";
 		if (sqlite3_prepare_v2(database, sql, -1, ret_get_hymn_info, NULL) != SQLITE_OK) {
 			printf("Problem preparing statement get_hymnInfo: %s \n", sqlite3_errmsg(database));
 		}
@@ -121,6 +122,7 @@ void Hymn::printDescription() const{
 	printf("Title: %s\n", this->title.c_str());
 	printf("Translator: %s\n", this->translator.c_str());
 	printf("Tune: %s\n", this->tune.c_str());
+	printf("Favourite: %d\n", this->favourite);
 }
 
 int Hymn::get_hymnID() const{
@@ -161,4 +163,7 @@ std::string Hymn::get_translator() const{
 }
 std::string Hymn::get_tune() const{
 	return tune;
+}
+bool Hymn::get_favourite() const{
+	return favourite;
 }

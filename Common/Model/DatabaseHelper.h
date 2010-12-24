@@ -32,8 +32,8 @@ typedef enum PartSpecifier {
 
 //enum for how to sort lists of hymns
 typedef enum HymnSort {
-	SORT_BY_NUMBER = 1,
-	SORT_BY_NAME = 2
+	SORT_BY_NUMBER = 2,
+	SORT_BY_NAME = 3
 } HymnSort;
 
 typedef struct HymnSection {	

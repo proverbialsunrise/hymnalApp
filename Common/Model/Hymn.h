@@ -37,6 +37,7 @@ public:
 	std::string get_title() const;
 	std::string get_translator() const;
 	std::string get_tune() const;
+	bool get_favourite() const;
 	//Setters aren't necessary. 
 	
 	static void prepareDatabaseStatements(sqlite3 *database);
@@ -63,6 +64,7 @@ private:
 	std::string title;
 	std::string translator;
 	std::string tune;
+	bool favourite;
 
 	void setHymnDetailsFromSqlRow(sqlite3_stmt *row);
 };
