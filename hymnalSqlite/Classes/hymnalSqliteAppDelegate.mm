@@ -7,10 +7,14 @@
 //
 
 #import "hymnalSqliteAppDelegate.h"
-#import "ByNumberController.h"
 #import <string>
+
+
 #import "DatabaseHelper.h"
 #import "ByTitleController.h"
+#import "FavouritesController.h"
+#import "ByNumberController.h"
+
 
 
 @implementation hymnalSqliteAppDelegate
@@ -22,10 +26,32 @@
 #pragma mark -
 #pragma mark Application lifecycle
 
+- (NSString *)createEditableCopyOfDatabaseIfNeeded
+{
+	BOOL dbExists = FALSE;
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSError *error;
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	NSString *documentsDirectory = [paths objectAtIndex:0];
+	NSString *writableDBPath = [documentsDirectory stringByAppendingFormat:@"hymnal.db"];
+	
+	dbExists = [fileManager fileExistsAtPath:writableDBPath];
+	if (dbExists) {
+		return writableDBPath;
+	}
+	NSString *dbPath = [[NSBundle mainBundle] pathForResource:@"exampleDB" ofType:@"db"];
+	dbExists = [fileManager copyItemAtPath:dbPath toPath:writableDBPath error:&error];
+	if (dbExists) {
+		return writableDBPath;
+	} else {
+		NSAssert1(0, @"Failed to create writable database file: '%@'.", [error localizedDescription]);
+		return nil;
+	}
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
     
-    // Override point for customization after application launch.
-	NSString *dbPath = [[NSBundle mainBundle] pathForResource:@"exampleDB" ofType:@"db"];
+	NSString *dbPath = [self createEditableCopyOfDatabaseIfNeeded];
 	std::string dbPathString = std::string([dbPath UTF8String]);
 	openConnectionWithPath(dbPathString);
 	//Instantiate the ByNumber list.
@@ -36,12 +62,17 @@
 	//Instantiate the ByTopic list.
 	//we don't have this view controller yet but I wanted to add something else to the TabBar.  
 	ByTitleController *byTitleController = [[[ByTitleController alloc] initWithNibName:@"HymnListTableViewController" bundle:[NSBundle mainBundle]] autorelease];
-	UINavigationController *topicNavigationController = [[[UINavigationController alloc] initWithRootViewController:byTitleController] autorelease];
-	topicNavigationController.tabBarItem = [[[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemRecents tag:2] autorelease];
-	topicNavigationController.navigationBar.barStyle = UIBarStyleBlack;
+	UINavigationController *titleNavigationController = [[[UINavigationController alloc] initWithRootViewController:byTitleController] autorelease];
+	titleNavigationController.tabBarItem = [[[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemRecents tag:2] autorelease];
+	titleNavigationController.navigationBar.barStyle = UIBarStyleBlack;
+	
+	FavouritesController *favouritesController = [[[FavouritesController alloc] initWithNibName:@"HymnListTableViewController" bundle:[NSBundle mainBundle]] autorelease];
+	UINavigationController *favouritesNavigationController = [[[UINavigationController alloc] initWithRootViewController:favouritesController] autorelease];
+	favouritesNavigationController.tabBarItem = [[[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemFavorites tag:3] autorelease];
+	favouritesNavigationController.navigationBar.barStyle = UIBarStyleBlack;
 
 	
-	NSArray *viewControllers = [NSArray arrayWithObjects:numNavigationController, topicNavigationController, nil];
+	NSArray *viewControllers = [NSArray arrayWithObjects:numNavigationController, titleNavigationController, favouritesNavigationController, nil];
 	
 	tabBarController.viewControllers = viewControllers;
 		

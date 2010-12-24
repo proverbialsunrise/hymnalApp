@@ -21,6 +21,7 @@
 		37596A0712C46600000AA24E /* HymnListTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 37596A0512C46600000AA24E /* HymnListTableViewController.mm */; };
 		37596A0812C46600000AA24E /* HymnListTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 37596A0612C46600000AA24E /* HymnListTableViewController.xib */; };
 		37596A6D12C47691000AA24E /* ByTitleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 37596A6C12C47691000AA24E /* ByTitleController.mm */; };
+		37596B2012C52661000AA24E /* FavouritesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 37596B1F12C52661000AA24E /* FavouritesController.mm */; };
 		378149C712A2EDB200110CCE /* Hymnal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 378149C612A2EDB200110CCE /* Hymnal.cpp */; };
 		378149D112A2F0ED00110CCE /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 378149D012A2F0ED00110CCE /* libsqlite3.dylib */; };
 		378149DA12A2F8F000110CCE /* Hymn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 378149D912A2F8F000110CCE /* Hymn.cpp */; };
@@ -58,6 +59,8 @@
 		37596A0612C46600000AA24E /* HymnListTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HymnListTableViewController.xib; sourceTree = "<group>"; };
 		37596A6B12C47691000AA24E /* ByTitleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ByTitleController.h; sourceTree = "<group>"; };
 		37596A6C12C47691000AA24E /* ByTitleController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ByTitleController.mm; sourceTree = "<group>"; };
+		37596B1E12C52661000AA24E /* FavouritesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavouritesController.h; sourceTree = "<group>"; };
+		37596B1F12C52661000AA24E /* FavouritesController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FavouritesController.mm; sourceTree = "<group>"; };
 		378149C512A2EDB200110CCE /* Hymnal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hymnal.h; sourceTree = "<group>"; };
 		378149C612A2EDB200110CCE /* Hymnal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Hymnal.cpp; sourceTree = "<group>"; };
 		378149D012A2F0ED00110CCE /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
@@ -119,6 +122,8 @@
 				37F5959212B5541C00A33F3C /* HymnViewController.mm */,
 				37596A0412C46600000AA24E /* HymnListTableViewController.h */,
 				37596A0512C46600000AA24E /* HymnListTableViewController.mm */,
+				37596B1E12C52661000AA24E /* FavouritesController.h */,
+				37596B1F12C52661000AA24E /* FavouritesController.mm */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -349,6 +354,7 @@
 				37F5959412B5541C00A33F3C /* HymnViewController.mm in Sources */,
 				37596A0712C46600000AA24E /* HymnListTableViewController.mm in Sources */,
 				37596A6D12C47691000AA24E /* ByTitleController.mm in Sources */,
+				37596B2012C52661000AA24E /* FavouritesController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

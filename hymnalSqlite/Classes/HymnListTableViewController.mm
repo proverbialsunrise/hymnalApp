@@ -17,6 +17,20 @@
 #pragma mark View lifecycle
 
 - (void) viewDidLoad {
+	[self setTitle:[NSString stringWithCString:hymnal.get_title().c_str() encoding:NSUTF8StringEncoding]];
+	
+
+	if (savedSearchTerm) {
+		[self.searchDisplayController setActive:searchWasActive];
+		[self.searchDisplayController.searchBar setSelectedScopeButtonIndex:savedScopeButtonIndex];
+		[self.searchDisplayController.searchBar setText:savedSearchTerm];
+		
+		savedSearchTerm = nil;
+	}
+	
+	//[self.searchDisplayController.searchBar setScopeButtonTitles:[NSArray arrayWithObjects:@"All", @"Title", @"Number", nil]];
+	[self.tableView reloadData];
+	
 	if ([self isMemberOfClass:[HymnListTableViewController class]]) {
 		NSLog(@"Warning: You must implement viewDidLoad in your subclass");
 	}
@@ -73,7 +87,7 @@
 	 */
 	if (tableView == self.searchDisplayController.searchResultsTableView)
 	{
-		return filteredHymns->size();
+		return filteredHymns.size();
     }
 	else
 	{
@@ -96,7 +110,7 @@
 	Hymn hymn;
 	
 	if (tableView == self.searchDisplayController.searchResultsTableView) {
-		hymn = (*filteredHymns)[row];
+		hymn = filteredHymns[row];
 	} else {
 		hymn = hymns[row];
 	}
@@ -120,7 +134,7 @@
 	[self setTitle:[NSString stringWithCString:hymnal.get_shortName().c_str() encoding:NSUTF8StringEncoding]];
 	Hymn hymn;
 	if (tableView == self.searchDisplayController.searchResultsTableView) {
-		hymn = (*filteredHymns)[indexPath.row];
+		hymn = filteredHymns[indexPath.row];
 	} else {
 		hymn = (hymns)[indexPath.row];
 	}
@@ -133,9 +147,23 @@
 
 #pragma mark -
 
-- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope {
-	if ([self isMemberOfClass:[HymnListTableViewController class]]) {
-		NSLog(@"Warning: You must implement filterContentForSearchText in your subclass");
+
+
+#pragma mark Content Filtering
+
+- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
+{
+	//Universal search.  Query the database by number if the search is a number, otherwise query by title. 
+	
+	/*
+	 Search the main list for hymns that match based on number, name, first line
+	 */
+	NSInteger hymnNumber = [searchText integerValue];
+	if (hymnNumber != 0) {
+		filteredHymns = getHymnsForNumericSearch(1, hymnNumber);
+	} else {
+		std::string searchTextString = std::string([searchText UTF8String]);
+		filteredHymns = getHymnsForTitleSearch(1, searchTextString);
 	}
 }
 
@@ -177,7 +205,6 @@
 }
 
 - (void)dealloc {
-	delete filteredHymns;
     [super dealloc];
 }
 

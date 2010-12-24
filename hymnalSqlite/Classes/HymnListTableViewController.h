@@ -15,7 +15,7 @@
 	
 	//Stores list content.  
 	HymnVector hymns;
-	HymnVector *filteredHymns;
+	HymnVector filteredHymns;
 	
 	//Stores search state if the view is unloaded
 	NSString *savedSearchTerm;
