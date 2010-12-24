@@ -83,6 +83,12 @@ HymnVector getHymnsForSection(int hymnalID, std::string& section, HymnSort sortB
 
 HymnVector getHymnsForSubSection(int hymnalID, std::string& subSection, HymnSort sortBy);
 
+HymnVector getFavouriteHymnsForHymnal(int hymnalID, HymnSort sortBy);
+
+HymnVector getHymnsForNumericSearch(int hymnalID, int hymnNumber);
+
+HymnVector getHymnsForTitleSearch(int hymnalID, std::string& searchString);
+
 #pragma mark -
 
 #endif

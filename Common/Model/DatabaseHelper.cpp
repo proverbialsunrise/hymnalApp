@@ -16,12 +16,17 @@ static sqlite3 *database = 0;
 //When adding a sqlite statement, make sure to add it to finalizeDatabaseStatements() so that it is properly destroyed.
 static sqlite3_stmt *get_allHymns_sort = 0;
 static sqlite3_stmt *get_allHymnsForSection_sort = 0;
+static sqlite3_stmt *get_favouriteHymns_sort = 0;
 
 static sqlite3_stmt *get_hymnMusicSections = 0;
 static sqlite3_stmt *get_hymnLyricsSections = 0;
 static sqlite3_stmt *get_hymnSections = 0;
 
 static sqlite3_stmt *get_numVersesForHymn = 0;
+
+//Search statements.
+static sqlite3_stmt *get_hymnsForNumericSearch = 0;
+static sqlite3_stmt *get_hymnsForTitleSearch = 0;
 
 #pragma mark Database Lifecycle
 void openConnectionWithPath(std::string& databasePath){
@@ -80,6 +85,18 @@ void finalizeDatabaseStatements(){
 	if (0 != get_hymnSections) {
 		sqlite3_finalize(get_hymnSections);
 		get_hymnSections = 0;
+	}
+	if (0 != get_favouriteHymns_sort) {
+		sqlite3_finalize(get_favouriteHymns_sort);
+		get_favouriteHymns_sort = 0;
+	}
+	if (0 != get_hymnsForNumericSearch) {
+		sqlite3_finalize(get_hymnsForNumericSearch);
+		get_hymnsForNumericSearch = 0;
+	}
+	if (0 != get_hymnsForTitleSearch) {
+		sqlite3_finalize(get_hymnsForTitleSearch);
+		get_hymnsForTitleSearch = 0;
 	}
 	
 }
@@ -243,7 +260,6 @@ HymnVector getHymnsForHymnal(int hymnalID, HymnSort sortBy){
 	Hymnal hymnal = Hymnal(hymnalID);
 	
 	if (0 == get_allHymns_sort) {
-		//I don't know if you can put a wild card into an ORDER BY like this.  We may need two separate statements.
 		const char *sql = "SELECT hymnID, hymnNumber, title FROM hymn WHERE hymnal = ? ORDER BY CASE ? WHEN 1 THEN hymnID WHEN 2 THEN hymnNumber WHEN 3 THEN title END ASC";
 		if (sqlite3_prepare_v2(database, sql, -1, &get_allHymns_sort, NULL) != SQLITE_OK) {
 			printf("Problem preparing get_allHymns_sort: %s\n", sqlite3_errmsg(database));
@@ -266,6 +282,88 @@ HymnVector getHymnsForHymnal(int hymnalID, HymnSort sortBy){
 	}
 	sqlite3_reset(get_allHymns_sort);
 	return hymns;
+}
+
+HymnVector getFavouriteHymnsForHymnal(int hymnalID, HymnSort sortBy) {
+	Hymnal hymnal = Hymnal(hymnalID);
+	if (0 == get_favouriteHymns_sort) {
+		const char *sql = "SELECT hymnID, hymnNumber, title FROM hymn WHERE hymnal = ? AND favourite = 1 ORDER BY CASE ? WHEN 1 THEN hymnID WHEN 2 THEN hymnNumber WHEN 3 THEN title END ASC";
+		if (sqlite3_prepare_v2(database, sql, -1, &get_favouriteHymns_sort, NULL) != SQLITE_OK) {
+			printf("Problem preparing get_favouriteHymns_sort: %s\n", sqlite3_errmsg(database));
+		}
+	}
+	
+	if (sqlite3_bind_int(get_favouriteHymns_sort, 1, hymnalID) != SQLITE_OK){
+		printf("Problem binding to 1 of get_favouriteHymns_sort.\n");
+	}
+	
+	if (sqlite3_bind_int(get_favouriteHymns_sort, 2, sortBy) != SQLITE_OK){
+		printf("Problem binding to 2 of get_favouriteHymns_sort.\n");
+	} 
+	HymnVector hymns;
+	while (sqlite3_step(get_favouriteHymns_sort) == SQLITE_ROW) {
+		int hymnID = sqlite3_column_int(get_favouriteHymns_sort, 0);
+		Hymn hymn = Hymn(hymnID, hymnal);
+		hymns.push_back(hymn);
+	}
+	sqlite3_reset(get_favouriteHymns_sort);
+	return hymns;
+}
+
+HymnVector getHymnsForNumericSearch(int hymnalID, int hymnNumber){
+	Hymnal hymnal = Hymnal(hymnalID);
+	if (0 == get_hymnsForNumericSearch) {
+		const char *sql = "SELECT hymnID, hymnNumber, title FROM hymn WHERE hymnal = ? AND hymnNumber = ?";
+		if (sqlite3_prepare_v2(database, sql, -1, &get_hymnsForNumericSearch, NULL) != SQLITE_OK) {
+			printf("Problem preparing get_hymnsForNumericSearch: %s\n", sqlite3_errmsg(database));
+		}
+	}
+	
+	if (sqlite3_bind_int(get_hymnsForNumericSearch, 1, hymnalID) != SQLITE_OK){
+		printf("Problem binding to 1 of get_hymnsForNumericSearch.\n");
+	}
+	
+	if (sqlite3_bind_int(get_hymnsForNumericSearch, 2, hymnNumber) != SQLITE_OK){
+		printf("Problem binding to 2 of get_hymnsForNumericSearch.\n");
+	} 
+	HymnVector hymns;
+	while (sqlite3_step(get_hymnsForNumericSearch) == SQLITE_ROW) {
+		int hymnID = sqlite3_column_int(get_hymnsForNumericSearch, 0);
+		Hymn hymn = Hymn(hymnID, hymnal);
+		hymns.push_back(hymn);
+	}
+	sqlite3_reset(get_hymnsForNumericSearch);
+	return hymns;
+}
+
+HymnVector getHymnsForTitleSearch(int hymnalID, std::string& searchString){
+	Hymnal hymnal = Hymnal(hymnalID);
+	if (0 == get_hymnsForTitleSearch) {
+		const char *sql = "SELECT hymnID, hymnNumber, title FROM hymn WHERE hymnal = ? AND title LIKE ?";
+		if (sqlite3_prepare_v2(database, sql, -1, &get_hymnsForTitleSearch, NULL) != SQLITE_OK) {
+			printf("Problem preparing get_hymnsForTitleSeach: %s\n", sqlite3_errmsg(database));
+		}
+	}
+	
+	if (sqlite3_bind_int(get_hymnsForTitleSearch, 1, hymnalID) != SQLITE_OK){
+		printf("Problem binding to 1 of get_hymnsForTitleSearch.\n");
+	}
+	//prepare the search string.
+	searchString.append("%");
+	searchString.push_back('%');
+	if (sqlite3_bind_text(get_hymnsForTitleSearch, 2, searchString.c_str(), strlen(searchString.c_str()), SQLITE_TRANSIENT)) {
+		printf("Problem binding text to get_hymnsForTitleSearch.\n");
+	}
+	
+	HymnVector hymns;
+	while (sqlite3_step(get_hymnsForTitleSearch) == SQLITE_ROW) {
+		int hymnID = sqlite3_column_int(get_hymnsForTitleSearch, 0);
+		Hymn hymn = Hymn(hymnID, hymnal);
+		hymns.push_back(hymn);
+	}
+	sqlite3_reset(get_hymnsForTitleSearch);
+	return hymns;
+	
 }
 
 #pragma mark -
