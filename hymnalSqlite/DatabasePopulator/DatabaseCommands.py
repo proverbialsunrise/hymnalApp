@@ -23,7 +23,8 @@ title TEXT,
 translator TEXT,
 tune TEXT,
 hymnal INTEGER,
-FOREIGN KEY(hymnal) REFERENCES artist(hymnalID)
+favourite INTEGER DEFAULT 0,
+FOREIGN KEY(hymnal) REFERENCES hymnal(hymnalID)
 );
  """,
  
@@ -67,5 +68,11 @@ useInWorship TEXT,
 hymn INTEGER,
 FOREIGN KEY(hymn) REFERENCES hymn(hymnID) ON DELETE CASCADE ON UPDATE CASCADE 
 );
+""",
 
- """]
+"""
+CREATE TABLE recents (rowID INTEGER PRIMARY KEY AUTOINCREMENT, 
+hymn INTEGER,
+FOREIGN KEY(hymn) REFERENCES hymn(hymnID) ON DELETE CASCADE ON UPDATE CASCADE 
+);
+"""]
