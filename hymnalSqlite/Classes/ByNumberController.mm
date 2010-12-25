@@ -17,7 +17,12 @@
 	hymnal = getHymnal(1);
 	hymns = getHymnsForHymnal(hymnal.get_hymnalID(), SORT_BY_NUMBER);
 	[super viewDidLoad];
+	self.navigationController.title = @"By Number";
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	[self setTitle:@"By Number"];
+}
 @end
 

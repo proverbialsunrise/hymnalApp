@@ -15,7 +15,11 @@
 - (void)viewDidLoad {
 	hymnal = getHymnal(1);
 	hymns = getHymnsForHymnal(hymnal.get_hymnalID(), SORT_BY_NAME);
-    [super viewDidLoad];
+	[self setTitle:@"By Title"];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	[self setTitle:@"By Title"];
+}
 @end

@@ -18,8 +18,13 @@
 	hymns = getFavouriteHymnsForHymnal(hymnal.get_hymnalID(), SORT_BY_NAME);
 
 	[super viewDidLoad];
+	[self setTitle:@"Favorites"];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	[self setTitle:@"Favorites"];
+}
 
 
 @end

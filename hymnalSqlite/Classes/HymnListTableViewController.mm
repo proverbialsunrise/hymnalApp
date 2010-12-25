@@ -37,7 +37,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-	[self setTitle:[NSString stringWithCString:hymnal.get_title().c_str() encoding:NSUTF8StringEncoding]];
+	//[self setTitle:[NSString stringWithCString:hymnal.get_title().c_str() encoding:NSUTF8StringEncoding]];
     [super viewWillAppear:animated];
 }
 

@@ -57,13 +57,13 @@
 	//Instantiate the ByNumber list.
 	ByNumberController *byNumberController = [[[ByNumberController alloc] initWithNibName:@"HymnListTableViewController" bundle:[NSBundle mainBundle]] autorelease];
 	UINavigationController *numNavigationController = [[[UINavigationController alloc] initWithRootViewController:byNumberController] autorelease];
-	numNavigationController.tabBarItem = [[[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemTopRated tag:1] autorelease];
+	numNavigationController.tabBarItem = [[[UITabBarItem alloc] initWithTitle:@"By Number" image:[UIImage imageNamed:@"ByNumber"] tag:1] autorelease];
 	numNavigationController.navigationBar.barStyle = UIBarStyleBlack;
 	//Instantiate the ByTopic list.
 	//we don't have this view controller yet but I wanted to add something else to the TabBar.  
 	ByTitleController *byTitleController = [[[ByTitleController alloc] initWithNibName:@"HymnListTableViewController" bundle:[NSBundle mainBundle]] autorelease];
 	UINavigationController *titleNavigationController = [[[UINavigationController alloc] initWithRootViewController:byTitleController] autorelease];
-	titleNavigationController.tabBarItem = [[[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemRecents tag:2] autorelease];
+	titleNavigationController.tabBarItem = [[[UITabBarItem alloc] initWithTitle:@"By Title" image:[UIImage imageNamed:@"ByTitle"] tag:2] autorelease];
 	titleNavigationController.navigationBar.barStyle = UIBarStyleBlack;
 	
 	FavouritesController *favouritesController = [[[FavouritesController alloc] initWithNibName:@"HymnListTableViewController" bundle:[NSBundle mainBundle]] autorelease];
@@ -79,7 +79,6 @@
     // Add the navigation controller's view to the window and display.
     [window addSubview:tabBarController.view];
     [window makeKeyAndVisible];
-
     return YES;
 }
 
