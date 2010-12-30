@@ -15,7 +15,7 @@
 
 	hymnal = getHymnal(1);
 	
-	hymns = getFavouriteHymnsForHymnal(hymnal.get_hymnalID(), SORT_BY_NAME);
+	hymns = getFavouriteHymnsForHymnal(hymnal.get_hymnalID(), SORT_BY_NUMBER);
 
 	[super viewDidLoad];
 	[self setTitle:@"Favorites"];
@@ -24,7 +24,8 @@
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	[self setTitle:@"Favorites"];
+	hymns = getFavouriteHymnsForHymnal(hymnal.get_hymnalID(), SORT_BY_NUMBER);
+	[self.tableView reloadData];
 }
-
 
 @end

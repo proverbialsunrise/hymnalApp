@@ -38,7 +38,9 @@ public:
 	std::string get_translator() const;
 	std::string get_tune() const;
 	bool get_favourite() const;
-	//Setters aren't necessary. 
+	//Setters aren't necessary for most. 
+	
+	void set_favourite(bool f);
 	
 	static void prepareDatabaseStatements(sqlite3 *database);
 	static void tsPrepareDatabaseStatements(sqlite3 *database, sqlite3_stmt** ret_get_hymn_info);

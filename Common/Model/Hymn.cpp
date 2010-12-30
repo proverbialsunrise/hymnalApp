@@ -33,6 +33,7 @@ Hymn::Hymn(const Hymn& h){
 	title = h.title;
 	translator = h.translator;
 	tune = h.tune;
+	favourite = h.favourite;
 }
 
 Hymn::Hymn(const int hymnID, const Hymnal& parentHymnal){
@@ -99,8 +100,6 @@ void Hymn::tsPrepareDatabaseStatements(sqlite3 *database, sqlite3_stmt** ret_get
 	}
 }
 
-
-
 void Hymn::finalizeDatabaseStatements(){
 	if (0 != get_hymnInfo) {
 		sqlite3_finalize(get_hymnInfo);
@@ -125,6 +124,7 @@ void Hymn::printDescription() const{
 	printf("Favourite: %d\n", this->favourite);
 }
 
+#pragma mark Getters
 int Hymn::get_hymnID() const{
 	return hymnID;
 }
@@ -167,3 +167,10 @@ std::string Hymn::get_tune() const{
 bool Hymn::get_favourite() const{
 	return favourite;
 }
+#pragma mark -
+
+#pragma mark Setters
+void Hymn::set_favourite(bool f){
+	favourite = f;
+}
+#pragma mark - 

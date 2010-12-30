@@ -20,6 +20,10 @@
 
 - (void) scrollToVerse:(NSInteger)verseNum animated:(BOOL)animate;
 
+- (void) toggleFavourite;
+
+- (void) setupFavouriteButtonForHymnStatus;
+
 @end
 
 
@@ -62,6 +66,7 @@
 		[verseViewControllers addObject:verseViewController];
 	}
 	[self.scrollView setDelegate:self];		
+	[self setupFavouriteButtonForHymnStatus];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -79,20 +84,20 @@
 	}
 }
 
-- (void)didReceiveMemoryWarning {
+- (void) didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
     
     // Release any cached data, images, etc that aren't in use.
 }
 
-- (void)viewDidUnload {
+- (void) viewDidUnload {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
 
-- (void)dealloc {
+- (void) dealloc {
 	[scrollView release];
 	[verseViewControllers release];
     [super dealloc];
@@ -191,6 +196,30 @@
 	}
 	[self.scrollView setContentSize:CGSizeMake(xOffset, self.view.frame.size.height)];
 	[self scrollToVerse:currentVerse animated:NO];
+}
+
+- (void) toggleFavourite{
+	hymn.set_favourite(!hymn.get_favourite());
+	setFavouriteStatusForHymn(hymn.get_hymnID(), hymn.get_favourite());
+	[self setupFavouriteButtonForHymnStatus];
+}
+
+- (void) setupFavouriteButtonForHymnStatus{
+	if (hymn.get_favourite()) {
+		//Setup Gold Button from image. 
+		UIImage *goldButtonImage = [UIImage imageNamed:@"GoldStarButton"];
+		UIButton *favouriteButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		[favouriteButton setFrame:CGRectMake(0, 0, goldButtonImage.size.width, goldButtonImage.size.height)];
+		[favouriteButton setImage:goldButtonImage forState:UIControlStateNormal];
+		[favouriteButton setAdjustsImageWhenDisabled:YES];
+		[favouriteButton setAdjustsImageWhenHighlighted:YES];
+		[favouriteButton addTarget:self action:@selector(toggleFavourite) forControlEvents:UIControlEventTouchUpInside];
+		UIBarButtonItem *favouriteBarButton = [[[UIBarButtonItem alloc] initWithCustomView:favouriteButton] autorelease];
+		self.navigationItem.rightBarButtonItem = favouriteBarButton;
+	} else {
+		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"ClosedStar"] style:UIBarButtonItemStyleBordered target:self action:@selector(toggleFavourite)] autorelease];
+	}
+
 }
 
 #pragma mark -

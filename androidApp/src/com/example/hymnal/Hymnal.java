@@ -13,7 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class Hymnal extends ListActivity{
-	static boolean EMULATOR = false;
+	static boolean EMULATOR = true;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {

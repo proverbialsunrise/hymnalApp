@@ -91,4 +91,12 @@ HymnVector getHymnsForTitleSearch(int hymnalID, std::string& searchString);
 
 #pragma mark -
 
+#pragma mark Writing To DB
+//This method needs to take the hymnID not the hymn number.  HymnIDs are unique while hymnNumbers are only unique to a hymnal.
+void setFavouriteStatusForHymn(int hymnID, bool favouriteStatus);
+
+void addHymnToRecents(int hymnID);
+
+#pragma mark -
+
 #endif

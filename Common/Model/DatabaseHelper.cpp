@@ -28,6 +28,13 @@ static sqlite3_stmt *get_numVersesForHymn = 0;
 static sqlite3_stmt *get_hymnsForNumericSearch = 0;
 static sqlite3_stmt *get_hymnsForTitleSearch = 0;
 
+//Writing to database
+static sqlite3_stmt *set_hymnFavouriteStatus = 0;
+
+//Recents statements
+static sqlite3_stmt *add_hymnToRecentsDelete = 0;
+static sqlite3_stmt *add_hymnToRecentsAdd = 0;
+
 #pragma mark Database Lifecycle
 void openConnectionWithPath(std::string& databasePath){
 	if (database == 0) {
@@ -98,7 +105,10 @@ void finalizeDatabaseStatements(){
 		sqlite3_finalize(get_hymnsForTitleSearch);
 		get_hymnsForTitleSearch = 0;
 	}
-	
+	if (0 != set_hymnFavouriteStatus) {
+		sqlite3_finalize(set_hymnFavouriteStatus);
+		set_hymnFavouriteStatus = 0;
+	}
 }
 
 #pragma mark -
@@ -364,6 +374,30 @@ HymnVector getHymnsForTitleSearch(int hymnalID, std::string& searchString){
 	sqlite3_reset(get_hymnsForTitleSearch);
 	return hymns;
 	
+}
+
+#pragma mark -
+
+#pragma mark Writing To DB
+
+void setFavouriteStatusForHymn(int hymnID, bool favouriteStatus){
+	if (0 == set_hymnFavouriteStatus) {
+		const char * sql = "UPDATE hymn SET favourite = ? WHERE hymnID = ?";
+		if (sqlite3_prepare_v2(database, sql, -1, &set_hymnFavouriteStatus, NULL) != SQLITE_OK) {
+			printf("Problem preparing set_hymnFavouriteStatus: %s\n", sqlite3_errmsg(database));
+		}
+	}
+	
+	sqlite3_bind_int(set_hymnFavouriteStatus, 1, favouriteStatus);
+	sqlite3_bind_int(set_hymnFavouriteStatus, 2, hymnID);
+	
+	if (sqlite3_step(set_hymnFavouriteStatus) != SQLITE_DONE) {
+		printf("Couldn't set Favourite Status to %d For Hymn %d.\n", favouriteStatus, hymnID);
+	}
+}
+
+void addHymnToRecents(int hymnID){
+
 }
 
 #pragma mark -
