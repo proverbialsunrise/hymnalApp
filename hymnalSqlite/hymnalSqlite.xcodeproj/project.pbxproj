@@ -32,6 +32,7 @@
 		378149D112A2F0ED00110CCE /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 378149D012A2F0ED00110CCE /* libsqlite3.dylib */; };
 		378149DA12A2F8F000110CCE /* Hymn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 378149D912A2F8F000110CCE /* Hymn.cpp */; };
 		378149ED12A4C1AC00110CCE /* DatabaseHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 378149EC12A4C1AC00110CCE /* DatabaseHelper.cpp */; };
+		37AF737F12CD933D00B19F55 /* RecentsController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 37AF737E12CD933D00B19F55 /* RecentsController.mm */; };
 		37C38E3712C8549100A62E38 /* GoldStarButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 37C38E3612C8549100A62E38 /* GoldStarButton.png */; };
 		37EAC98E12AA1B8B007A2EFD /* DatabaseTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 37EAC98D12AA1B8B007A2EFD /* DatabaseTests.mm */; };
 		37F5959412B5541C00A33F3C /* HymnViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 37F5959212B5541C00A33F3C /* HymnViewController.mm */; };
@@ -81,6 +82,8 @@
 		378149D912A2F8F000110CCE /* Hymn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Hymn.cpp; sourceTree = "<group>"; };
 		378149EB12A4C1AC00110CCE /* DatabaseHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseHelper.h; sourceTree = "<group>"; };
 		378149EC12A4C1AC00110CCE /* DatabaseHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DatabaseHelper.cpp; sourceTree = "<group>"; };
+		37AF737D12CD933D00B19F55 /* RecentsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecentsController.h; sourceTree = "<group>"; };
+		37AF737E12CD933D00B19F55 /* RecentsController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RecentsController.mm; sourceTree = "<group>"; };
 		37C38E3612C8549100A62E38 /* GoldStarButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = GoldStarButton.png; path = ../Artwork/GoldStarButton.png; sourceTree = SOURCE_ROOT; };
 		37EAC98712AA1B18007A2EFD /* DatabaseTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DatabaseTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		37EAC98812AA1B18007A2EFD /* DatabaseTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DatabaseTests-Info.plist"; sourceTree = "<group>"; };
@@ -138,6 +141,8 @@
 				37596A0512C46600000AA24E /* HymnListTableViewController.mm */,
 				37596B1E12C52661000AA24E /* FavouritesController.h */,
 				37596B1F12C52661000AA24E /* FavouritesController.mm */,
+				37AF737D12CD933D00B19F55 /* RecentsController.h */,
+				37AF737E12CD933D00B19F55 /* RecentsController.mm */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -296,6 +301,7 @@
 			isa = PBXProject;
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "hymnalSqlite" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -382,6 +388,7 @@
 				37596A0712C46600000AA24E /* HymnListTableViewController.mm in Sources */,
 				37596A6D12C47691000AA24E /* ByTitleController.mm in Sources */,
 				37596B2012C52661000AA24E /* FavouritesController.mm in Sources */,
+				37AF737F12CD933D00B19F55 /* RecentsController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -508,7 +515,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Don't Code Sign";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;

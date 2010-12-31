@@ -200,7 +200,7 @@
 
 - (void) toggleFavourite{
 	hymn.set_favourite(!hymn.get_favourite());
-	setFavouriteStatusForHymn(hymn.get_hymnID(), hymn.get_favourite());
+	setFavouriteStatusForHymn(hymn.get_hymnal().get_hymnalID(), hymn.get_hymnID(), hymn.get_favourite());
 	[self setupFavouriteButtonForHymnStatus];
 }
 

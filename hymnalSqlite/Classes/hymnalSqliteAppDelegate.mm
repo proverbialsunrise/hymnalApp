@@ -14,6 +14,7 @@
 #import "ByTitleController.h"
 #import "FavouritesController.h"
 #import "ByNumberController.h"
+#import "RecentsController.h"
 
 
 
@@ -33,7 +34,7 @@
 	NSError *error;
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 	NSString *documentsDirectory = [paths objectAtIndex:0];
-	NSString *writableDBPath = [documentsDirectory stringByAppendingFormat:@"hymnal.db"];
+	NSString *writableDBPath = [documentsDirectory stringByAppendingFormat:@"/hymnal.db"];
 	
 	dbExists = [fileManager fileExistsAtPath:writableDBPath];
 	if (dbExists) {
@@ -71,8 +72,12 @@
 	favouritesNavigationController.tabBarItem = [[[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemFavorites tag:3] autorelease];
 	favouritesNavigationController.navigationBar.barStyle = UIBarStyleBlack;
 
+	RecentsController *recentsController = [[[RecentsController alloc] initWithNibName:@"HymnListTableViewController" bundle:[NSBundle mainBundle]] autorelease];
+	UINavigationController *recentsNavigationController = [[[UINavigationController alloc] initWithRootViewController:recentsController] autorelease];
+	recentsNavigationController.tabBarItem = [[[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemRecents tag:4] autorelease];
+	recentsNavigationController.navigationBar.barStyle = UIBarStyleBlack;
 	
-	NSArray *viewControllers = [NSArray arrayWithObjects:numNavigationController, titleNavigationController, favouritesNavigationController, nil];
+	NSArray *viewControllers = [NSArray arrayWithObjects:numNavigationController, titleNavigationController, favouritesNavigationController, recentsNavigationController, nil];
 	
 	tabBarController.viewControllers = viewControllers;
 		

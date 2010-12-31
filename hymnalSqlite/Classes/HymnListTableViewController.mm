@@ -142,6 +142,9 @@
 	HymnViewController *hymnViewController = [[HymnViewController alloc] initWithHymn:hymn];
 	[self.navigationController pushViewController:hymnViewController animated:YES];
 	[hymnViewController release];
+	
+	//Add the hymn to recently viewed hymns.
+	addHymnToRecents(hymnal.get_hymnalID(), hymn.get_hymnID());
 }
 
 

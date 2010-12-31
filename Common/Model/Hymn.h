@@ -24,6 +24,7 @@ public:
 	Hymn(const int hymnID, const Hymnal& parentHymnal);
 	Hymn(const int hymnID, const Hymnal& parentHymnal, sqlite3_stmt* get_hymn);
 	
+	Hymnal get_hymnal() const;
 	int get_hymnID() const;
 	int get_hymnNumber() const;
 	std::string get_author() const;

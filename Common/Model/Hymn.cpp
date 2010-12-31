@@ -125,6 +125,9 @@ void Hymn::printDescription() const{
 }
 
 #pragma mark Getters
+Hymnal Hymn::get_hymnal() const{
+	return hymnal;
+}
 int Hymn::get_hymnID() const{
 	return hymnID;
 }

@@ -27,13 +27,13 @@ static sqlite3_stmt *get_numVersesForHymn = 0;
 //Search statements.
 static sqlite3_stmt *get_hymnsForNumericSearch = 0;
 static sqlite3_stmt *get_hymnsForTitleSearch = 0;
+static sqlite3_stmt *get_recents = 0;
 
 //Writing to database
 static sqlite3_stmt *set_hymnFavouriteStatus = 0;
 
 //Recents statements
-static sqlite3_stmt *add_hymnToRecentsDelete = 0;
-static sqlite3_stmt *add_hymnToRecentsAdd = 0;
+static sqlite3_stmt *insert_hymnIntoRecents = 0;
 
 #pragma mark Database Lifecycle
 void openConnectionWithPath(std::string& databasePath){
@@ -108,6 +108,10 @@ void finalizeDatabaseStatements(){
 	if (0 != set_hymnFavouriteStatus) {
 		sqlite3_finalize(set_hymnFavouriteStatus);
 		set_hymnFavouriteStatus = 0;
+	}
+	if (0 != insert_hymnIntoRecents) {
+		sqlite3_finalize(insert_hymnIntoRecents);
+		insert_hymnIntoRecents = 0;
 	}
 }
 
@@ -373,16 +377,35 @@ HymnVector getHymnsForTitleSearch(int hymnalID, std::string& searchString){
 	}
 	sqlite3_reset(get_hymnsForTitleSearch);
 	return hymns;
+}
+
+HymnVector getRecents(int hymnalID){
+	Hymnal hymnal = Hymnal(hymnalID);
+	if (0 == get_recents) {
+		const char *sql = "SELECT hymn FROM recents WHERE hymnal = ? ORDER BY rowID DESC";
+		if (sqlite3_prepare_v2(database, sql, -1, &get_recents, NULL) != SQLITE_OK) {
+			printf("Problem preparing get_recents: %s\n", sqlite3_errmsg(database));
+		}
+	}
 	
+	sqlite3_bind_int(get_recents, 1, hymnalID);
+	HymnVector hymns;
+	while (sqlite3_step(get_recents) == SQLITE_ROW) {
+		int hymnID = sqlite3_column_int(get_recents, 0);
+		Hymn hymn = Hymn(hymnID, hymnal);
+		hymns.push_back(hymn);
+	}
+	sqlite3_reset(get_recents);
+	return hymns;
 }
 
 #pragma mark -
 
 #pragma mark Writing To DB
 
-void setFavouriteStatusForHymn(int hymnID, bool favouriteStatus){
+void setFavouriteStatusForHymn(int hymnalID, int hymnID, bool favouriteStatus){
 	if (0 == set_hymnFavouriteStatus) {
-		const char * sql = "UPDATE hymn SET favourite = ? WHERE hymnID = ?";
+		const char * sql = "UPDATE hymn SET favourite = ? WHERE hymnID = ? AND hymnal = ?";
 		if (sqlite3_prepare_v2(database, sql, -1, &set_hymnFavouriteStatus, NULL) != SQLITE_OK) {
 			printf("Problem preparing set_hymnFavouriteStatus: %s\n", sqlite3_errmsg(database));
 		}
@@ -390,14 +413,27 @@ void setFavouriteStatusForHymn(int hymnID, bool favouriteStatus){
 	
 	sqlite3_bind_int(set_hymnFavouriteStatus, 1, favouriteStatus);
 	sqlite3_bind_int(set_hymnFavouriteStatus, 2, hymnID);
+	sqlite3_bind_int(set_hymnFavouriteStatus, 3, hymnalID);
 	
 	if (sqlite3_step(set_hymnFavouriteStatus) != SQLITE_DONE) {
-		printf("Couldn't set Favourite Status to %d For Hymn %d.\n", favouriteStatus, hymnID);
+		printf("Couldn't set Favourite Status to %d For Hymn %d in Hymnal %d.\n", favouriteStatus, hymnID, hymnalID);
 	}
+	sqlite3_reset(set_hymnFavouriteStatus);
 }
 
-void addHymnToRecents(int hymnID){
-
+void addHymnToRecents(int hymnalID, int hymnID){
+	if (0 == insert_hymnIntoRecents) {
+		const char *sql = "INSERT INTO recents (hymnal, hymn) VALUES (?, ?)";
+		if (sqlite3_prepare_v2(database, sql, -1, &insert_hymnIntoRecents, NULL) != SQLITE_OK) {
+			printf("Problem preparing insert_hymnIntoRecentsAdd: %s\n", sqlite3_errmsg(database));
+		}
+	}
+	sqlite3_bind_int(insert_hymnIntoRecents, 1, hymnalID);
+	sqlite3_bind_int(insert_hymnIntoRecents, 2, hymnID);
+	if (sqlite3_step(insert_hymnIntoRecents) != SQLITE_DONE) {
+		printf("Problem adding hymn to recents: %s", sqlite3_errmsg(database));
+	}
+	sqlite3_reset(insert_hymnIntoRecents);
 }
 
 #pragma mark -
