@@ -11,6 +11,8 @@
 
 void finalizeDatabaseStatements();
 
+#define MAX_RECENTS 2
+
 static sqlite3 *database = 0;
 
 //When adding a sqlite statement, make sure to add it to finalizeDatabaseStatements() so that it is properly destroyed.
@@ -34,6 +36,9 @@ static sqlite3_stmt *set_hymnFavouriteStatus = 0;
 
 //Recents statements
 static sqlite3_stmt *insert_hymnIntoRecents = 0;
+static sqlite3_stmt *count_entries_in_recents = 0;
+static sqlite3_stmt *get_oldest_entry_from_recents = 0;
+static sqlite3_stmt *delete_entry_from_recents = 0;
 
 #pragma mark Database Lifecycle
 void openConnectionWithPath(std::string& databasePath){
@@ -80,7 +85,6 @@ void finalizeDatabaseStatements(){
 		sqlite3_finalize(get_allHymnsForSection_sort);
 		get_allHymnsForSection_sort = 0;
 	}
-
 	if (0 != get_hymnMusicSections) {
 		sqlite3_finalize(get_hymnMusicSections);
 		get_hymnMusicSections = 0;
@@ -112,6 +116,18 @@ void finalizeDatabaseStatements(){
 	if (0 != insert_hymnIntoRecents) {
 		sqlite3_finalize(insert_hymnIntoRecents);
 		insert_hymnIntoRecents = 0;
+	}
+	if (0 != count_entries_in_recents) {
+		sqlite3_finalize(count_entries_in_recents);
+		count_entries_in_recents = 0;
+	}
+	if (0 != get_oldest_entry_from_recents) {
+		sqlite3_finalize(get_oldest_entry_from_recents);
+		get_oldest_entry_from_recents = 0;
+	}
+	if (0 != delete_entry_from_recents) {
+		sqlite3_finalize(delete_entry_from_recents);
+		delete_entry_from_recents = 0;
 	}
 }
 
@@ -421,6 +437,46 @@ void setFavouriteStatusForHymn(int hymnalID, int hymnID, bool favouriteStatus){
 	sqlite3_reset(set_hymnFavouriteStatus);
 }
 
+void deleteOldestEntryInRecents(){
+	if (0 == get_oldest_entry_from_recents) {
+		const char *sql = "SELECT rowID FROM recents ORDER BY rowID DESC LIMIT 1";
+		if (sqlite3_prepare_v2(database, sql, -1, &get_oldest_entry_from_recents, NULL) != SQLITE_OK) {
+			printf("Problem preparing get_oldest_entry_from_recents, %s\n", sqlite3_errmsg(database));
+		}
+	}
+	if (0 == delete_entry_from_recents) {
+		const char *sql = "DELETE FROM recents WHERE rowID = ?";
+		if (sqlite3_prepare_v2(database, sql, -1, &delete_entry_from_recents, NULL) == SQLITE_OK) {
+			printf("Problem preparing delete_entry_from_recents: %s\n", sqlite3_errmsg(database));
+		}
+	}
+	if (sqlite3_step(get_oldest_entry_from_recents) == SQLITE_ROW) {
+		int oldestRowID = sqlite3_column_int(get_oldest_entry_from_recents, 0);
+		sqlite3_bind_int(delete_entry_from_recents, 1, oldestRowID);
+		sqlite3_step(delete_entry_from_recents);
+		sqlite3_reset(delete_entry_from_recents);
+	}
+	sqlite3_reset(get_oldest_entry_from_recents);
+}
+
+
+void deleteExtraEntriesFromRecents(){
+	if (0 == count_entries_in_recents) {
+		const char *sql = "SELECT COUNT(1) FROM recents";
+		if (sqlite3_prepare_v2(database, sql, -1, &count_entries_in_recents, NULL) != SQLITE_OK) {
+			printf("Problem preparing count_entries_in_recents: %s\n", sqlite3_errmsg(database));
+		}
+	}
+	if (sqlite3_step(count_entries_in_recents) == SQLITE_ROW) {
+		int count = sqlite3_column_int(count_entries_in_recents, 0);
+		while (count > MAX_RECENTS) {
+			deleteOldestEntryInRecents();
+			count --;
+		}
+	}
+	sqlite3_reset(count_entries_in_recents);
+}
+
 void addHymnToRecents(int hymnalID, int hymnID){
 	if (0 == insert_hymnIntoRecents) {
 		const char *sql = "INSERT INTO recents (hymnal, hymn) VALUES (?, ?)";
@@ -434,6 +490,9 @@ void addHymnToRecents(int hymnalID, int hymnID){
 		printf("Problem adding hymn to recents: %s", sqlite3_errmsg(database));
 	}
 	sqlite3_reset(insert_hymnIntoRecents);
+	deleteExtraEntriesFromRecents();
 }
+
+
 
 #pragma mark -
