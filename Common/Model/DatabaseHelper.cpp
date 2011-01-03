@@ -380,7 +380,7 @@ HymnVector getHymnsForTitleSearch(int hymnalID, std::string& searchString){
 	}
 	//prepare the search string.
 	searchString.append("%");
-	searchString.push_back('%');
+	searchString.insert(0, "%");
 	if (sqlite3_bind_text(get_hymnsForTitleSearch, 2, searchString.c_str(), strlen(searchString.c_str()), SQLITE_TRANSIENT)) {
 		printf("Problem binding text to get_hymnsForTitleSearch.\n");
 	}
@@ -417,7 +417,7 @@ HymnVector getRecents(int hymnalID){
 
 #pragma mark -
 
-#pragma mark Writing To DB
+#pragma mark Favourites
 
 void setFavouriteStatusForHymn(int hymnalID, int hymnID, bool favouriteStatus){
 	if (0 == set_hymnFavouriteStatus) {
@@ -436,6 +436,9 @@ void setFavouriteStatusForHymn(int hymnalID, int hymnID, bool favouriteStatus){
 	}
 	sqlite3_reset(set_hymnFavouriteStatus);
 }
+#pragma mark -
+
+#pragma mark Recents
 
 void deleteOldestEntryInRecents(){
 	if (0 == get_oldest_entry_from_recents) {
