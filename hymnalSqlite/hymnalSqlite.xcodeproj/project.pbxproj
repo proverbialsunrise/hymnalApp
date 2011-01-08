@@ -24,6 +24,9 @@
 		37449FA812AC31780060771F /* VerseViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 37449FA612AC31780060771F /* VerseViewController.mm */; };
 		37449FA912AC31780060771F /* VerseViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 37449FA712AC31780060771F /* VerseViewController.xib */; };
 		3744A05212AC8A170060771F /* Hymnal A Worship Book in Resources */ = {isa = PBXBuildFile; fileRef = 3744A00912AC8A170060771F /* Hymnal A Worship Book */; };
+		374612F312D3BF29007A3D6C /* SettingsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 374612F212D3BF29007A3D6C /* SettingsManager.m */; };
+		3746130312D3C8DF007A3D6C /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3746130112D3C8DF007A3D6C /* SettingsViewController.m */; };
+		3746130412D3C8DF007A3D6C /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3746130212D3C8DF007A3D6C /* SettingsViewController.xib */; };
 		37596A0712C46600000AA24E /* HymnListTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 37596A0512C46600000AA24E /* HymnListTableViewController.mm */; };
 		37596A0812C46600000AA24E /* HymnListTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 37596A0612C46600000AA24E /* HymnListTableViewController.xib */; };
 		37596A6D12C47691000AA24E /* ByTitleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 37596A6C12C47691000AA24E /* ByTitleController.mm */; };
@@ -68,6 +71,11 @@
 		37449FA612AC31780060771F /* VerseViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VerseViewController.mm; sourceTree = "<group>"; };
 		37449FA712AC31780060771F /* VerseViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VerseViewController.xib; sourceTree = "<group>"; };
 		3744A00912AC8A170060771F /* Hymnal A Worship Book */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Hymnal A Worship Book"; path = "TestData/Hymnal A Worship Book"; sourceTree = "<group>"; };
+		374612F112D3BF29007A3D6C /* SettingsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsManager.h; sourceTree = "<group>"; };
+		374612F212D3BF29007A3D6C /* SettingsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsManager.m; sourceTree = "<group>"; };
+		3746130012D3C8DF007A3D6C /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		3746130112D3C8DF007A3D6C /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		3746130212D3C8DF007A3D6C /* SettingsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = SettingsViewController.xib; path = ../SettingsViewController.xib; sourceTree = "<group>"; };
 		37596A0412C46600000AA24E /* HymnListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HymnListTableViewController.h; sourceTree = "<group>"; };
 		37596A0512C46600000AA24E /* HymnListTableViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HymnListTableViewController.mm; sourceTree = "<group>"; };
 		37596A0612C46600000AA24E /* HymnListTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HymnListTableViewController.xib; sourceTree = "<group>"; };
@@ -143,6 +151,9 @@
 				37596B1F12C52661000AA24E /* FavouritesController.mm */,
 				37AF737D12CD933D00B19F55 /* RecentsController.h */,
 				37AF737E12CD933D00B19F55 /* RecentsController.mm */,
+				3746130012D3C8DF007A3D6C /* SettingsViewController.h */,
+				3746130112D3C8DF007A3D6C /* SettingsViewController.m */,
+				3746130212D3C8DF007A3D6C /* SettingsViewController.xib */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -222,6 +233,8 @@
 				378149D912A2F8F000110CCE /* Hymn.cpp */,
 				378149EB12A4C1AC00110CCE /* DatabaseHelper.h */,
 				378149EC12A4C1AC00110CCE /* DatabaseHelper.cpp */,
+				374612F112D3BF29007A3D6C /* SettingsManager.h */,
+				374612F212D3BF29007A3D6C /* SettingsManager.m */,
 			);
 			name = Model;
 			path = ../../Common/Model;
@@ -344,6 +357,7 @@
 				3739263012C6881900BABC6A /* ClosedStar@2x.png in Resources */,
 				3739263212C6882800BABC6A /* OpenStar@2x.png in Resources */,
 				37C38E3712C8549100A62E38 /* GoldStarButton.png in Resources */,
+				3746130412D3C8DF007A3D6C /* SettingsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -389,6 +403,8 @@
 				37596A6D12C47691000AA24E /* ByTitleController.mm in Sources */,
 				37596B2012C52661000AA24E /* FavouritesController.mm in Sources */,
 				37AF737F12CD933D00B19F55 /* RecentsController.mm in Sources */,
+				374612F312D3BF29007A3D6C /* SettingsManager.m in Sources */,
+				3746130312D3C8DF007A3D6C /* SettingsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

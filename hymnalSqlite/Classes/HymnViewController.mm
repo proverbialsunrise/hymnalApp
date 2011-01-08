@@ -95,11 +95,12 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+	[scrollView release];
+	[verseViewControllers release];
 }
 
 - (void) dealloc {
-	[scrollView release];
-	[verseViewControllers release];
+
     [super dealloc];
 }
 
