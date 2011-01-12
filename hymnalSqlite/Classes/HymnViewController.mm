@@ -84,6 +84,10 @@
 	}
 }
 
+- (void) viewDidDisappear:(BOOL)animated {
+	[verseViewControllers makeObjectsPerformSelector:@selector(removeViewFromSuperview)];
+}
+
 - (void) didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
@@ -100,7 +104,8 @@
 }
 
 - (void) dealloc {
-
+	[scrollView release];
+	[verseViewControllers release];
     [super dealloc];
 }
 

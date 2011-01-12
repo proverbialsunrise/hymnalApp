@@ -449,7 +449,7 @@ void deleteOldestEntryInRecents(){
 	}
 	if (0 == delete_entry_from_recents) {
 		const char *sql = "DELETE FROM recents WHERE rowID = ?";
-		if (sqlite3_prepare_v2(database, sql, -1, &delete_entry_from_recents, NULL) == SQLITE_OK) {
+		if (sqlite3_prepare_v2(database, sql, -1, &delete_entry_from_recents, NULL) != SQLITE_OK) {
 			printf("Problem preparing delete_entry_from_recents: %s\n", sqlite3_errmsg(database));
 		}
 	}

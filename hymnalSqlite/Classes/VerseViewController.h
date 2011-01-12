@@ -28,6 +28,8 @@
 	unsigned int verseNumber;
 	
 	id <VerseViewControllerDelegate> delegate;
+	
+	NSMutableArray *imageViews;
 }
 
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
@@ -35,6 +37,7 @@
 
 - (id) initWithHymn:(Hymn)h verse:(unsigned int)verseNum;
 
+- (void) removeViewFromSuperview;
 
 - (void) reset;
 

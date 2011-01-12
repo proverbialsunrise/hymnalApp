@@ -26,6 +26,7 @@
 	if (self = [super initWithNibName:@"VerseViewController" bundle:[NSBundle mainBundle]]) {
 		hymn = h;
 		verseNumber = verseNum;
+		imageViews = [NSMutableArray new];
 		
 	}
 	return self;
@@ -62,6 +63,7 @@
 - (void)viewDidUnload {
 	[self removeAllImages];
 	hymnSections.clear();
+	[imageViews release];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -103,11 +105,10 @@
 #pragma mark Private Interface 
 
 - (void) removeAllImages {
-	for (UIView *view in [self.scrollView subviews]) {
-		if ([view isKindOfClass:[UIImageView class]]) {
-			[view removeFromSuperview];
-		}
+	for (UIImageView *view in imageViews) {
+		[view removeFromSuperview];
 	}
+	[imageViews removeAllObjects];
 }
 
 - (void) refreshImages {	
@@ -126,9 +127,11 @@
 		NSString *fullPath = [NSString stringWithFormat:@"%@/%@", appDirectory, path];
 		NSLog(@"%@/%@", appDirectory, path);
 		
-		UIImage *sectionImage = [UIImage imageWithContentsOfFile:fullPath];
+		UIImage *sectionImage = [[UIImage alloc] initWithContentsOfFile:fullPath];
 		UIImageView *sectionImageView = [[UIImageView alloc] initWithImage:sectionImage];
+		[sectionImage release];
 		sectionImageView.frame = CGRectMake(0, contentHeight, sectionImage.size.width, sectionImage.size.height);
+		[imageViews addObject:sectionImageView];
 		[contentView addSubview:sectionImageView];
 		
 		contentHeight += sectionImage.size.height;
@@ -146,6 +149,11 @@
 	[scrollView setZoomScale:minimumScale];
 }
 
+- (void) removeViewFromSuperview{
+	[self.view removeFromSuperview];
+	[self removeAllImages];
+}
+
 
 - (void) touchUpInside {
 	[delegate verseViewControllerTouchUpEvent:self];
@@ -156,6 +164,7 @@
 
 
 - (void)dealloc {
+	[imageViews release];
 	[scrollView release];
     [super dealloc];
 }
