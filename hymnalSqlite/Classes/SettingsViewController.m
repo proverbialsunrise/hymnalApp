@@ -7,9 +7,13 @@
 //
 
 #import "SettingsViewController.h"
+#import "SettingsManager.h"
+
 
 
 @implementation SettingsViewController
+
+@synthesize voicePartExplanatoryLabel, verseDisplayExplanatoryLabel, voicePartSegmentedControl, verseDisplaySegmentedControl;
 
 // The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
 /*
@@ -22,12 +26,13 @@
 }
 */
 
-/*
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
+	[self setTitle:@"Settings"];
 }
-*/
+
 
 /*
 // Override to allow orientations other than the default portrait orientation.
@@ -48,12 +53,54 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+	[voicePartExplanatoryLabel release];
+	[verseDisplayExplanatoryLabel release];
+	[voicePartSegmentedControl release];
+	[verseDisplaySegmentedControl release];
 }
 
 
 - (void)dealloc {
+	[voicePartExplanatoryLabel release];
+	[verseDisplayExplanatoryLabel release];
+	[voicePartSegmentedControl release];
+	[verseDisplaySegmentedControl release];
     [super dealloc];
 }
 
 
+- (void) updateExplanatoryLabels {
+	switch (verseDisplaySegmentedControl.selectedSegmentIndex) {
+		case ALLPARTS:
+			verseDisplayExplanatoryLabel.text = @"All voice parts will be displayed in displayed.";
+			break;
+		case ALTOSOPRANO:
+			verseDisplayExplanatoryLabel.text = @"Only soprano and alto parts will be displayed.";
+			break;
+		case TENORBASS:
+			verseDisplayExplanatoryLabel.text = @"Only tenor and bass parts will be displayed.";
+		default:
+			break;
+	}
+	
+	switch (voicePartSegmentedControl.selectedSegmentIndex) {
+		case HORIZONTAL:
+			voicePartExplanatoryLabel.text = @"Swipe side to sideo to view more verses.";
+			break;
+		case VERTICAL:
+			voicePartExplanatoryLabel.text = @"Scroll down to view more verses.";
+			break;
+		case INLINE:
+			voicePartExplanatoryLabel.text = @"All verse will be displayed inline";
+		default:
+			break;
+	}
+}
+
+
+- (IBAction) segmentedControlValueChanged:(id)sender{
+	[self updateExplanatoryLabels];
+	[[SettingsManager sharedInstance] setMusicOption:verseDisplaySegmentedControl.selectedSegmentIndex];
+	[[SettingsManager sharedInstance] setMusicOption:voicePartSegmentedControl.selectedSegmentIndex];
+}
 @end

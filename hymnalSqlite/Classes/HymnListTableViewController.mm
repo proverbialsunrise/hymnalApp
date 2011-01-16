@@ -8,6 +8,7 @@
 
 #import "HymnListTableViewController.h"
 #import "HymnViewController.h"
+#import "SettingsViewController.h"
 
 
 @implementation HymnListTableViewController
@@ -31,8 +32,13 @@
 	//[self.searchDisplayController.searchBar setScopeButtonTitles:[NSArray arrayWithObjects:@"All", @"Title", @"Number", nil]];
 	[self.tableView reloadData];
 	
+	
+	//Add the settings button.
+	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(openSettings)] autorelease];
+	
+	//Warning...
 	if ([self isMemberOfClass:[HymnListTableViewController class]]) {
-		NSLog(@"Warning: You must implement viewDidLoad in your subclass");
+		NSLog(@"Warning: You must implement viewDidLoad in your subclass to load a list of hymns");
 	}
 }
 
@@ -190,6 +196,15 @@
     
     // Return YES to cause the search result table view to be reloaded.
     return YES;
+}
+
+#pragma mark -
+
+#pragma mark SettingsControl
+
+- (void) openSettings{
+	SettingsViewController *settingsViewController = [[[UIViewController alloc] initWithNibName:@"SettingsViewController" bundle:[NSBundle mainBundle]] autorelease];
+	[self.navigationController presentModalViewController:settingsViewController animated:YES];
 }
 
 #pragma mark -
