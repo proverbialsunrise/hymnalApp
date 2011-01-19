@@ -15,6 +15,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,7 +29,12 @@ public class HymnView extends Activity {
 	int currentVerse = 0;
 	int hymnId = -1;
 	int numVerses = 0;
+	static int part = 0;
 	File hymnalBaseDir = null;
+
+	public final int ALLPARTS = 0;
+	public final int TREBLE = 1;
+	public final int BASS = 2;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,6 +99,22 @@ public class HymnView extends Activity {
         mainScrollView.setOnTouchListener(gestureListener);
     }
     
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	menu.add(Menu.NONE, ALLPARTS, Menu.NONE, "All");
+    	menu.add(Menu.NONE, TREBLE, Menu.NONE, "Treble");
+    	menu.add(Menu.NONE, BASS, Menu.NONE, "Bass");
+    	return super.onCreateOptionsMenu(menu);
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	part = item.getItemId();
+    	clearPage();
+    	showPage();
+    	return true;
+    }
+    
     private static final int SWIPE_MIN_DISTANCE = 120;
     private static final int SWIPE_MAX_OFF_PATH = 250;
     private static final int SWIPE_THRESHOLD_VELOCITY = 200;
@@ -142,7 +165,7 @@ public class HymnView extends Activity {
     }
     
     private void showPage(){
-        Vector<String> pieces = getHymnPieces(hymnId, 0);
+        Vector<String> pieces = getHymnPieces(hymnId, part);
         ScrollView mainScrollView = (ScrollView) findViewById(R.id.hymn_scrollview);
         LinearLayout ll = (LinearLayout) mainScrollView.findViewById(R.id.next_level);
         TextView filler = new TextView(getApplicationContext());
@@ -170,11 +193,6 @@ public class HymnView extends Activity {
         }
     	
     }
-    
-    //TODO: use
-	public final int ALLPARTS = 0;
-	public final int TREBLE = 1;
-	public final int BASS = 2;
     
     //public native String[] getLyricSections ( int hymnId, int partSpecifier );
     public native String[] getMusicSections ( int hymnId, int partSpecifier );
@@ -220,9 +238,9 @@ public class HymnView extends Activity {
     	int verse = currentVerse;
     	String clef = "png";
     	if ( partSpecifier == 1 )
-    		clef = "bass";
-    	else if ( partSpecifier == 2 )
     		clef = "treble";
+    	else if ( partSpecifier == 2 )
+    		clef = "bass";
  
     	Iterator<String> it = sortedSet.iterator();
     	while ( it.hasNext() ){
