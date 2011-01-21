@@ -10,11 +10,11 @@
 
 
 @interface SettingsViewController : UIViewController {
-	UILabel IBOutlet *voicePartExplanatoryLabel;
-	UILabel IBOutlet *verseDisplayExplanatoryLabel;
+	UILabel *voicePartExplanatoryLabel;
+	UILabel *verseDisplayExplanatoryLabel;
 	
-	UISegmentedControl IBOutlet *voicePartSegmentedControl;
-	UISegmentedControl IBOutlet *verseDisplaySegmentedControl;
+	UISegmentedControl *voicePartSegmentedControl;
+	UISegmentedControl *verseDisplaySegmentedControl;
 }
 
 @property (nonatomic, retain) IBOutlet UILabel *voicePartExplanatoryLabel;

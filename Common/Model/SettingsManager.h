@@ -7,15 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-
-typedef enum MusicOption {
-	ALLPARTS = 0,
-	ALTOSOPRANO,
-	TENORBASS
-} MusicOption;
+#import "Global.h"
 
 typedef enum VerseOption {
-	HORIZONTAL = 9,
+	HORIZONTAL = 0,
 	VERTICAL,
 	INLINE
 } VerseOption;
@@ -25,12 +20,12 @@ typedef enum VerseOption {
 
 @interface SettingsManager : NSObject {
 	VerseOption verseOption;
-	MusicOption musicOption;
+	PartSpecifier musicOption;
 }
 
 
 @property (nonatomic, assign) VerseOption verseOption;
-@property (nonatomic, assign) MusicOption musicOption;
+@property (nonatomic, assign) PartSpecifier musicOption;
 
 + (SettingsManager *) sharedInstance;
 

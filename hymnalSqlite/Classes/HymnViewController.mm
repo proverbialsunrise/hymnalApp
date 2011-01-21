@@ -67,6 +67,7 @@
 	}
 	[self.scrollView setDelegate:self];		
 	[self setupFavouriteButtonForHymnStatus];
+	
 }
 
 - (void) viewWillAppear:(BOOL)animated {

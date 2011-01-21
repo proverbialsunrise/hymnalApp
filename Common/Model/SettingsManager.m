@@ -32,14 +32,14 @@ static SettingsManager *sharedSettingsManager = nil;
 }
 
 
-- (MusicOption) musicOption{
+- (PartSpecifier) musicOption{
 	return musicOption;
 }
 - (VerseOption) verseOption{
 	return verseOption;
 }
 
-- (void) setMusicOption:(MusicOption)mOpt{
+- (void) setMusicOption:(PartSpecifier)mOpt{
 	musicOption = mOpt;
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	[defaults setInteger:musicOption forKey:kMusicOption];

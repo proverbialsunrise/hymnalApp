@@ -34,7 +34,7 @@
 	
 	
 	//Add the settings button.
-	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(openSettings)] autorelease];
+	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"gears"] style:UIBarButtonItemStyleBordered target:self action:@selector(openSettings)] autorelease];
 	
 	//Warning...
 	if ([self isMemberOfClass:[HymnListTableViewController class]]) {
@@ -203,7 +203,7 @@
 #pragma mark SettingsControl
 
 - (void) openSettings{
-	SettingsViewController *settingsViewController = [[[UIViewController alloc] initWithNibName:@"SettingsViewController" bundle:[NSBundle mainBundle]] autorelease];
+	SettingsViewController *settingsViewController = [[[SettingsViewController alloc] initWithNibName:@"SettingsViewController" bundle:[NSBundle mainBundle]] autorelease];
 	[self presentModalViewController:settingsViewController animated:YES];
 }
 

@@ -8,6 +8,7 @@
 
 #import "SettingsViewController.h"
 #import "SettingsManager.h"
+#include "Global.h"
 
 @interface SettingsViewController ()
 
@@ -38,6 +39,34 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
+	/*
+	UISegmentedControl* voiceSControl = [[[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"All", @"Treble", @"Bass", nil]] autorelease];
+	[voiceSControl setSegmentedControlStyle:UISegmentedControlStyleBezeled];
+	[voiceSControl setSelectedSegmentIndex:[[SettingsManager sharedInstance] musicOption]];
+	[voiceSControl setFrame:CGRectMake(20, 90, 280, 44)];
+	[voiceSControl addTarget:self action:@selector(segmentedControlValueChanged:) forControlEvents:UIControlEventValueChanged];
+	self.voicePartSegmentedControl = voiceSControl;
+	[self.view addSubview:voicePartSegmentedControl];
+
+	
+	self.voicePartExplanatoryLabel = [[[UILabel alloc] initWithFrame:CGRectMake(26, 140, 274, 80)] autorelease];
+	voicePartExplanatoryLabel.numberOfLines = 2;
+	[self.view addSubview:voicePartExplanatoryLabel];
+	
+	UISegmentedControl* lyricSControl = [[[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"Horizontal", @"Vertical", @"Inline", nil]] autorelease];
+	[lyricSControl setSegmentedControlStyle:UISegmentedControlStyleBezeled];
+	[lyricSControl setSelectedSegmentIndex:[[SettingsManager sharedInstance] verseOption]];
+	[lyricSControl setFrame:CGRectMake(20, 254, 280, 44)];
+	[lyricSControl addTarget:self action:@selector(segmentedControlValueChanged:) forControlEvents:UIControlEventValueChanged];
+	self.verseDisplaySegmentedControl = lyricSControl;
+	[self.view addSubview:verseDisplaySegmentedControl];
+
+	
+	self.verseDisplayExplanatoryLabel = [[[UILabel alloc] initWithFrame:CGRectMake(26, 305, 274, 80)] autorelease];
+	verseDisplayExplanatoryLabel.numberOfLines = 2;
+	 [self.view addSubview:verseDisplayExplanatoryLabel];
+	 */
+	
 	[self loadSettings];
 	[self updateExplanatoryLabels];
 }
@@ -84,28 +113,28 @@
 }
 
 - (void) updateExplanatoryLabels {
-	switch (verseDisplaySegmentedControl.selectedSegmentIndex) {
+	switch (voicePartSegmentedControl.selectedSegmentIndex) {
 		case ALLPARTS:
-			verseDisplayExplanatoryLabel.text = @"All voice parts will be displayed in displayed.";
+			voicePartExplanatoryLabel.text = @"All voice parts will be displayed.";
 			break;
-		case ALTOSOPRANO:
-			verseDisplayExplanatoryLabel.text = @"Only soprano and alto parts will be displayed.";
+		case TREBLE:
+			voicePartExplanatoryLabel.text = @"Only soprano and alto parts will be displayed.";
 			break;
-		case TENORBASS:
-			verseDisplayExplanatoryLabel.text = @"Only tenor and bass parts will be displayed.";
+		case BASS:
+			voicePartExplanatoryLabel.text = @"Only tenor and bass parts will be displayed.";
 		default:
 			break;
 	}
 	
-	switch (voicePartSegmentedControl.selectedSegmentIndex) {
+	switch (verseDisplaySegmentedControl.selectedSegmentIndex) {
 		case HORIZONTAL:
-			voicePartExplanatoryLabel.text = @"Swipe side to sideo to view more verses.";
+			verseDisplayExplanatoryLabel.text = @"Swipe side to side to view more verses.";
 			break;
 		case VERTICAL:
-			voicePartExplanatoryLabel.text = @"Scroll down to view more verses.";
+			verseDisplayExplanatoryLabel.text = @"Scroll down to view more verses.";
 			break;
 		case INLINE:
-			voicePartExplanatoryLabel.text = @"All verse will be displayed inline";
+			verseDisplayExplanatoryLabel.text = @"All verse will be displayed inline";
 		default:
 			break;
 	}

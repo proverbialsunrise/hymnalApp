@@ -17,18 +17,12 @@
 
 extern "C"{
 #include "sqlite3.h"
+#include "Global.h"
 }
 #include "Hymn.h"
 #include "Hymnal.h"
 
 static const unsigned int ALLVERSES = 0;
-
-//enum for which parts to return
-typedef enum PartSpecifier {
-	ALLPARTS = 0,
-	TREBLE = 1,
-	BASS = 2	
-} PartSpecifier;
 
 //enum for how to sort lists of hymns
 typedef enum HymnSort {

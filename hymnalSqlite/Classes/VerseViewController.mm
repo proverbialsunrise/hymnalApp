@@ -7,6 +7,8 @@
 //
 
 #import "VerseViewController.h"
+#import "SettingsManager.h" 
+
 @interface VerseViewController () //Private Interface
 - (void) setToMinimumZoom;
 
@@ -44,7 +46,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	[self setTitle:[NSString stringWithFormat:@"%s", hymn.get_title().c_str()]];
-	hymnSections = getPiecesForHymn(hymn.get_hymnID(), verseNumber, ALLPARTS);
+	hymnSections = getPiecesForHymn(hymn.get_hymnID(), verseNumber, (PartSpecifier)[[SettingsManager sharedInstance] musicOption]);
 	[self refreshImages];
 	UIButton* showNavBarButton = [[[UIButton alloc] initWithFrame:self.scrollView.frame] autorelease];
 	[showNavBarButton addTarget:self action:@selector(touchUpInside) forControlEvents:UIControlEventTouchUpInside];

@@ -26,7 +26,6 @@
 		3744A05212AC8A170060771F /* Hymnal A Worship Book in Resources */ = {isa = PBXBuildFile; fileRef = 3744A00912AC8A170060771F /* Hymnal A Worship Book */; };
 		374612F312D3BF29007A3D6C /* SettingsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 374612F212D3BF29007A3D6C /* SettingsManager.m */; };
 		3746130312D3C8DF007A3D6C /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3746130112D3C8DF007A3D6C /* SettingsViewController.m */; };
-		3746130412D3C8DF007A3D6C /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3746130212D3C8DF007A3D6C /* SettingsViewController.xib */; };
 		37596A0712C46600000AA24E /* HymnListTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 37596A0512C46600000AA24E /* HymnListTableViewController.mm */; };
 		37596A0812C46600000AA24E /* HymnListTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 37596A0612C46600000AA24E /* HymnListTableViewController.xib */; };
 		37596A6D12C47691000AA24E /* ByTitleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 37596A6C12C47691000AA24E /* ByTitleController.mm */; };
@@ -37,6 +36,9 @@
 		378149ED12A4C1AC00110CCE /* DatabaseHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 378149EC12A4C1AC00110CCE /* DatabaseHelper.cpp */; };
 		37AF737F12CD933D00B19F55 /* RecentsController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 37AF737E12CD933D00B19F55 /* RecentsController.mm */; };
 		37C38E3712C8549100A62E38 /* GoldStarButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 37C38E3612C8549100A62E38 /* GoldStarButton.png */; };
+		37CC43BE12E9CFFA000C79D4 /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 37CC43BD12E9CFFA000C79D4 /* SettingsViewController.xib */; };
+		37CC443412E9D8C6000C79D4 /* Global.c in Sources */ = {isa = PBXBuildFile; fileRef = 37CC443312E9D8C6000C79D4 /* Global.c */; };
+		37CC446512E9DC33000C79D4 /* gears.png in Resources */ = {isa = PBXBuildFile; fileRef = 37CC446412E9DC33000C79D4 /* gears.png */; };
 		37EAC98E12AA1B8B007A2EFD /* DatabaseTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 37EAC98D12AA1B8B007A2EFD /* DatabaseTests.mm */; };
 		37F5959412B5541C00A33F3C /* HymnViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 37F5959212B5541C00A33F3C /* HymnViewController.mm */; };
 		37F5959512B5541C00A33F3C /* HymnViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 37F5959312B5541C00A33F3C /* HymnViewController.xib */; };
@@ -75,7 +77,6 @@
 		374612F212D3BF29007A3D6C /* SettingsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsManager.m; sourceTree = "<group>"; };
 		3746130012D3C8DF007A3D6C /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		3746130112D3C8DF007A3D6C /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
-		3746130212D3C8DF007A3D6C /* SettingsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingsViewController.xib; sourceTree = "<group>"; };
 		37596A0412C46600000AA24E /* HymnListTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HymnListTableViewController.h; sourceTree = "<group>"; };
 		37596A0512C46600000AA24E /* HymnListTableViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HymnListTableViewController.mm; sourceTree = "<group>"; };
 		37596A0612C46600000AA24E /* HymnListTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HymnListTableViewController.xib; sourceTree = "<group>"; };
@@ -93,6 +94,10 @@
 		37AF737D12CD933D00B19F55 /* RecentsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecentsController.h; sourceTree = "<group>"; };
 		37AF737E12CD933D00B19F55 /* RecentsController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RecentsController.mm; sourceTree = "<group>"; };
 		37C38E3612C8549100A62E38 /* GoldStarButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = GoldStarButton.png; path = ../Artwork/GoldStarButton.png; sourceTree = SOURCE_ROOT; };
+		37CC43BD12E9CFFA000C79D4 /* SettingsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingsViewController.xib; sourceTree = "<group>"; };
+		37CC443212E9D8C6000C79D4 /* Global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Global.h; sourceTree = "<group>"; };
+		37CC443312E9D8C6000C79D4 /* Global.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Global.c; sourceTree = "<group>"; };
+		37CC446412E9DC33000C79D4 /* gears.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gears.png; path = ../Artwork/gears.png; sourceTree = SOURCE_ROOT; };
 		37EAC98712AA1B18007A2EFD /* DatabaseTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DatabaseTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		37EAC98812AA1B18007A2EFD /* DatabaseTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DatabaseTests-Info.plist"; sourceTree = "<group>"; };
 		37EAC98C12AA1B8B007A2EFD /* DatabaseTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DatabaseTests.h; path = Tests/DatabaseTests.h; sourceTree = "<group>"; };
@@ -196,10 +201,10 @@
 				37F5983812B73DDA00A33F3C /* Artwork */,
 				3744A00912AC8A170060771F /* Hymnal A Worship Book */,
 				37449FA712AC31780060771F /* VerseViewController.xib */,
-				3746130212D3C8DF007A3D6C /* SettingsViewController.xib */,
 				37F5959312B5541C00A33F3C /* HymnViewController.xib */,
 				37596A0612C46600000AA24E /* HymnListTableViewController.xib */,
 				28AD735F0D9D9599002E5188 /* MainWindow.xib */,
+				37CC43BD12E9CFFA000C79D4 /* SettingsViewController.xib */,
 				8D1107310486CEB800E47090 /* hymnalSqlite-Info.plist */,
 			);
 			name = Resources;
@@ -235,6 +240,8 @@
 				378149EC12A4C1AC00110CCE /* DatabaseHelper.cpp */,
 				374612F112D3BF29007A3D6C /* SettingsManager.h */,
 				374612F212D3BF29007A3D6C /* SettingsManager.m */,
+				37CC443212E9D8C6000C79D4 /* Global.h */,
+				37CC443312E9D8C6000C79D4 /* Global.c */,
 			);
 			name = Model;
 			path = ../../Common/Model;
@@ -252,6 +259,7 @@
 		37F5983812B73DDA00A33F3C /* Artwork */ = {
 			isa = PBXGroup;
 			children = (
+				37CC446412E9DC33000C79D4 /* gears.png */,
 				37C38E3612C8549100A62E38 /* GoldStarButton.png */,
 				3739263112C6882800BABC6A /* OpenStar@2x.png */,
 				3739262F12C6881900BABC6A /* ClosedStar@2x.png */,
@@ -315,7 +323,6 @@
 			isa = PBXProject;
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "hymnalSqlite" */;
 			compatibilityVersion = "Xcode 3.1";
-			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -358,7 +365,8 @@
 				3739263012C6881900BABC6A /* ClosedStar@2x.png in Resources */,
 				3739263212C6882800BABC6A /* OpenStar@2x.png in Resources */,
 				37C38E3712C8549100A62E38 /* GoldStarButton.png in Resources */,
-				3746130412D3C8DF007A3D6C /* SettingsViewController.xib in Resources */,
+				37CC43BE12E9CFFA000C79D4 /* SettingsViewController.xib in Resources */,
+				37CC446512E9DC33000C79D4 /* gears.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -419,6 +427,7 @@
 				37AF737F12CD933D00B19F55 /* RecentsController.mm in Sources */,
 				374612F312D3BF29007A3D6C /* SettingsManager.m in Sources */,
 				3746130312D3C8DF007A3D6C /* SettingsViewController.m in Sources */,
+				37CC443412E9D8C6000C79D4 /* Global.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
