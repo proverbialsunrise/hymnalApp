@@ -10,11 +10,11 @@
 
 
 @interface SettingsViewController : UIViewController {
-	UILabel *voicePartExplanatoryLabel;
-	UILabel *verseDisplayExplanatoryLabel;
+	UILabel IBOutlet *voicePartExplanatoryLabel;
+	UILabel IBOutlet *verseDisplayExplanatoryLabel;
 	
-	UISegmentedControl *voicePartSegmentedControl;
-	UISegmentedControl *verseDisplaySegmentedControl;
+	UISegmentedControl IBOutlet *voicePartSegmentedControl;
+	UISegmentedControl IBOutlet *verseDisplaySegmentedControl;
 }
 
 @property (nonatomic, retain) IBOutlet UILabel *voicePartExplanatoryLabel;
@@ -24,5 +24,9 @@
 
 
 - (IBAction) segmentedControlValueChanged:(id)sender;
+
+- (IBAction) saveButtonPressed:(id)sender;
+
+- (IBAction) cancelButtonPressed:(id)sender;
 
 @end

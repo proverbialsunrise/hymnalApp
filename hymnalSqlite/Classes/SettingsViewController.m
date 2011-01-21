@@ -9,6 +9,14 @@
 #import "SettingsViewController.h"
 #import "SettingsManager.h"
 
+@interface SettingsViewController ()
+
+- (void) updateExplanatoryLabels;
+
+- (void) loadSettings;
+
+@end
+
 
 
 @implementation SettingsViewController
@@ -30,7 +38,8 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
-	[self setTitle:@"Settings"];
+	[self loadSettings];
+	[self updateExplanatoryLabels];
 }
 
 
@@ -68,6 +77,11 @@
     [super dealloc];
 }
 
+- (void) loadSettings {
+	SettingsManager *settingsManager = [SettingsManager sharedInstance];
+	verseDisplaySegmentedControl.selectedSegmentIndex = [settingsManager verseOption];
+	voicePartSegmentedControl.selectedSegmentIndex = [settingsManager musicOption];
+}
 
 - (void) updateExplanatoryLabels {
 	switch (verseDisplaySegmentedControl.selectedSegmentIndex) {
@@ -100,7 +114,15 @@
 
 - (IBAction) segmentedControlValueChanged:(id)sender{
 	[self updateExplanatoryLabels];
-	[[SettingsManager sharedInstance] setMusicOption:verseDisplaySegmentedControl.selectedSegmentIndex];
+}
+
+- (IBAction) saveButtonPressed:(id)sender	{
+	[[SettingsManager sharedInstance] setVerseOption:verseDisplaySegmentedControl.selectedSegmentIndex];
 	[[SettingsManager sharedInstance] setMusicOption:voicePartSegmentedControl.selectedSegmentIndex];
+	[self.parentViewController dismissModalViewControllerAnimated:YES];
+}
+
+- (IBAction) cancelButtonPressed:(id)sender{
+	[self.parentViewController dismissModalViewControllerAnimated:YES];
 }
 @end

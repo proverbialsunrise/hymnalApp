@@ -204,7 +204,7 @@
 
 - (void) openSettings{
 	SettingsViewController *settingsViewController = [[[UIViewController alloc] initWithNibName:@"SettingsViewController" bundle:[NSBundle mainBundle]] autorelease];
-	[self.navigationController presentModalViewController:settingsViewController animated:YES];
+	[self presentModalViewController:settingsViewController animated:YES];
 }
 
 #pragma mark -

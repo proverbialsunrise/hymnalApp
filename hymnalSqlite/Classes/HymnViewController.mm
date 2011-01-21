@@ -84,12 +84,14 @@
 	}
 }
 
-- (void) viewDidDisappear:(BOOL)animated {
-	[verseViewControllers makeObjectsPerformSelector:@selector(removeViewFromSuperview)];
+- (void) viewDidDisappear:(BOOL)animated{
+	
 }
 
 - (void) didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.
+	[scrollView release];
+	[verseViewControllers release];
     [super didReceiveMemoryWarning];
     
     // Release any cached data, images, etc that aren't in use.
@@ -99,8 +101,6 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
-	[scrollView release];
-	[verseViewControllers release];
 }
 
 - (void) dealloc {
