@@ -198,9 +198,14 @@ def addAllHymnSections ( hymnalName, baseDir ):
         if os.path.isdir(baseDir + "/" + name) == False or \
             name[0] == ".":
             continue
+        
         #convert to int to ensure that it's a number
         #and to strip leading zeroes
-        hymnNumber = int(name[0:3])
+        try:
+            hymnNumber = int(name[0:3])
+        except ValueError:
+            continue
+            
         
         addHymnSectionsToDB ( baseDir + "/" + name, hymnNumber, hymnalName )
 
