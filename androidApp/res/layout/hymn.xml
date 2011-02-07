@@ -1,25 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    style="@style/HymnTheme"
-    >
 
-<ScrollView  
-	android:id="@+id/hymn_scrollview"
+
+<Gallery xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/hymn_gallery"
     android:layout_width="fill_parent" 
     android:layout_height="fill_parent"
-    android:fadingEdge="none"
-    style="@style/HymnTheme"
     >
-    <LinearLayout
-      android:id="@+id/next_level"
-		android:orientation="vertical"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-    style="@style/HymnTheme">
-	</LinearLayout>
-</ScrollView>
-
-</LinearLayout>
+</Gallery>

@@ -15,8 +15,7 @@ public final class R {
         public static final int icon=0x7f020001;
     }
     public static final class id {
-        public static final int hymn_scrollview=0x7f070000;
-        public static final int next_level=0x7f070001;
+        public static final int hymn_gallery=0x7f070000;
     }
     public static final class layout {
         public static final int hymn=0x7f030000;
@@ -38,4 +37,25 @@ public final class R {
     public static final class xml {
         public static final int searchable=0x7f040000;
     }
+    public static final class styleable {
+        /** Attributes that can be used with a HelloGallery.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #HelloGallery_android_galleryItemBackground com.example.hymnal:android_galleryItemBackground}</code></td><td></td></tr>
+           </table>
+           @see #HelloGallery_android_galleryItemBackground
+         */
+        public static final int[] HelloGallery = {
+            0x0101004c
+        };
+        /**
+          <p>This symbol is the offset where the {@link com.example.hymnal.R.attr#android_galleryItemBackground}
+          attribute's value can be found in the {@link #HelloGallery} array.
+          @attr name android:android_galleryItemBackground
+        */
+        public static final int HelloGallery_android_galleryItemBackground = 0;
+    };
 }

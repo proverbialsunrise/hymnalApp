@@ -2,25 +2,28 @@ package com.example.hymnal;
 
 import java.io.File;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -31,6 +34,7 @@ public class HymnView extends Activity {
 	int numVerses = 0;
 	static int part = 0;
 	File hymnalBaseDir = null;
+	VerseAdapter va = null;
 
 	public final int ALLPARTS = 0;
 	public final int TREBLE = 1;
@@ -47,10 +51,6 @@ public class HymnView extends Activity {
         hymnId = extras.getInt("HymnId");
         Log.d ( "hymnal", "hymnId: " + hymnId );
         setTitle(hymnName);
-
-        ScrollView mainScrollView = (ScrollView) findViewById(R.id.hymn_scrollview);
-        LinearLayout ll = (LinearLayout) mainScrollView.findViewById(R.id.next_level);
-        ll.setBackgroundColor(0xffffffff);
         
         if ( !Environment.MEDIA_MOUNTED.equals(Environment.MEDIA_MOUNTED) &&
              !Environment.MEDIA_MOUNTED.equals(Environment.MEDIA_MOUNTED_READ_ONLY)	){
@@ -76,7 +76,7 @@ public class HymnView extends Activity {
         File hymnalDir = new File ( hymnalDirName );
         files = hymnalDir.listFiles();
         if ( files == null ){
-        	Log.e ( "hymnal", "failed getting hymnal dir" );
+        	Log.e ( "hymnal", "failed getting hymnal dir: '" + hymnalDirName + "'" );
         	setTitle("error occurred");
         	return;
         }
@@ -88,15 +88,30 @@ public class HymnView extends Activity {
         	numVerses = 4;
         if ( numVerses == -1 )
         	numVerses = 1;
-        showPage();
-		
-		gestureDetector = new GestureDetector(new MyGestureDetector());
-        gestureListener = new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                return gestureDetector.onTouchEvent(event);
-            }
-        };
-        mainScrollView.setOnTouchListener(gestureListener);
+
+        Gallery gallery = (Gallery) findViewById(R.id.hymn_gallery);
+        va = new VerseAdapter(this);
+        gallery.setAdapter ( va );
+        gallery.setBackgroundColor(0xffffffff);
+    }
+    
+    @Override
+    /*
+     * Individually free the memory for each image
+     */
+    public void onPause(){
+    	super.onPause();
+    	Gallery gallery = (Gallery) findViewById(R.id.hymn_gallery);
+    	for ( int i = 0; i < gallery.getChildCount(); ++i ){
+    		ScrollView gfsv = (ScrollView) gallery.getChildAt(i);
+    		LinearLayout ll = (LinearLayout) gfsv.getChildAt(0);
+    		for ( int j = 0; j < ll.getChildCount(); ++j ){
+    			View iv = ll.getChildAt(j);
+    			if ( iv instanceof ImageView )
+    				((ImageView)iv).setImageBitmap(null);
+    		}
+    	}
+    	System.gc();
     }
     
     @Override
@@ -110,88 +125,83 @@ public class HymnView extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	part = item.getItemId();
-    	clearPage();
-    	showPage();
+    	Gallery gallery = (Gallery) findViewById(R.id.hymn_gallery);
+    	int position = gallery.getFirstVisiblePosition();
+    	int last = gallery.getLastVisiblePosition();
+    	while ( position <= last ){
+	    	ScrollView sv = (ScrollView) gallery.getChildAt(position);
+	    	if ( sv == null ){
+	    		++position;
+	    		continue;
+	    	}
+	    	sv.removeAllViews();
+	    	va.fillScrollView(sv, position + 1);
+	    	++position;
+    	}
     	return true;
     }
     
-    private static final int SWIPE_MIN_DISTANCE = 120;
-    private static final int SWIPE_MAX_OFF_PATH = 250;
-    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
-    private GestureDetector gestureDetector;
-    View.OnTouchListener gestureListener;
-    class MyGestureDetector extends SimpleOnGestureListener {
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            try {
-                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
-                    return false;
-                // right to left swipe
-                if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                	changeVerse ( true );
-                }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                	changeVerse ( false );
-                }
-                return true;
-            } catch (Exception e) {
-                // nothing
-            }
-            return false;
-        }
-    }
-    
-    private final void changeVerse ( boolean advance ){
-    	if ( advance ){
-    		if ( currentVerse == numVerses ){
-    	        ScrollView mainScrollView = (ScrollView) findViewById(R.id.hymn_scrollview);
-    	        mainScrollView.scrollTo(0, 0);
-    			return;
-    		}
-    		++currentVerse;
-    	}else{
-    		if ( currentVerse == 0 )
-    			return;
-    		--currentVerse;
+    class VerseAdapter extends BaseAdapter {
+    	private Context mContext;
+    	int mGalleryItemBackground;
+    	Map<Integer, View> views;
+    	
+    	public VerseAdapter ( Context c ){
+    		mContext = c;
+            TypedArray a = obtainStyledAttributes(R.styleable.HelloGallery);
+            mGalleryItemBackground = a.getResourceId(
+                    R.styleable.HelloGallery_android_galleryItemBackground, 0);
+            a.recycle();
     	}
-		clearPage();
-		showPage();
-    }
-    
-    private void clearPage(){
-        ScrollView mainScrollView = (ScrollView) findViewById(R.id.hymn_scrollview);
-        mainScrollView.scrollTo(0, 0);
-        LinearLayout ll = (LinearLayout) mainScrollView.findViewById(R.id.next_level);
-        ll.removeAllViews();
-    }
-    
-    private void showPage(){
-        Vector<String> pieces = getHymnPieces(hymnId, part);
-        ScrollView mainScrollView = (ScrollView) findViewById(R.id.hymn_scrollview);
-        LinearLayout ll = (LinearLayout) mainScrollView.findViewById(R.id.next_level);
-        TextView filler = new TextView(getApplicationContext());
-        filler.setHeight(5);
-        filler.setBackgroundColor(0xffffffff);
-        ll.addView( filler );
-        for ( int i = 0; i < pieces.size(); ++i ){
-        	ImageView image = new ImageView(getApplicationContext());
-        	String path = hymnalBaseDir + "/" + pieces.get(i);
-        	//Log.e ( "hymnal", "path: " + path );
-        	Bitmap bm = BitmapFactory.decodeFile(path);
-        	image.setImageBitmap(bm);
-        	image.setScaleType(ScaleType.FIT_XY);
+    	public int getCount() {
+    		return numVerses;
+    	}
+    	public Object getItem( int position ){
+    		return position;
+    	}
+    	public long getItemId ( int position ){
+    		return position;
+    	}
+    	public View getView ( int position, View convertView, ViewGroup parent ){
+            GalleryFriendlyScrollView sv = new GalleryFriendlyScrollView(mContext);
+    		fillScrollView(sv, position+1);
+            return sv;
+    	}
+    	public void fillScrollView ( ScrollView sv, int verse ){
+            Vector<String> pieces = getHymnPieces(hymnId, part, verse); //no verse zero
+    		LinearLayout ll = new LinearLayout(mContext);
+    		ll.setOrientation(LinearLayout.VERTICAL);
+    		TextView filler = new TextView(mContext);
+            filler.setHeight(5);
+            filler.setBackgroundColor(0xffffffff);
+            ll.addView( filler );
         	DisplayMetrics dm = new DisplayMetrics();
         	getWindowManager().getDefaultDisplay().getMetrics(dm);
         	int width = dm.widthPixels;
-        	int height = width * bm.getHeight() / bm.getWidth();
-        	image.setLayoutParams(new LinearLayout.LayoutParams(width, height));
-        	if ( pieces.get(i).contains("bass") ){
-        		image.setPadding(0, 0, 0, 5);
-        	}else{
-        		image.setPadding(0, 0, 0, 0);
-        	}
-        	ll.addView(image);
-        }
-    	
+            for ( int i = 0; i < pieces.size(); ++i ){
+            	ImageView image = new ImageView(mContext);
+            	String path = hymnalBaseDir + "/" + pieces.get(i);
+            	//Log.e ( "hymnal", "path: " + path );
+            	Bitmap bm = null;
+            	try{
+            		bm = BitmapFactory.decodeFile(path);
+            	} catch ( Exception ex ){
+            		Log.e ( "hymnal", "error: " + ex );
+            	}
+            	image.setImageBitmap(bm);
+            	image.setScaleType(ScaleType.FIT_XY);
+            	int height = width * bm.getHeight() / bm.getWidth();
+            	image.setLayoutParams(new LinearLayout.LayoutParams(width, height));
+            	if ( pieces.get(i).contains("bass") ){
+            		image.setPadding(0, 0, 0, 5);
+            	}else{
+            		image.setPadding(0, 0, 0, 0);
+            	}
+            	ll.addView(image);
+            }
+            ll.setBackgroundColor(0xffffffff);
+            sv.addView(ll);
+    	}
     }
     
     //public native String[] getLyricSections ( int hymnId, int partSpecifier );
@@ -203,11 +213,11 @@ public class HymnView extends Activity {
 			System.loadLibrary ( "Database-Jni" );
 	}
 
-    private Vector<String> getHymnPieces ( int hymnId, int partSpecifier ){
+    private Vector<String> getHymnPieces ( int hymnId, int partSpecifier, int verse ){
     	if ( Hymnal.EMULATOR ){
-    		return getHymnPieces_noJni(hymnId, partSpecifier);
+    		return getHymnPieces_noJni(hymnId, partSpecifier, verse);
     	}
-    	String[] pieces = getSections ( hymnId, currentVerse, partSpecifier );
+    	String[] pieces = getSections ( hymnId, verse, partSpecifier );
     	SortedSet<String> sortedSet = new TreeSet<String> ( );
     	for ( int i = 0; i < pieces.length; ++i ){
     		sortedSet.add(pieces[i]);
@@ -222,7 +232,7 @@ public class HymnView extends Activity {
     }
     
     //just a hack to display one particular hymn without using the database
-    private Vector<String> getHymnPieces_noJni ( int hymnId, int partSpecifier ){
+    private Vector<String> getHymnPieces_noJni ( int hymnId, int partSpecifier, int verse ){
     	Vector<String> ret = new Vector<String>();
     	File dir = new File("/sdcard/hymnalapp/Hymnal A Worship Book/043 My faith has foundmus/");
     	String basePath = "Hymnal A Worship Book/043 My faith has foundmus/";
@@ -234,8 +244,7 @@ public class HymnView extends Activity {
     			continue;
     		sortedSet.add(list[i]);
     	}
-    	
-    	int verse = currentVerse;
+
     	String clef = "png";
     	if ( partSpecifier == 1 )
     		clef = "treble";
