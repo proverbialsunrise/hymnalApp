@@ -90,6 +90,8 @@ public class HymnView extends Activity {
         	numVerses = 1;
 
         Gallery gallery = (Gallery) findViewById(R.id.hymn_gallery);
+        gallery.setHapticFeedbackEnabled(false);
+        gallery.setSpacing(1);
         va = new VerseAdapter(this);
         gallery.setAdapter ( va );
         gallery.setBackgroundColor(0xffffffff);
@@ -115,6 +117,23 @@ public class HymnView extends Activity {
     }
     
     @Override
+    /*
+     * The displayed image doesn't reload automatically - do it manually here.
+     */
+    protected void onResume() {
+    	super.onResume();
+    	Gallery gallery = (Gallery) findViewById(R.id.hymn_gallery);
+    	if ( gallery == null )
+    		return;
+    	ScrollView sv = (ScrollView) gallery.getSelectedView();
+    	if ( sv == null ){
+    		return;
+    	}
+    	sv.removeAllViews();
+    	va.fillScrollView( sv, gallery.getSelectedItemPosition()+1 );
+    }
+    
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	menu.add(Menu.NONE, ALLPARTS, Menu.NONE, "All");
     	menu.add(Menu.NONE, TREBLE, Menu.NONE, "Treble");
@@ -126,17 +145,12 @@ public class HymnView extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
     	part = item.getItemId();
     	Gallery gallery = (Gallery) findViewById(R.id.hymn_gallery);
-    	int position = gallery.getFirstVisiblePosition();
-    	int last = gallery.getLastVisiblePosition();
-    	while ( position <= last ){
-	    	ScrollView sv = (ScrollView) gallery.getChildAt(position);
-	    	if ( sv == null ){
-	    		++position;
-	    		continue;
-	    	}
-	    	sv.removeAllViews();
-	    	va.fillScrollView(sv, position + 1);
-	    	++position;
+    	ScrollView sv = (ScrollView) gallery.getSelectedView();
+    	if ( sv == null ){
+    		Log.e ( "hymnal", "failed to refresh" );
+    	}else{
+    		sv.removeAllViews();
+    		va.fillScrollView(sv, gallery.getSelectedItemPosition()+1);
     	}
     	return true;
     }
