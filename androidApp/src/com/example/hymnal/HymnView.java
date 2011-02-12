@@ -14,14 +14,18 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Gallery;
 import android.widget.ImageView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ImageView.ScaleType;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
@@ -89,7 +93,22 @@ public class HymnView extends Activity {
         if ( numVerses == -1 )
         	numVerses = 1;
 
-        Gallery gallery = (Gallery) findViewById(R.id.hymn_gallery);
+        final HymnGallery gallery = (HymnGallery) findViewById(R.id.hymn_gallery);
+        gallery.setOnItemSelectedListener(new OnItemSelectedListener() {
+			public void onItemSelected(AdapterView<?> arg0, View view,
+					int position, long id) {
+				long t = SystemClock.uptimeMillis();
+				//Don't cancel scrolling
+				if ( gallery.mIsScrolling )
+					return;
+				//cancel flinging (so it doesn't go too far)
+				gallery.mPositionSelected = position;
+				MotionEvent e = MotionEvent.obtain(t, t, MotionEvent.ACTION_CANCEL, 0, 0, 0);
+				gallery.onTouchEvent(e);
+			}
+			public void onNothingSelected(AdapterView<?> arg0) {}
+		});
+        gallery.setCallbackDuringFling(true);
         gallery.setHapticFeedbackEnabled(false);
         gallery.setSpacing(1);
         va = new VerseAdapter(this);
