@@ -33,10 +33,10 @@ public class HymnList extends ListActivity{
           public void onItemClick(AdapterView<?> parent, View view,
               int position, long id) {
 	    	   Intent i = new Intent(HymnList.this, HymnView.class);
-	    	   //TODO: pass the hymnID and a display settings parameter
+	    	   //TODO: pass a display settings parameter?
 	    	   i.putExtra ( "HymnName", ((TextView)view).getText() );
 	    	   i.putExtra ( "HymnalName", hymnalName );
-	    	   i.putExtra ( "HymnId", hymns[position].hymnId );//TODO: position == array index??
+	    	   i.putExtra ( "HymnId", hymns[position].hymnId );
 	    	   startActivity(i);
           }
         });

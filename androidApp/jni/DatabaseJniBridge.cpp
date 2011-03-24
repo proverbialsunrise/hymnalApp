@@ -22,7 +22,38 @@ JNIEXPORT jobjectArray JNICALL
 Java_com_example_hymnal_HymnView_getSections ( JNIEnv* env, jobject thiz, jint hymnId, jint verse, jint partSpecifier );
 JNIEXPORT jint JNICALL
 Java_com_example_hymnal_HymnView_getNumVerses ( JNIEnv* env, jobject thiz, jint hymnId );
+JNIEXPORT jobjectArray JNICALL
+Java_com_example_hymnal_SearchActivity_search ( JNIEnv* env, jobject thiz, jint hymnalId, jstring jQuery );
 }
+
+JNIEXPORT jobjectArray JNICALL
+Java_com_example_hymnal_SearchActivity_search ( JNIEnv* env, jobject thiz, jint hymnalId, jstring jQuery ){
+	jboolean isCopy;
+	const char *query = env->GetStringUTFChars ( jQuery, &isCopy );
+	std::string searchString(query);
+	
+	HymnVector list = getHymnsForTitleSearch ( hymnalId, searchString );
+//TODO: put the below (reused) code in a function
+	jclass hymnClass = env->FindClass ( "com/example/hymnal/Hymn" );
+	jobjectArray hymnArray = env->NewObjectArray ( list.size(), hymnClass, NULL );
+	jmethodID midConstructor = env->GetMethodID ( hymnClass, "<init>", "(IILjava/lang/String;)V" );
+
+	jclass stringClass = env->FindClass ( "java/lang/String" );
+    jobject hymnObject;
+	
+	for ( int i = 0; i < list.size(); ++i ){
+		jstring title = env->NewStringUTF ( list[i].get_title().c_str() );
+		__android_log_print ( ANDROID_LOG_ERROR, "hymnal-JNI", list[i].get_title().c_str() );
+     	hymnObject = env->NewObject ( hymnClass, midConstructor, 
+    					list[i].get_hymnID(), list[i].get_hymnNumber(), title );
+		env->SetObjectArrayElement ( hymnArray, i, hymnObject );
+		env->DeleteLocalRef ( hymnObject );
+		env->DeleteLocalRef ( title );
+	}
+
+	return hymnArray;
+}
+
 
 jint JNI_OnLoad(JavaVM *vm, void *reserved){
 	__android_log_print(ANDROID_LOG_ERROR, "hymnal-JNI", "opened connection");
